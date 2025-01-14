@@ -19,5 +19,8 @@ RUN npm run build
 # Expose the desired port (default is 3000 for Next.js)
 EXPOSE 3001     
 
-# Set the command to run your application
+# Set environment variable for the port
+ENV PORT=3001
+
+# Start the application
 CMD ["npm", "start"]

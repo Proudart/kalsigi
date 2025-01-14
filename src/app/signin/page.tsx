@@ -22,7 +22,7 @@ export default async function SignUpPage() {
         prefetch={true}
       >
         <Image
-          src="/kalkomi.webp"
+          src="/kalsigi.webp"
           alt={process.env.site_name as string}
           width={50}
           height={50}

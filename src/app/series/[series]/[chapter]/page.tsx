@@ -211,7 +211,7 @@ export default async function ChapterPage(props: any) {
       name: siteName,
       logo: {
         "@type": "ImageObject",
-        url: `${baseUrl}/kalkomi.webp`,
+        url: `${baseUrl}/kalsigi.webp`,
       },
     },
     datePublished: data.chapters[0]?.published_at,

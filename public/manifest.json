@@ -8,38 +8,38 @@
     "theme_color": "#c3d5ce",
     "icons": [
       {
-        "src": "/kalkomi-192.png",
+        "src": "/kalsigi-192.png",
         "sizes": "192x192",
         "type": "image/png",
         "purpose": "any"
       },
       {
-        "src": "/kalkomi-512.png",
+        "src": "/kalsigi-512.png",
         "sizes": "512x512",
         "type": "image/png",
         "purpose": "any"
       },
       {
-        "src": "/kalkomi.png",
+        "src": "/kalsigi.png",
         "sizes": "500x500",
         "type": "image/png",
         "purpose": "any"
       },
       {
-        "src": "/kalkomi-144.png",
+        "src": "/kalsigi-144.png",
         "sizes": "144x144",
         "type": "image/png",
         "purpose": "any"
       }
     ],"screenshots": [
     {
-      "src": "/kalkomi-desktop.png",
+      "src": "/kalsigi-desktop.png",
       "sizes": "1278x801",
       "type": "image/png",
       "form_factor": "wide"
     },
     {
-      "src": "/kalkomi-phone.png",
+      "src": "/kalsigi-phone.png",
       "sizes": "821x934",
       "type": "image/png"
     }

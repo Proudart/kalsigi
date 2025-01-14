@@ -2,7 +2,7 @@ import "./globals.css";
 import { Poppins } from "next/font/google";
 import dynamic from "next/dynamic";
 import { Toaster } from "../components/ui/toaster";
-import logo from "../../public/kalkomi.webp";
+import logo from "../../public/kalsigi.webp";
 import PlausibleProvider from "next-plausible";
 import { ThemeProvider } from "next-themes";
 import { Suspense } from "react";
@@ -74,11 +74,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/kalkomi-144.png", sizes: "144x144", type: "image/png" },
-      { url: "/kalkomi-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/kalkomi-512.png", sizes: "512x512", type: "image/png" },
+      { url: "/kalsigi-144.png", sizes: "144x144", type: "image/png" },
+      { url: "/kalsigi-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/kalsigi-512.png", sizes: "512x512", type: "image/png" },
     ],
-    apple: [{ url: "/kalkomi.webp", sizes: "192x192", type: "image/webp" }],
+    apple: [{ url: "/kalsigi.webp", sizes: "192x192", type: "image/webp" }],
   },
 };
 

@@ -1,0 +1,48 @@
+{
+    "name": "kalsigi",
+    "short_name": "kalsigi",
+    "description": "The only manga sites you'll need are those that bring together your favourite or most popular translators into one place, such as Reaperscans and Asurascans, and that is what we do at kalsigi.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#141f1b",
+    "theme_color": "#c3d5ce",
+    "icons": [
+      {
+        "src": "/kalkomi-192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any"
+      },
+      {
+        "src": "/kalkomi-512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any"
+      },
+      {
+        "src": "/kalkomi.png",
+        "sizes": "500x500",
+        "type": "image/png",
+        "purpose": "any"
+      },
+      {
+        "src": "/kalkomi-144.png",
+        "sizes": "144x144",
+        "type": "image/png",
+        "purpose": "any"
+      }
+    ],"screenshots": [
+    {
+      "src": "/kalkomi-desktop.png",
+      "sizes": "1278x801",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/kalkomi-phone.png",
+      "sizes": "821x934",
+      "type": "image/png"
+    }
+  ]
+    
+  }

@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@/components/ui/*": ["./components/ui/*"],
+        }
+    },
+    "include": ["next-env.d.ts", "**/*.js", "**/*.ts", "**/*.tsx"]
+  }
+  

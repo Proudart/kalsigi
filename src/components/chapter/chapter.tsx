@@ -16,8 +16,8 @@ export default async function Chapter({ params }: any) {
   const regex = /-\d{6}/;
   const modifiedTitle = title.replace(regex, "");
   const res = await fetch(
-    `https://www.${process.env.site_name}.com/api/chapter?series=${modifiedTitle}`
-    // `http://localhost:3000/api/chapter?series=${modifiedTitle}`
+    // `https://www.${process.env.site_name}.com/api/chapter?series=${modifiedTitle}`
+    `http://localhost:3000/api/chapter?series=${modifiedTitle}`
   );
 
   const chapterNumber = chapter.replace(/^chapter-/i, "");
@@ -28,7 +28,6 @@ export default async function Chapter({ params }: any) {
   let publisher;
   let date;
   let summary;
-
   try {
     panels = data.chapters.find(
       (item: { chapter_number: any }) => item.chapter_number == chapterNumber

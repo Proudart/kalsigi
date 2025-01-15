@@ -95,7 +95,7 @@ export default function RootLayout({
           <Suspense fallback={<Loader></Loader>}>
             <ThemeProvider
               attribute="class"
-              defaultTheme="system"
+              defaultTheme="dark"
               enableSystem
               disableTransitionOnChange
             >

@@ -36,6 +36,7 @@ const ListboxComponent: React.FC<ListboxComponentProps> = React.memo(
     const [currentChapterIndex, setCurrentChapterIndex] = useState<
       number | null
     >(null);
+
     const chapterNumber = chapter.replace("chapter-", "");
 
     const [selectedOption, setSelectedOption] = useState<string>(chapterNumber);
@@ -127,6 +128,7 @@ const ListboxComponent: React.FC<ListboxComponentProps> = React.memo(
         chapters={chapters}
         selectedOption={selectedOption}
         title={url}
+        urlCode={urlCode}
       />
     );
 

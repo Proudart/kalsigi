@@ -6,12 +6,14 @@ interface CustomSelectWithLinkProps {
   chapters: string[];
   selectedOption: string;
   title: string;
+  urlCode: string;
 }
 
 const CustomSelectWithLink: React.FC<CustomSelectWithLinkProps> = ({
   chapters,
   selectedOption,
   title,
+  urlCode,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -106,7 +108,7 @@ const CustomSelectWithLink: React.FC<CustomSelectWithLinkProps> = ({
                 ref={chapter === selectedOption ? selectedItemRef : null}
               >
                 <Link
-                  href={`/series/${title}/chapter-${chapter}`}
+                  href={`/series/${title}-${urlCode}/chapter-${chapter}`}
                   prefetch={true}
                   onClick={handleLinkClick}
                   className={`block px-4 py-2

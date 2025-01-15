@@ -32,7 +32,7 @@ export default async function Manga({
       <div className="mx-auto p-4 mt-6 flex justify-evenly items-center flex-wrap">
         <Bookmark title={title} />
         <Share
-          url={`https://www.${process.env.site_name}.com/series/${modifiedTitle}`}
+          url={`https://www.${process.env.site_name}.com/series/${title}`}
           title={data.title}
         />
       </div>

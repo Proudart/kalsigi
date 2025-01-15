@@ -134,7 +134,7 @@ export default async function Chapter({ params }: any) {
         </ListboxComponent>
 
         <Share
-          url={`https://www.${process.env.site_name}.com/series/${title}/${chapter}`}
+          url={`https://www.${process.env.site_name}.com/series/${title}-${data.url_code}/${chapter}`}
           title={data.title + " - " + chapter?.toString().replace(/-/g, " ")}
         />
         <div data-nat="1424528"></div>

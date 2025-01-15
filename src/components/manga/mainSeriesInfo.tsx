@@ -22,63 +22,98 @@ interface MainSeriesInfoProps {
 
 const MainSeriesInfo: React.FC<MainSeriesInfoProps> = ({ data }) => {
     return (
-        <div className="container mx-auto p-4">
-            <div className="relative">
-                <Image
-                    src={data.cover_image_url}
-                    alt={data.title}
-                    className="w-full h-96 object-cover shadow-lg object-position-center rounded-xl"
-                    width={800}
-                    height={600}
-                    quality={100}
-                    loading="lazy"
-                    unoptimized
-                />
-                <div className="absolute bottom-0 left-0 right-0 bg-primary-500 p-6 shadow-xl rounded-b-xl">
-                    <div>
-                    <h1 className="text-3xl font-bold text-textmain">{data.title}</h1>
-                    <p className="text-sm text-textmain">
-                        Genres: {data.genre.filter(g => g !== "Null").join(", ") ?? ""}
-                    </p>
-                    </div>
-                    <div>
-                        <p className="text-textmain">
-                            Description: {data.description}
-                        </p>
+        <div className="w-full pt-2">
+            <div className="container px-4 py-6 mx-auto bg-background-500 rounded-lg">
+                <div className="flex flex-col md:flex-row gap-6 lg:gap-8">
+                    {/* Cover Image Section */}
+                    <div className="w-full md:w-[300px] lg:w-[400px] shrink-0">
+                        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg 
+                            shadow-lg bg-background-100 dark:bg-background-800">
+                            <Image
+                                src={data.cover_image_url}
+                                alt={data.title}
+                                fill
+                                className="object-cover"
+                                priority
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 300px, 400px"
+                            />
+                        </div>
                     </div>
 
-                </div>
-                
-            </div>
+                    {/* Content Section */}
+                    <div className="flex-1 space-y-6">
+                        {/* Title and Rating */}
+                        <div>
+                            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold 
+                                text-text-950 dark:text-text-50 mb-3">
+                                {data.title}
+                            </h1>
+                            <div className="flex items-center gap-2 text-text-800 dark:text-text-200">
+                                <span className="text-lg font-semibold">
+                                    {data.averageRating.toFixed(1)}
+                                </span>
+                                <span className="text-sm">Rating</span>
+                            </div>
+                        </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-                <div className="bg-primary-500 p-4 shadow-md hover:shadow-lg transition-shadow rounded-xl">
-                    <h2 className="font-semibold text-lg text-textmain">Chapters</h2>
-                    <p className="text-textmain">
-                        {data.total_chapters} chapters published
-                    </p>
-                </div>
-                <div className="bg-primary-500 p-4 shadow-md hover:shadow-lg transition-shadow rounded-xl">
-                    <h2 className="font-semibold text-lg text-textmain">
-                        Author and Artist
-                    </h2>
-                    <p className="text-textmain">Author: {data.author || "N/A"}</p>
-                    <p className="text-textmain">Artist: {data.artist || "N/A"}</p>
-                </div>
-                <div className="bg-primary-500 p-4 shadow-md hover:shadow-lg transition-shadow rounded-xl">
-                    <h2 className="font-semibold text-lg text-textmain">
-                        Publication Details
-                    </h2>
-                    <p className="text-textmain">Status: {data.status}</p>
-                    <p className="text-textmain">
-                        Last Updated: {new Date(data.updated_at).toLocaleDateString()}
-                    </p>
-                </div>
-                <div className="bg-primary-500 p-4 shadow-md hover:shadow-lg transition-shadow rounded-xl">
-                    <h2 className="font-semibold text-lg text-textmain">Rating</h2>
-                    <p className="text-textmain">
-                        Average Rating: {data.averageRating}
-                    </p>
+                        {/* Genres */}
+                        <div className="flex flex-wrap gap-2">
+                            {data.genre.filter(g => g !== "Null").map((genre, index) => (
+                                <span 
+                                    key={index} 
+                                    className="px-3 py-1.5 text-sm rounded-full
+                                    bg-primary-100 dark:bg-primary-800
+                                    text-primary-900 dark:text-primary-100
+                                    hover:bg-primary-200 dark:hover:bg-primary-700
+                                    transition-colors duration-200"
+                                >
+                                    {genre}
+                                </span>
+                            ))}
+                        </div>
+
+                        {/* Description */}
+                        <div className="prose dark:prose-invert max-w-none">
+                            <p className="text-text-800 dark:text-text-200 leading-relaxed">
+                                {data.description}
+                            </p>
+                        </div>
+
+                        {/* Stats Grid */}
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div className="p-4 rounded-lg bg-background-100 dark:bg-background-800">
+                                <dt className="text-sm text-text-700 dark:text-text-300">Chapters</dt>
+                                <dd className="mt-1 text-lg font-semibold text-text-900 dark:text-text-50">
+                                    {data.total_chapters}
+                                </dd>
+                            </div>
+                            <div className="p-4 rounded-lg bg-background-100 dark:bg-background-800">
+                                <dt className="text-sm text-text-700 dark:text-text-300">Status</dt>
+                                <dd className="mt-1 text-lg font-semibold text-text-900 dark:text-text-50">
+                                    {data.status}
+                                </dd>
+                            </div>
+                            <div className="p-4 rounded-lg bg-background-100 dark:bg-background-800">
+                                <dt className="text-sm text-text-700 dark:text-text-300">Author</dt>
+                                <dd className="mt-1 text-lg font-semibold text-text-900 dark:text-text-50">
+                                    {data.author || "N/A"}
+                                </dd>
+                            </div>
+                            {data.artist && (
+                                <div className="p-4 rounded-lg bg-background-100 dark:bg-background-800">
+                                    <dt className="text-sm text-text-700 dark:text-text-300">Artist</dt>
+                                    <dd className="mt-1 text-lg font-semibold text-text-900 dark:text-text-50">
+                                        {data.artist}
+                                    </dd>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Last Updated */}
+                        <div className="text-sm text-text-700 dark:text-text-300">
+                            Last Updated: {new Date(data.updated_at).toLocaleDateString()}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

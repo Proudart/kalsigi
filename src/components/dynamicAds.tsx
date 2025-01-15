@@ -29,9 +29,6 @@ export default function AdManager({ options }: AdManagerProps) {
         src="https://js.wpadmngr.com/static/adManager.js"
         strategy="afterInteractive"
         data-admpid={options.admpid}
-        onError={(e) => {
-          console.error('Ad Manager script failed to load:', e);
-        }}
         onLoad={() => {
         }}
       />

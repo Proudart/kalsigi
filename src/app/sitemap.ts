@@ -1,19 +1,8 @@
 import { MetadataRoute } from 'next';
-import fs from 'fs';
-import path from 'path';
 
 interface SitemapEntry {
   url: string;
   lastModified: string | Date;
-}
-
-interface SitemapState {
-  lastUpdate: string;
-  addedUrls: string[];
-  startDate: string;
-  backdatedEntries: {
-    [key: string]: string[];
-  };
 }
 
 // Configure your dates here
@@ -37,60 +26,51 @@ function getDatesInRange(startDate: Date, endDate: Date): Date[] {
   return dates;
 }
 
+function getAssignedUrlsForDate(
+  allUrls: SitemapEntry[],
+  date: Date,
+  urlsPerDay: { MIN: number; MAX: number },
+  usedUrls: Set<string>
+): SitemapEntry[] {
+  const dateStr = date.toISOString().split('T')[0];
+  const availableUrls = allUrls.filter(entry => !usedUrls.has(entry.url));
+  
+  if (availableUrls.length === 0) return [];
+
+  const numUrls = Math.min(
+    urlsPerDay.MAX,
+    Math.max(urlsPerDay.MIN, availableUrls.length)
+  );
+
+  const assignedUrls = availableUrls.slice(0, numUrls);
+  assignedUrls.forEach(entry => {
+    usedUrls.add(entry.url);
+    entry.lastModified = new Date(dateStr);
+  });
+
+  return assignedUrls;
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
-    const statePath = path.join(process.cwd(), 'sitemap-state.json');
     const fetchUrl = `https://www.${process.env.site_name}.com/api/chaptersxml`;
     const response = await fetch(fetchUrl);
     const chapters = await response.json();
-
-    // Initialize default state
-    const defaultState: SitemapState = {
-      lastUpdate: new Date(0).toISOString(),
-      addedUrls: [],
-      startDate: SITEMAP_CONFIG.START_DATE,
-      backdatedEntries: {} // Initialize empty object for backdated entries
-    };
-
-    // Load or use default state
-    let state: SitemapState;
-    try {
-      if (fs.existsSync(statePath)) {
-        const savedState = JSON.parse(fs.readFileSync(statePath, 'utf-8'));
-        // Ensure all required properties exist
-        state = {
-          ...defaultState,
-          ...savedState,
-          backdatedEntries: savedState.backdatedEntries || {}
-        };
-      } else {
-        state = defaultState;
-      }
-    } catch (error) {
-      console.warn('Error loading sitemap state, starting fresh');
-      state = defaultState;
-    }
 
     // Collect all possible URLs
     const allUrls: SitemapEntry[] = chapters.flatMap((series: any) => {
       const urls = [];
       
-      const seriesUrl = `https://www.${process.env.site_name}.com/series/${series.url}-${series.url_code}`;
-      if (!state.addedUrls.includes(seriesUrl)) {
-        urls.push({
-          url: seriesUrl,
-          lastModified: new Date(series.updated_at),
-        });
-      }
+      urls.push({
+        url: `https://www.${process.env.site_name}.com/series/${series.url}-${series.url_code}`,
+        lastModified: new Date(series.updated_at),
+      });
 
       series.chapters.forEach((chapter: any) => {
-        const chapterUrl = `https://www.${process.env.site_name}.com/series/${series.url}-${series.url_code}/chapter-${chapter.chapter_number}`;
-        if (!state.addedUrls.includes(chapterUrl)) {
-          urls.push({
-            url: chapterUrl,
-            lastModified: new Date(chapter.published_at),
-          });
-        }
+        urls.push({
+          url: `https://www.${process.env.site_name}.com/series/${series.url}-${series.url_code}/chapter-${chapter.chapter_number}`,
+          lastModified: new Date(chapter.published_at),
+        });
       });
 
       return urls;
@@ -103,31 +83,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const startDate = new Date(state.startDate);
+    const startDate = new Date(SITEMAP_CONFIG.START_DATE);
     startDate.setHours(0, 0, 0, 0);
     const backDate = new Date(SITEMAP_CONFIG.BACKDATE_FROM);
     backDate.setHours(0, 0, 0, 0);
 
-    // Create array of remaining URLs to process
-    let remainingUrls = [...allUrls];
-
-    // Handle backdating
-    const backdateDates = getDatesInRange(backDate, startDate);
-    for (const date of backdateDates) {
-      const dateStr = date.toISOString().split('T')[0];
-      
-      // Skip if we already have entries for this date
-      if (!state.backdatedEntries[dateStr] && remainingUrls.length > 0) {
-        const numUrls = Math.min(
-          SITEMAP_CONFIG.URLS_PER_DAY.MAX,
-          Math.max(SITEMAP_CONFIG.URLS_PER_DAY.MIN, remainingUrls.length)
-        );
-        
-        const dateUrls = remainingUrls.splice(0, numUrls);
-        state.backdatedEntries[dateStr] = dateUrls.map(entry => entry.url);
-        state.addedUrls.push(...state.backdatedEntries[dateStr]);
-      }
-    }
+    // Track used URLs
+    const usedUrls = new Set<string>();
 
     // Initialize sitemap URLs array with homepage
     let sitemapUrls: SitemapEntry[] = [
@@ -137,37 +99,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     ];
 
-    // Add backdated entries to sitemap
-    Object.entries(state.backdatedEntries).forEach(([date, urls]) => {
-      urls.forEach(url => {
-        sitemapUrls.push({
-          url,
-          lastModified: new Date(date)
-        });
-      });
-    });
-
-    // Handle new URLs if we're past the start date
-    const lastUpdateDate = new Date(state.lastUpdate);
-    lastUpdateDate.setHours(0, 0, 0, 0);
-
-    if (today >= startDate && today.getTime() > lastUpdateDate.getTime() && remainingUrls.length > 0) {
-      const numNewUrls = Math.min(
-        SITEMAP_CONFIG.URLS_PER_DAY.MAX,
-        Math.max(SITEMAP_CONFIG.URLS_PER_DAY.MIN, remainingUrls.length)
+    // Handle backdating
+    const backdateDates = getDatesInRange(backDate, startDate);
+    for (const date of backdateDates) {
+      const assignedUrls = getAssignedUrlsForDate(
+        allUrls,
+        date,
+        SITEMAP_CONFIG.URLS_PER_DAY,
+        usedUrls
       );
-      
-      const newUrls = remainingUrls.splice(0, numNewUrls);
-      state.lastUpdate = new Date().toISOString();
-      
-      // Add new URLs to both state and sitemap
-      const newUrlStrings = newUrls.map(entry => entry.url);
-      state.addedUrls.push(...newUrlStrings);
-      sitemapUrls.push(...newUrls);
+      sitemapUrls.push(...assignedUrls);
     }
 
-    // Save updated state
-    fs.writeFileSync(statePath, JSON.stringify(state, null, 2));
+    // Handle new URLs if we're past the start date
+    if (today >= startDate) {
+      const assignedUrls = getAssignedUrlsForDate(
+        allUrls,
+        today,
+        SITEMAP_CONFIG.URLS_PER_DAY,
+        usedUrls
+      );
+      sitemapUrls.push(...assignedUrls);
+    }
 
     return sitemapUrls;
 

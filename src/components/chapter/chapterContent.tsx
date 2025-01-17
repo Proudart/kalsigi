@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import ChapterProgress from "../chapter/chapterProgress";
+
 const ScrollableImage = dynamic(() => import("./scrollableImage"), {
   ssr: true,
 });

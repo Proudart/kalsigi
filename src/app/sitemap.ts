@@ -5,10 +5,9 @@ interface SitemapEntry {
   lastModified: string | Date;
 }
 
-// Configure your dates here
 const SITEMAP_CONFIG = {
-  START_DATE: process.env.SITEMAP_START_DATE || '2025-01-14',    // When to start adding new URLs
-  BACKDATE_FROM: process.env.SITEMAP_BACKDATE_FROM || '2025-01-12', // Earliest date for backdated entries
+  START_DATE: process.env.SITEMAP_START_DATE || '2025-01-14',
+  BACKDATE_FROM: process.env.SITEMAP_BACKDATE_FROM || '2025-01-11',
   URLS_PER_DAY: {
     MIN: 50,
     MAX: 100
@@ -18,10 +17,12 @@ const SITEMAP_CONFIG = {
 function getDatesInRange(startDate: Date, endDate: Date): Date[] {
   const dates: Date[] = [];
   let currentDate = new Date(startDate);
+  const endTime = endDate.getTime();
 
-  while (currentDate <= endDate) {
+  while (currentDate.getTime() <= endTime) {
     dates.push(new Date(currentDate));
-    currentDate.setDate(currentDate.getDate() + 1);
+    // Create a new Date object for the next day
+    currentDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
   }
   return dates;
 }
@@ -37,9 +38,10 @@ function getAssignedUrlsForDate(
   
   if (availableUrls.length === 0) return [];
 
+  // Ensure we're getting new URLs each day
   const numUrls = Math.min(
     urlsPerDay.MAX,
-    Math.max(urlsPerDay.MIN, availableUrls.length)
+    Math.max(urlsPerDay.MIN, Math.ceil(availableUrls.length / 7)) // Distribute remaining URLs over a week
   );
 
   const assignedUrls = availableUrls.slice(0, numUrls);
@@ -83,8 +85,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    
     const startDate = new Date(SITEMAP_CONFIG.START_DATE);
     startDate.setHours(0, 0, 0, 0);
+    
     const backDate = new Date(SITEMAP_CONFIG.BACKDATE_FROM);
     backDate.setHours(0, 0, 0, 0);
 
@@ -111,16 +115,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       sitemapUrls.push(...assignedUrls);
     }
 
-    // Handle new URLs if we're past the start date
+    // Handle dates from start date to today
     if (today >= startDate) {
-      const assignedUrls = getAssignedUrlsForDate(
-        allUrls,
-        today,
-        SITEMAP_CONFIG.URLS_PER_DAY,
-        usedUrls
-      );
-      sitemapUrls.push(...assignedUrls);
+      const currentDates = getDatesInRange(startDate, today);
+      for (const date of currentDates) {
+        const assignedUrls = getAssignedUrlsForDate(
+          allUrls,
+          date,
+          SITEMAP_CONFIG.URLS_PER_DAY,
+          usedUrls
+        );
+        sitemapUrls.push(...assignedUrls);
+      }
     }
+
+    // Add debug logging
+    console.log('Sitemap stats:', {
+      totalUrls: sitemapUrls.length,
+      uniqueUrls: new Set(sitemapUrls.map(entry => entry.url)).size,
+      dateRange: {
+        from: sitemapUrls[0].lastModified,
+        to: sitemapUrls[sitemapUrls.length - 1].lastModified
+      }
+    });
 
     return sitemapUrls;
 

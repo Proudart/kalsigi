@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import { Input } from "../../components/ui/input";
-import { IconQuestionMark } from "@tabler/icons-react";
+import { IconBug } from "@tabler/icons-react";
 
 import {
   Dialog,
@@ -89,7 +89,7 @@ export default React.memo(function BugReport() {
     <div className="fixed z-50 bottom-5 right-4">
       <Dialog open={opens} onOpenChange={setOpen} defaultOpen={false}>
         <DialogTrigger>
-          <IconQuestionMark className="w-8 h-8 p-1 text-2xl text-white rounded-full bg-primary-500 border border-white" />
+          <IconBug className="w-8 h-8 p-1 text-2xl text-white rounded-full bg-primary-500 border border-white" />
         </DialogTrigger>
         <DialogContent className="p-4 text-main bg-background-600 rounded-2xl md:p-8">
           <DialogHeader>

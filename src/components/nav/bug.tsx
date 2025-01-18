@@ -53,6 +53,7 @@ export default React.memo(function BugReport() {
     setEmail(event.target.value);
   };
 
+  
   const handleSummaryChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {

@@ -3,7 +3,8 @@ import Chapter from "../../../../components/chapter/chapter";
 import Script from "next/script";
 import Loader from "../../../../components/load";
 import { Metadata } from "next";
-
+export const dynamic = 'force-static';
+export const revalidate = 60 * 60 * 24; // 24 hours
 // Types based on your database schema
 interface ChapterData {
   id: string;
@@ -93,7 +94,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
     ].filter(Boolean).join(", ");
 
     // Enhanced description using summary data
-    const description = `${summary.tldr || ''} ${summary.synopsis || ''} - Read ${data.title} ${chapterTitle} online at ${siteName}.com`;
+    const description = `${summary.tldr || ''} - Read ${data.title} ${chapterTitle} online at ${siteName}.com`;
 
     const metadata: Metadata = {
       title: fullTitle,

@@ -190,7 +190,7 @@ export default async function ChapterPage(props: any) {
       "name": process.env.site_name,
       "logo": {
         "@type": "ImageObject",
-        "url": `${process.env.NEXT_PUBLIC_BASE_URL}/logo.png`
+        "url": `${process.env.NEXT_PUBLIC_BASE_URL}/kalsigi.png`
       }
     },
     "datePublished": data.chapters[0]?.published_at,

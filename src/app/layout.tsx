@@ -15,7 +15,7 @@ const Footer = dynamic(() => import("../components/nav/footer"), { ssr: true });
 const Cookie = dynamic(() => import("../components/nav/cookies"), {
   ssr: true,
 });
-const Navbar = dynamic(() => import("../components/nav/navbar"), { ssr: true });
+const Navbar = dynamic(() => import("../components/nav/navbarWrapper"), { ssr: true });
 const DynamicAds = dynamic(() => import("../components/dynamicAds"), {
   ssr: true,
 });
@@ -100,12 +100,6 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <main className="bg-background-100 dark:bg-background-100">
-                <DynamicAds
-                  options={{
-                    key: "banner",
-                    admpid: "257593",
-                  }}
-                />
                 <Navbar logo={logo}></Navbar>
                 <div className="min-h-dvh">{children}</div>
                 <Cookie />

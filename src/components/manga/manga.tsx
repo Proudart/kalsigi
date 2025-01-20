@@ -26,9 +26,6 @@ export default async function Manga({
   return (
     <div className="bg-backgroundmain min-h-screen overflow-y-auto">
       <MainSeriesInfo data={data} />
-      <div className="container mx-auto p-4 mt-6">
-        <div data-banner-id="1424527"></div>
-      </div>
       <div className="mx-auto p-4 mt-6 flex justify-evenly items-center flex-wrap">
         <Bookmark title={title} />
         <Share
@@ -40,7 +37,6 @@ export default async function Manga({
         <ChapterSearch data={data} title={title} />
       </div>
       <div className="container mx-auto p-4 mt-6">
-        <div data-nat="1424528"></div>
         <Recommended genres={data.genre} seriesId={data.id} />
       </div>
 

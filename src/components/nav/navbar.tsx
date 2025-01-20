@@ -1,27 +1,20 @@
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { StaticImageData } from "next/image";
-import { ThemeToggle } from "../ui/themeToggle";
-import Auth from "../auth/auth";
-import LiveSearch from "./liveSearch";
-import dynamic from "next/dynamic";
-
+import React from "react"
+import Link from "next/link"
+import Image from "next/image"
+import type { StaticImageData } from "next/image"
+import { ThemeToggle } from "../ui/themeToggle"
+import Auth from "../auth/auth"
+import LiveSearch from "./liveSearch"
 
 const navigation = [
-  { name: "Home", href: "/", current: true },
-  { name: "Series", href: "/series", current: false },
-  { name: "Bookmarks", href: "/bookmarks", current: false },
-];
-
-const Up = dynamic(() => import("./up"), { ssr: true });
-const Bug = dynamic(() => import("./bug"), { ssr: true });
-const NavbarClient = dynamic(() => import("./navbarClient"), { ssr: true });
-
+  { name: "Home", href: "/" },
+  { name: "Series", href: "/series" },
+  { name: "Bookmarks", href: "/bookmarks" },
+]
 
 type Props = {
-  logo: StaticImageData;
-};
+  logo: StaticImageData
+}
 
 export default function Navbar({ logo }: Props) {
   return (
@@ -30,7 +23,7 @@ export default function Navbar({ logo }: Props) {
         <div className="flex items-center sm:flex-1">
           <Link href="/" className="flex items-center">
             <Image
-              src={logo}
+              src={logo || "/placeholder.svg"}
               alt={process.env.site_name as string}
               width={40}
               height={40}
@@ -51,20 +44,18 @@ export default function Navbar({ logo }: Props) {
             ))}
           </ul>
         </nav>
-        <Bug />
-        <Up />
+
         <div className="flex items-center space-x-2 flex-1 justify-end">
           <div className="flex-1 max-w-xs">
             <LiveSearch />
           </div>
-
           <div className="flex items-center">
             <ThemeToggle />
           </div>
           <Auth />
-          <NavbarClient />
         </div>
       </div>
     </header>
-  );
+  )
 }
+

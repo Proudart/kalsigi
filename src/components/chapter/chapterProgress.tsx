@@ -23,15 +23,17 @@ const ReadingProgress: React.FC<ReadingProgressProps> = ({ totalPages, currentPa
         };
 
         calculateProgress();
-    }, [currentPage, totalPages, averageReadingSpeed]);
+    }, [currentPage, totalPages, averageReadingSpeed, timeLeft]);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setTimeLeft(prevTimeLeft => prevTimeLeft - 1);
-        }, 1000);
+        if (timeLeft > 0) {
+            const interval = setInterval(() => {
+                setTimeLeft(prevTimeLeft => prevTimeLeft - 1);
+            }, 1000);
 
-        return () => clearInterval(interval);
-    }, []);
+            return () => clearInterval(interval);
+        }
+    }, [timeLeft]);
 
     const formatTimeLeft = (seconds: number) => {
         if (seconds < 60) return `${Math.ceil(seconds)}s`;
@@ -41,18 +43,21 @@ const ReadingProgress: React.FC<ReadingProgressProps> = ({ totalPages, currentPa
 
     return (
         <div className="fixed bottom-0 left-0 right-0" style={{ zIndex: 10 }}>
-            <div className="bg-background-600 text-text-50 p-2">
+            <div className="bg-background-600 text-text-50 p-2" role="contentinfo" aria-label="Reading Progress">
                 <div className="container mx-auto flex items-center justify-between px-4">
                     <div className="flex items-center space-x-4">
-                        <span className="text-sm">{Math.round(progress)}%</span>
-                        <div className="w-48 h-2 bg-background-600 rounded-full">
-                            <div 
+                        <span className="text-sm" aria-label={`Reading progress: ${Math.round(progress)} percent`}>
+                            {Math.round(progress)}%
+                        </span>
+                        <div className="w-48 h-2 bg-background-600 rounded-full" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
+                            <div
                                 className="h-full bg-primary-400 rounded-full transition-all duration-300"
                                 style={{ width: `${progress}%` }}
+                                aria-hidden="true"
                             />
                         </div>
                     </div>
-                    <div className="text-sm">
+                    <div className="text-sm" aria-label={`Time left: ${formatTimeLeft(timeLeft)}`}>
                         {formatTimeLeft(timeLeft)} left
                     </div>
                 </div>

@@ -41,7 +41,6 @@ function formatDate(dateString: any): any {
 
   return `${formattedDate} • ${relativeTime}`;
 }
-
 // Types based on the database schema
 type Chapter = {
   id: string;

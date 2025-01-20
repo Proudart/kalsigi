@@ -3,8 +3,7 @@ import Chapter from "../../../../components/chapter/chapter";
 import Script from "next/script";
 import Loader from "../../../../components/load";
 import { Metadata } from "next";
-export const dynamic = 'force-static';
-export const revalidate = 60 * 60 * 24; // 24 hours
+
 // Types based on your database schema
 interface ChapterData {
   id: string;
@@ -23,8 +22,8 @@ interface ChapterData {
     synopsis?: string;
   };
 }
-
 interface SeriesData {
+  genre: any;
   id: string;
   title: string;
   url: string;
@@ -40,12 +39,7 @@ interface SeriesData {
 
 }
 
-interface RouteParams {
-  params: {
-    series: string;
-    chapter: string;
-  };
-}
+
 
 async function fetchChapterData(url: string): Promise<SeriesData> {
   const siteName = process.env.site_name;
@@ -66,7 +60,7 @@ async function fetchChapterData(url: string): Promise<SeriesData> {
   return response.json();
 }
 export async function generateMetadata({ params }: any): Promise<Metadata> {
-  const { series, chapter } = await params;
+  const { series, chapter } = params;
   const siteName = process.env.site_name;
   const baseUrl = `https://www.${siteName}.com`;
   const regex = /-\d{6}/;
@@ -79,34 +73,46 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
     );
 
     const summary = chapterData?.summary || {};
-    const chapterTitle = chapter.charAt(0).toUpperCase() + chapter.slice(1);
-    const fullTitle = `${data.title} ${chapterTitle} | Read Online At ${siteName}`;
+    const chapterTitle = `Chapter ${chapterData?.chapter_number}`;
+    const fullTitle = `${data.title} ${chapterTitle} - Read Online | ${siteName}`;
     const pageUrl = `${baseUrl}/series/${series}/${chapter}`;
 
-    // Enhanced keywords using summary data
     const keywords = [
       data.title,
+      `${data.title} manga`,
       `${data.title} ${chapterTitle}`,
-      `${data.title} read online`,
-      summary.keywords ? (Array.isArray(summary.keywords) ? summary.keywords.join(', ') : summary.keywords) : '',
-      summary.tldr || '',
-      data.description?.slice(0, 100) || "",
+      `read ${data.title} online`,
+      data.genre?.join(', '),
+      data.author,
+      data.status,
+      Array.isArray(summary.keywords) ? summary.keywords.join(', ') : summary.keywords,
+      'free manga',
+      'online manga reader'
     ].filter(Boolean).join(", ");
 
-    // Enhanced description using summary data
-    const description = `${summary.tldr || ''} - Read ${data.title} ${chapterTitle} online at ${siteName}.com`;
+    const description = `Read ${data.title} ${chapterTitle} online for free. ${summary.tldr || ''} ${data.description?.slice(0, 150)}... Continue reading at ${siteName}.`;
 
-    const metadata: Metadata = {
+    return {
       title: fullTitle,
       description: description.trim(),
       keywords,
       metadataBase: new URL(baseUrl),
+      alternates: {
+        canonical: pageUrl,
+      },
+      robots: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+        'max-video-preview': -1,
+      },
       openGraph: {
         title: fullTitle,
         description: description.trim(),
         type: "article",
         url: pageUrl,
-        siteName: `${siteName}.com`,
+        siteName: `${siteName}`,
         locale: "en_US",
         images: data.cover_image_url ? [{
           url: data.cover_image_url,
@@ -121,33 +127,18 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
         creator: `@${siteName}`,
         title: fullTitle,
         description: description.trim(),
-        images: data.cover_image_url ? [{
-          url: data.cover_image_url,
-          width: 1200,
-          height: 630,
-          alt: `Cover image for ${data.title}`
-        }] : undefined
+        images: data.cover_image_url ? [data.cover_image_url] : undefined
       }
     };
-
-    return metadata;
   } catch (error) {
-    // Fallback metadata remains unchanged
     return {
-      title: `404 | ${siteName}`,
-      description: `Read manga online at ${siteName}.com`,
-      metadataBase: new URL(baseUrl),
-      openGraph: {
-        title: `404 | ${siteName}`,
-        description: `Read manga online at ${siteName}.com`,
-        type: "website",
-        url: baseUrl,
-        siteName: `${siteName}.com`,
-      },
-      keywords: `manga, webtoons, read online, ${siteName}`,
+      title: `404 Not Found | ${siteName}`,
+      description: `Read manga and comics online for free at ${siteName}.`,
+      robots: { index: false }
     };
   }
 }
+
 
 export async function generateStaticParams() {
   try {
@@ -172,7 +163,7 @@ export async function generateStaticParams() {
 
 export default async function ChapterPage(props: any) {
   const params = await props.params;
-  const { series, chapter } = params;
+  const { series, chapter } = await params;
   const siteName = process.env.site_name;
   const baseUrl = `https://www.${siteName}.com`;
 
@@ -181,53 +172,46 @@ export default async function ChapterPage(props: any) {
 
   const data = await fetchChapterData(modifiedUrl);
 
-  const chapterTitle = chapter.charAt(0).toUpperCase() + chapter.slice(1);
-  const fullTitle = `${data.title} ${chapterTitle} | Read Online  | ${siteName}`;
-  const description =
-    data.description ||
-    `Read ${data.title} ${chapterTitle} online  at ${siteName}.com`;
-  const pageUrl = `${baseUrl}/series/${series}/${chapter}`;
-
+  // Structured Data implementation
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Chapter",
-    description,
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": pageUrl,
-    },
-    headline: fullTitle,
-    image: data.cover_image_url,
-    author: data.author
-      ? {
-          "@type": "Person",
-          name: data.author,
-        }
-      : {
-          "@type": "Organization",
-          name: siteName,
-        },
-    publisher: {
-      "@type": "Organization",
-      name: siteName,
-      logo: {
-        "@type": "ImageObject",
-        url: `${baseUrl}/kalsigi.webp`,
-      },
-    },
-    datePublished: data.chapters[0]?.published_at,
-    dateModified: data.chapters[0]?.updated_at,
-    isPartOf: {
+    "name": `${data.title} - Chapter ${chapter}`,
+    "isPartOf": {
       "@type": "ComicSeries",
-      name: data.title,
-      url: `${baseUrl}/series/${series}`,
+      "name": data.title,
+      "author": {
+        "@type": "Person",
+        "name": data.author
+      }
     },
+    "publisher": {
+      "@type": "Organization",
+      "name": process.env.site_name,
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${process.env.NEXT_PUBLIC_BASE_URL}/logo.png`
+      }
+    },
+    "datePublished": data.chapters[0]?.published_at,
+    "dateModified": data.chapters[0]?.updated_at,
+    "image": data.cover_image_url,
+    "url": `${process.env.NEXT_PUBLIC_BASE_URL}/series/${series}/${chapter}`,
+    "description": data.description,
+    "genre": data.genre,
+    "inLanguage": "en",
+    "accessMode": "visual",
+    "accessibilityFeature": ["readingOrder", "unlocked"],
+    "potentialAction": {
+      "@type": "ReadAction",
+      "target": `${process.env.NEXT_PUBLIC_BASE_URL}/series/${series}/${chapter}`
+    }
   };
 
   return (
     <div>
       <Script
-        id="jsonld-chapter"
+        id="structured-data"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />

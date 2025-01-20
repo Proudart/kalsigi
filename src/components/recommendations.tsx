@@ -7,6 +7,7 @@ import { Badge } from '../components/ui/badge';
 import { Star } from 'lucide-react';
 
 interface RecommendedSeries {
+  url_code: any;
   id: string;
   title: string;
   url: string;
@@ -127,7 +128,7 @@ const Recommendations: React.FC<RecommendationsProps> = ({ genres, seriesId, cla
 
   const SeriesCard = ({ series }: { series: RecommendedSeries }) => (
     <Link 
-      href={`/series/${series.url}`}
+      href={`/series/${series.url}-${series.url_code}`}
       className="group relative flex flex-col bg-background-100 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl"
       prefetch={true}
     >
@@ -213,7 +214,6 @@ const Recommendations: React.FC<RecommendationsProps> = ({ genres, seriesId, cla
   }
 
   const skeletonCount = getItemsPerRow();
-
   return (
     <section 
       className={`bg-primary-500 p-6 rounded-lg shadow-lg ${className || ''}`}

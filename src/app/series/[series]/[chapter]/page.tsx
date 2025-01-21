@@ -91,7 +91,6 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
     ].filter(Boolean).join(", ");
 
     const description = `Read ${data.title} ${chapterTitle} online for free. ${summary.tldr || ''} ${data.description?.slice(0, 150)}... Continue reading at ${siteName}.`;
-
     return {
       title: fullTitle,
       description: description.trim(),

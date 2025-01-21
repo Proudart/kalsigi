@@ -1,3 +1,4 @@
+import MillionLint from '@million/lint';
 
 import withPWA from 'next-pwa';
 
@@ -14,7 +15,7 @@ const nextConfig = withPWA({
   async headers() {
     return [
         {
-            source: "/:all*(svg|jpg|jpeg|png|webp)",
+            source: '/:all*(svg|jpg|jpeg|png|webp)',
             locale: false,
             headers: [
               {
@@ -50,8 +51,8 @@ const nextConfig = withPWA({
 },
   reactStrictMode: true,
   i18n: {
-    locales: ["en"],
-    defaultLocale: "en"
+    locales: ['en'],
+    defaultLocale: 'en'
   },
 
   images: {
@@ -75,12 +76,12 @@ const nextConfig = withPWA({
   },
   async rewrites() {
     return [{
-      source: "/sitemap.xml",
-      destination: "/sitemap",
+      source: '/sitemap.xml',
+      destination: '/sitemap',
     },
     {
-      source: "/komic/:path*",
-      destination: "https://cnn.kalsigi.com/komic/:path*"
+      source: '/komic/:path*',
+      destination: 'https://cnn.kalsigi.com/komic/:path*'
     }
   ];
   },
@@ -92,4 +93,7 @@ const nextConfig = withPWA({
 
 
 
-export default nextConfig
+export default MillionLint.next({
+  enabled: true,
+  rsc: true
+})(nextConfig);

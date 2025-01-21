@@ -70,7 +70,10 @@ export default async function Chapter({ params }: any) {
           {data.title + " - " + chapter?.toString().replace(/-/g, " ")}
         </h1>
       </div>
-
+      <Share
+          url={`https://www.${process.env.site_name}.com/series/${title}-${data.url_code}/${chapter}`}
+          title={data.title + " - " + chapter?.toString().replace(/-/g, " ")}
+        />
       <article>
         <nav aria-label="Breadcrumb" className="max-w-3xl mx-auto">
           <ol className="flex flex-wrap justify-center mt-2 text-sm c4:justify-start gap-x-3 text-text-950">

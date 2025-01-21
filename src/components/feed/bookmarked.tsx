@@ -1,7 +1,7 @@
 'use client';
 
     import { Clock, BookOpen, Bookmark, BookmarkCheck } from "lucide-react";
-import { useState, useEffect, useCallback } from 'react'; 
+import { useState, useEffect, useCallback, memo } from 'react';
 import { getCookie, setCookie } from 'cookies-next';
 
 type Manga = {
@@ -16,7 +16,9 @@ type Manga = {
 };
 
 // BookmarkButton Component
-export default function BookmarkButton({ seriesUrl }: { seriesUrl: string }) {
+import React from 'react';
+
+const BookmarkButton = React.memo(function BookmarkButton({ seriesUrl }: { seriesUrl: string }) {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isShaking, setIsShaking] = useState(false);
 
@@ -103,4 +105,6 @@ export default function BookmarkButton({ seriesUrl }: { seriesUrl: string }) {
       `}</style>
     </div>
   );
-}
+});
+
+export default BookmarkButton;

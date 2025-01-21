@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Skeleton } from '../components/ui/skeleton';
 import { Badge } from '../components/ui/badge';
 import { Star } from 'lucide-react';
+import { useMemo } from 'react';
 
 interface RecommendedSeries {
   url_code: any;
@@ -126,71 +127,77 @@ const Recommendations: React.FC<RecommendationsProps> = ({ genres, seriesId, cla
     }
   }, [isMounted, recommendations]);
 
-  const SeriesCard = ({ series }: { series: RecommendedSeries }) => (
-    <Link 
-      href={`/series/${series.url}-${series.url_code}`}
-      className="group relative flex flex-col bg-background-100 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl"
-      prefetch={true}
-    >
-      <div className="relative aspect-[4/5] overflow-hidden">
-        <Image
-          src={series.cover_image_url}
-          alt={`Cover image for ${series.title}`}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-          priority={false}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background-900/90 via-background-900/40 to-transparent" />
-        
-        {series.status && (
-          <Badge className="absolute top-2 right-2 bg-primary-500">
-            {series.status}
-          </Badge>
-        )}
-        
-        {series.rating && (
-          <div className="absolute top-2 left-2 flex items-center gap-1 bg-background-900/80 text-text-50 px-2 py-1 rounded">
-            <Star className="w-4 h-4 text-yellow-400" />
-            <span className="text-sm font-medium">{series.rating.toFixed(1)}</span>
-          </div>
-        )}
-      </div>
+  const SeriesCard = ({ series }: { series: RecommendedSeries }) => {
+    const memoizedImage = useMemo(() => (
+      <Image
+        src={series.cover_image_url}
+        alt={`Cover image for ${series.title}`}
+        fill
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        className="object-cover transition-transform duration-300 group-hover:scale-105"
+        priority={false}
+      />
+    ), [series.cover_image_url, series.title]);
 
-      <div className="p-4 flex flex-col gap-2 flex-grow">
-        <h3 className="text-lg font-semibold line-clamp-2 text-text-900 group-hover:text-primary-600 transition-colors">
-          {series.title}
-        </h3>
-        
-        {series.description && (
-          <p className="text-sm text-text-600 line-clamp-2">
-            {series.description}
-          </p>
-        )}
+    return (
+      <Link 
+        href={`/series/${series.url}-${series.url_code}`}
+        className="group relative flex flex-col bg-background-100 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl"
+        prefetch={true}
+      >
+        <div className="relative aspect-[4/5] overflow-hidden">
+          {memoizedImage}
+          <div className="absolute inset-0 bg-gradient-to-t from-background-900/90 via-background-900/40 to-transparent" />
+          
+          {series.status && (
+            <Badge className="absolute top-2 right-2 bg-primary-500">
+              {series.status}
+            </Badge>
+          )}
+          
+          {series.rating && (
+            <div className="absolute top-2 left-2 flex items-center gap-1 bg-background-900/80 text-text-50 px-2 py-1 rounded">
+              <Star className="w-4 h-4 text-yellow-400" />
+              <span className="text-sm font-medium">{series.rating.toFixed(1)}</span>
+            </div>
+          )}
+        </div>
 
-        {series.genres && (
-          <div className="flex flex-wrap gap-1 mt-auto">
-            {series.genres.slice(0, 3).map((genre) => (
-              <Badge key={genre} variant="secondary" className="text-xs">
-                {genre}
-              </Badge>
-            ))}
-            {series.genres.length > 3 && (
-              <Badge variant="secondary" className="text-xs">
-                +{series.genres.length - 3}
-              </Badge>
-            )}
-          </div>
-        )}
+        <div className="p-4 flex flex-col gap-2 flex-grow">
+          <h3 className="text-lg font-semibold line-clamp-2 text-text-900 group-hover:text-primary-600 transition-colors">
+            {series.title}
+          </h3>
+          
+          {series.description && (
+            <p className="text-sm text-text-600 line-clamp-2">
+              {series.description}
+            </p>
+          )}
 
-        {series.total_chapters && (
-          <div className="text-sm text-text-500 mt-2">
-            {series.total_chapters} chapters
-          </div>
-        )}
-      </div>
-    </Link>
-  );
+          {series.genres && (
+            <div className="flex flex-wrap gap-1 mt-auto">
+              {series.genres.slice(0, 3).map((genre) => (
+                <Badge key={genre} variant="secondary" className="text-xs">
+                  {genre}
+                </Badge>
+              ))}
+              {series.genres.length > 3 && (
+                <Badge variant="secondary" className="text-xs">
+                  +{series.genres.length - 3}
+                </Badge>
+              )}
+            </div>
+          )}
+
+          {series.total_chapters && (
+            <div className="text-sm text-text-500 mt-2">
+              {series.total_chapters} chapters
+            </div>
+          )}
+        </div>
+      </Link>
+    );
+  };
 
   const LoadingSkeleton = () => (
     <div className="flex flex-col gap-4 bg-background-100 rounded-lg p-4">

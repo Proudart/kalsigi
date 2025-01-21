@@ -47,3 +47,5 @@ sitemap-state.json
 # public files
 /public/sw.js
 /public/workbox-*
+# Million Lint
+.million

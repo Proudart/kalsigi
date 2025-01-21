@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import dynamic from "next/dynamic";
 import ChapterProgress from "../chapter/chapterProgress";
 
@@ -33,7 +33,7 @@ interface ImageProps {
   onNavigate: (direction: "prev" | "next") => void;
 }
 
-const MyImage = ({
+const MyImage = memo(({
   src,
   alt,
   index,
@@ -59,7 +59,7 @@ const MyImage = ({
     onNavigate={onNavigate}
     key={src}
   />
-);
+));
 
 const ReadingTracker = ({
   panels,

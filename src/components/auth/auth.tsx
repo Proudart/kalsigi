@@ -27,6 +27,7 @@ interface User {
 }
 
 import { createAuthClient } from "better-auth/react";
+import { useCallback, useMemo } from "react";
 const baseURL = process.env.NODE_ENV === 'production' 
   ? 'https://www.kalsigi.com'
   : 'http://localhost:3000';
@@ -37,7 +38,7 @@ export default function Auth() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  async function getUser() {
+  const getUser = useCallback(async () => {
     try {
       setIsLoading(true);
       if (session) {
@@ -67,11 +68,83 @@ export default function Auth() {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [session]);
+
+  const disabled = useMemo(() => isPending || isLoading, [isPending, isLoading]);
 
   useEffect(() => {
     getUser();
-  }, [session]); // Only re-run when session changes
+  }, [getUser]);
+
+  const MemoizedIconLoader2 = useMemo(() => <IconLoader2 className="animate-spin" />, []);
+  
+  const MemoizedIconUser = useMemo(() => <IconUser />, []);
+
+  const UserMenu = useMemo(() => (
+    <DropdownMenuContent className="w-56 bg-accent-200">
+      <DropdownMenuItem>
+        <Link
+          prefetch={true}
+          href="/profile"
+          className="flex items-center space-x-2 bg-accent-400 text-accent-900 px-2 py-1 rounded-full"
+        >
+          <IconUser className="w-4 h-4" />
+          <span>{user as any}</span>
+        </Link>
+      </DropdownMenuItem>
+      <DropdownMenuItem>
+        <Link
+          href="/messages"
+          className="flex items-center space-x-2"
+          prefetch={true}
+        >
+          <IconMail className="w-4 h-4" />
+          <span>Messages</span>
+        </Link>
+      </DropdownMenuItem>
+      <DropdownMenuItem>
+        <Link
+          href="/settings"
+          className="flex items-center space-x-2"
+          prefetch={true}
+        >
+          <IconSettings className="w-4 h-4" />
+          <span>Settings</span>
+        </Link>
+      </DropdownMenuItem>
+      <DropdownMenuItem>
+        <div className="flex items-center space-x-2">
+          <IconLogout className="w-4 h-4" />
+          <SignOut />
+        </div>
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  ), [user]);
+
+  const AuthMenu = useMemo(() => (
+    <DropdownMenuContent className="w-56 bg-accent-200" align="end">
+      <DropdownMenuItem>
+        <Link
+          href="/signup"
+          className="flex items-center space-x-2"
+          prefetch={true}
+        >
+          <IconUserPlus className="w-4 h-4" />
+          <span>Sign Up</span>
+        </Link>
+      </DropdownMenuItem>
+      <DropdownMenuItem>
+        <Link
+          href="/signin"
+          className="flex items-center space-x-2"
+          prefetch={true}
+        >
+          <IconLogin className="w-4 h-4" />
+          <span>Sign In</span>
+        </Link>
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  ), []);
 
   return (
     <div className="relative">
@@ -79,82 +152,24 @@ export default function Auth() {
         <DropdownMenuTrigger
           className="flex items-center space-x-1 px-2 py-2 bg-blue-500 text-white rounded-lg ml-2 relative"
           onClick={getUser}
-          disabled={isPending || isLoading}
+          disabled={disabled}
         >
           {isPending || isLoading ? (
-            <IconLoader2 className="animate-spin" />
+            MemoizedIconLoader2
           ) : (
-            <IconUser />
+            MemoizedIconUser
           )}
         </DropdownMenuTrigger>
         {isPending || isLoading ? (
           <DropdownMenuContent className="w-56 bg-accent-200">
             <DropdownMenuItem className="flex justify-center">
-              <IconLoader2 className="animate-spin w-6 h-6" />
+              {MemoizedIconLoader2}
             </DropdownMenuItem>
           </DropdownMenuContent>
         ) : user ? (
-          <DropdownMenuContent className="w-56 bg-accent-200" key={user as any}>
-            <DropdownMenuItem>
-              <Link
-                prefetch={true}
-                href="/profile"
-                className="flex items-center space-x-2 bg-accent-400 text-accent-900 px-2 py-1 rounded-full"
-              >
-                <IconUser className="w-4 h-4" />
-                <span>{user as any}</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link
-                href="/messages"
-                className="flex items-center space-x-2"
-                prefetch={true}
-              >
-                <IconMail className="w-4 h-4" />
-                <span>Messages</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link
-                href="/settings"
-                className="flex items-center space-x-2"
-                prefetch={true}
-              >
-                <IconSettings className="w-4 h-4" />
-                <span>Settings</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <div className="flex items-center space-x-2">
-                <IconLogout className="w-4 h-4" />
-                <SignOut />
-              </div>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
+          UserMenu
         ) : (
-            <DropdownMenuContent className="w-56 bg-accent-200" key="auth" align="end">
-            <DropdownMenuItem>
-              <Link
-                href="/signup"
-                className="flex items-center space-x-2"
-                prefetch={true}
-              >
-                <IconUserPlus className="w-4 h-4" />
-                <span>Sign Up</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link
-                href="/signin"
-                className="flex items-center space-x-2"
-                prefetch={true}
-              >
-                <IconLogin className="w-4 h-4" />
-                <span>Sign In</span>
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
+          AuthMenu
         )}
       </DropdownMenu>
     </div>

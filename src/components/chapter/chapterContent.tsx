@@ -33,6 +33,7 @@ interface ImageProps {
   onNavigate: (direction: "prev" | "next") => void;
 }
 
+
 const MyImage = memo(({
   src,
   alt,
@@ -199,3 +200,5 @@ export default function ChapterContent({ panels,title,chapter }: ChapterContentP
     </>
   );
 }
+
+MyImage.displayName = "MyImage";

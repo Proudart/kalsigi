@@ -29,7 +29,7 @@ export default function Home() {
       <Continue />
       <Recommended />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <FeedNew title="Latest Updates" />
         <FeedNew title="Trending" />
       </div>
@@ -68,7 +68,7 @@ export default function Home() {
         <Feed title="Gender Bender" />
         <Feed title="Ecchi" />
         <Feed title="Mecha" />
-      </div>
+      </div> */}
     </div>
   );
 }

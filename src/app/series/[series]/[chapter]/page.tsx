@@ -60,7 +60,7 @@ async function fetchChapterData(url: string): Promise<SeriesData> {
   return response.json();
 }
 export async function generateMetadata({ params }: any): Promise<Metadata> {
-  const { series, chapter } = params;
+  const { series, chapter } = await params;
   const siteName = process.env.site_name;
   const baseUrl = `https://www.${siteName}.com`;
   const regex = /-\d{6}/;

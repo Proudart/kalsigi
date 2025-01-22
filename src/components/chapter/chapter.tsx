@@ -71,7 +71,7 @@ export default async function Chapter({ params }: any) {
         </h1>
       </div>
       <Share
-          url={`https://www.${process.env.site_name}.com/series/${title}-${data.url_code}/${chapter}`}
+          url={`https://www.${process.env.site_name}.com/series/${title}/${chapter}`}
           title={data.title + " - " + chapter?.toString().replace(/-/g, " ")}
         />
       <article>
@@ -129,7 +129,7 @@ export default async function Chapter({ params }: any) {
         </ListboxComponent>
 
         <Share
-          url={`https://www.${process.env.site_name}.com/series/${title}-${data.url_code}/${chapter}`}
+          url={`https://www.${process.env.site_name}.com/series/${title}/${chapter}`}
           title={data.title + " - " + chapter?.toString().replace(/-/g, " ")}
         />
         {summary && (

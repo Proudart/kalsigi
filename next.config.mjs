@@ -88,8 +88,7 @@ const nextConfig = withPWA({
   bundlePagesRouterDependencies: true,
   experimental: {
     optimizePackageImports: ['tabler/icons-react','@tabler/icons-react'],
-    modern: true,
-  },
+    },
   compress: true
 });
 

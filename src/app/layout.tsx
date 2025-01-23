@@ -9,7 +9,7 @@ import { Suspense } from "react";
 import Loader from "../components/load";
 import type { Viewport, Metadata } from "next";
 
-const inter = Poppins({ subsets: ["latin"], weight: "400" });
+const inter = Poppins({ subsets: ["latin"], weight: "400", preload: true });
 
 const Footer = dynamic(() => import("../components/nav/footer"), { ssr: true });
 const Cookie = dynamic(() => import("../components/nav/cookies"), {

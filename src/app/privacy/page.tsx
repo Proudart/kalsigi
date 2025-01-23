@@ -4,7 +4,7 @@ export const metadata = {
   title: "privacy",
   description: `The only manga sites you'll need are those that bring together your favourite or most popular translators into one place, such as Reaperscans and Asurascans, and that is what we do at ${process.env.site_name}.`,
   icons: {
-    icon: "/kalsigi.webp",
+    icon: "/skaihua.webp",
   },
   keywords: ["Manga", "Read Manga", "Read Manga Online", "Manga Online", "Manga Reader", "Manga Scans", "English Manga", "Manga Sites", "Manga Website", "Manga Translation", "Manga Translated", "Manga Scans Online", "Manga Website", "Where Can I Read Manga", "Read Manga Free", `${process.env.site_name} Website`],
 
@@ -17,7 +17,7 @@ function Series() {
           <Head>
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>Privacy</title>
-          <link rel="icon" href="/kalsigi.webp" /> 
+          <link rel="icon" href="/skaihua.webp" /> 
           </Head>
           <div className="min-h-screen mx-auto">
             <div className="flex flex-col items-center justify-center h-auto p-10 m-10 rounded-xl min-h-60 bg-silver">

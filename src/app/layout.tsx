@@ -2,7 +2,7 @@ import "./globals.css";
 import { Poppins } from "next/font/google";
 import dynamic from "next/dynamic";
 import { Toaster } from "../components/ui/toaster";
-import logo from "../../public/kalsigi.webp";
+import logo from "../../public/skaihua.webp";
 import PlausibleProvider from "next-plausible";
 import { ThemeProvider } from "next-themes";
 import { Suspense } from "react";

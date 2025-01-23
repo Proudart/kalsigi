@@ -1,45 +1,45 @@
 {
-    "name": "kalsigi",
-    "short_name": "kalsigi",
-    "description": "The only manga sites you'll need are those that bring together your favourite or most popular translators into one place, such as Reaperscans and Asurascans, and that is what we do at kalsigi.",
+    "name": "skaihua",
+    "short_name": "skaihua",
+    "description": "The only manga sites you'll need are those that bring together your favourite or most popular translators into one place, such as Reaperscans and Asurascans, and that is what we do at skaihua.",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#141f1b",
     "theme_color": "#c3d5ce",
     "icons": [
       {
-        "src": "/kalsigi-192.png",
+        "src": "/skaihua-192.png",
         "sizes": "192x192",
         "type": "image/png",
         "purpose": "any"
       },
       {
-        "src": "/kalsigi-512.png",
+        "src": "/skaihua-512.png",
         "sizes": "512x512",
         "type": "image/png",
         "purpose": "any"
       },
       {
-        "src": "/kalsigi.png",
+        "src": "/skaihua.png",
         "sizes": "500x500",
         "type": "image/png",
         "purpose": "any"
       },
       {
-        "src": "/kalsigi-144.png",
+        "src": "/skaihua-144.png",
         "sizes": "144x144",
         "type": "image/png",
         "purpose": "any"
       }
     ],"screenshots": [
     {
-      "src": "/kalsigi-desktop.png",
+      "src": "/skaihua-desktop.png",
       "sizes": "1278x801",
       "type": "image/png",
       "form_factor": "wide"
     },
     {
-      "src": "/kalsigi-phone.png",
+      "src": "/skaihua-phone.png",
       "sizes": "821x934",
       "type": "image/png"
     }

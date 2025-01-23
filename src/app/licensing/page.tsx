@@ -51,7 +51,7 @@ const ProtectedContent = ({ isVisible }: ProtectedContentProps) => {
 
         <div className="bg-primary-100 p-4 rounded-lg mt-4">
           <h3 className="font-semibold mb-2">Contact Information for DMCA Notices:</h3>
-          <p>Email: dmca@kalsigi.com</p>
+          <p>Email: dmca@skaihua.com</p>
           <p className="text-sm text-text-600 mt-2">
             Please allow 2-3 business days for a response
           </p>

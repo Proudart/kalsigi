@@ -74,11 +74,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/kalsigi-144.png", sizes: "144x144", type: "image/png" },
-      { url: "/kalsigi-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/kalsigi-512.png", sizes: "512x512", type: "image/png" },
+      { url: "/skaihua-144.png", sizes: "144x144", type: "image/png" },
+      { url: "/skaihua-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/skaihua-512.png", sizes: "512x512", type: "image/png" },
     ],
-    apple: [{ url: "/kalsigi.webp", sizes: "192x192", type: "image/webp" }],
+    apple: [{ url: "/skaihua.webp", sizes: "192x192", type: "image/webp" }],
   },
 };
 

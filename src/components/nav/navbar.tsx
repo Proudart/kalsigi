@@ -15,7 +15,6 @@ const navigation = [
 type Props = {
   logo: StaticImageData
 }
-
 export default function Navbar({ logo }: Props) {
   return (
     <header className="border-b">

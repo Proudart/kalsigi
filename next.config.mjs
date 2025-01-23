@@ -81,7 +81,7 @@ const nextConfig = withPWA({
     },
     {
       source: '/komic/:path*',
-      destination: 'https://cnn.kalsigi.com/komic/:path*'
+      destination: 'https://cnn.skaihua.com/komic/:path*'
     }
   ];
   },

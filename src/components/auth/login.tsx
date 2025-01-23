@@ -98,7 +98,7 @@ export function SignInForm() {
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input 
-                  placeholder={'user@kalsigi.com'} 
+                  placeholder={'user@skaihua.com'} 
                   {...field} 
                   disabled={isLoading}
                 />

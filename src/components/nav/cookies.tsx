@@ -15,13 +15,28 @@ const CookieConsent = React.memo(() => {
       setCookie("kkt", newKkt, { maxAge: 365 * 24 * 60 * 60 });
     }
   };
+
   React.useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
     const checkConsent = async () => {
       const consent = await hasCookie("localConsent");
-      setShowConsent(consent);
+      if (!consent) {
+        // Delay banner rendering by 3 seconds after LCP
+        timeoutId = setTimeout(() => {
+          setShowConsent(false);
+        }, 3000);
+      } else {
+        setShowConsent(true);
+      }
     };
+
     checkConsent();
     generateKadkomiToken();
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, []);
 
   const acceptCookie = () => {
@@ -39,7 +54,7 @@ const CookieConsent = React.memo(() => {
   }
 
   return (
-    <div className="fixed  bg-opacity-70 z-50">
+    <div className="fixed bg-opacity-70 z-50">
       <div className="fixed bottom-0 left-0 right-0 flex flex-col items-center justify-between px-4 py-8 bg-primary-400 space-y-4">
         <span className="text-dark text-base text-center">
           This website uses cookies to improve user experience. By using our
@@ -48,7 +63,6 @@ const CookieConsent = React.memo(() => {
           <Link
             className="text-blue-500"
             href="https://www.cookiepolicygenerator.com/live.php?token=0u740S0Og1qR8oiFMMHCJtPnHFHLlGyR"
-            
           >
             {" "}
             Learn more
@@ -74,5 +88,4 @@ const CookieConsent = React.memo(() => {
 });
 
 CookieConsent.displayName = "CookieConsent";
-
 export default CookieConsent;

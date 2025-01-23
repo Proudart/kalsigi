@@ -24,7 +24,7 @@ export default function Navbar({ logo }: Props) {
           <Link href="/" className="flex items-center">
             <Image
               src={logo || "/placeholder.svg"}
-              alt={process.env.site_name as string}
+              alt={'skaihua logo'}
               width={40}
               height={40}
               className="mr-2"

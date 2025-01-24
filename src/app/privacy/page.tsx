@@ -6,7 +6,7 @@ export const metadata = {
   icons: {
     icon: "/skaihua.webp",
   },
-  keywords: ["Manga", "Read Manga", "Read Manga Online", "Manga Online", "Manga Reader", "Manga Scans", "English Manga", "Manga Sites", "Manga Website", "Manga Translation", "Manga Translated", "Manga Scans Online", "Manga Website", "Where Can I Read Manga", "Read Manga Free", `${process.env.site_name} Website`],
+  keywords: ["Manga", "Read Manga", "Read Manga Online", "Manga Online", "Manga Reader", "Manga Scans", "English Manga", "Manga Sites", "Manga Website", "Manga Translation", "Manga Translated", "Manga Scans Online", "Manga Website", "Where Can I Read Manga", "Read Manga", `${process.env.site_name} Website`],
 
 }
 

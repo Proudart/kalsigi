@@ -86,11 +86,10 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
       data.author,
       data.status,
       Array.isArray(summary.keywords) ? summary.keywords.join(', ') : summary.keywords,
-      'free manga',
       'online manga reader'
     ].filter(Boolean).join(", ");
 
-    const description = `Read ${data.title} ${chapterTitle} online for free. ${summary.tldr || ''} ${data.description?.slice(0, 150)}... Continue reading at ${siteName}.`;
+    const description = `Read ${data.title} ${chapterTitle} online. ${summary.tldr || ''} ${data.description?.slice(0, 150)}... Continue reading at ${siteName}.`;
     return {
       title: fullTitle,
       description: description.trim(),
@@ -132,7 +131,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
   } catch (error) {
     return {
       title: `404 Not Found | ${siteName}`,
-      description: `Read manga and comics online for free at ${siteName}.`,
+      description: `Read manga and comics online at ${siteName}.`,
       robots: { index: false }
     };
   }

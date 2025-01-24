@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     "Manga Translated",
     "Manga Scans Online",
     "Where Can I Read Manga",
-    "Read Manga Free",
+    "Read Manga",
   ],
   description: `The only manga sites you'll need are those that bring together your favourite or most popular translators into one place, that is what we do at ${process.env.site_name}.`,
   openGraph: {

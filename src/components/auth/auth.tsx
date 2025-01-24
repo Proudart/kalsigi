@@ -33,6 +33,7 @@ const baseURL = process.env.NODE_ENV === 'production'
   : 'http://localhost:3000';
 const { useSession } = createAuthClient({baseURL: baseURL});
 
+
 export default function Auth() {
   const { data: session, isPending } = useSession();
   const [user, setUser] = useState<User | null>(null);

@@ -142,7 +142,7 @@ const SeriesChat: React.FC<{ seriesId: string }> = ({ seriesId }) => {
     };
 
     return (
-      <div className={`bg-background-100 p-4 rounded-lg shadow-sm border border-background-300 ${depth > 0 ? 'ml-4 mt-2' : 'mb-4'}`}>
+      <div className={`bg-background-100 p-4 rounded-lg shadow-xs border border-background-300 ${depth > 0 ? 'ml-4 mt-2' : 'mb-4'}`}>
         <div className="flex justify-between items-center mb-2">
           <p className="font-semibold text-text-800">{message.username}</p>
           <p className="text-sm text-text-500">{new Date(message.createdAt).toLocaleDateString()}</p>

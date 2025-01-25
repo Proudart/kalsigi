@@ -7,8 +7,8 @@ export default function DiscoverMangaSkeleton() {
     <section className="mt-8 bg-background-100 rounded-lg shadow-md p-4">
       <Skeleton className="h-8 w-48 mb-4" />
       <div className="flex flex-col sm:flex-row gap-4 mb-4">
-        <div className="flex flex-grow">
-          <Input disabled className="flex-grow" />
+        <div className="flex grow">
+          <Input disabled className="grow" />
         </div>
         <Skeleton className="h-10 w-32" />
       </div>

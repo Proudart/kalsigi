@@ -216,7 +216,7 @@ function SeriesContent() {
   };
 
   return (
-    <div className="bg-background-100 min-h-screen space-y-12 flex-grow container mx-auto px-4 py-8">
+    <div className="bg-background-100 min-h-screen space-y-12 grow container mx-auto px-4 py-8">
       <div className="mx-auto">
         <div className="flex flex-col items-center justify-center h-auto p-5 mb-4 bg-background-200 rounded-xl">
           <h1 className="text-2xl font-bold text-center text-text-900">

@@ -25,7 +25,7 @@ const SeriesImage = ({
   src,
   alt,
   width,
-  height,
+  height,     
 }: {
   src: string;
   alt: string;
@@ -37,9 +37,8 @@ const SeriesImage = ({
     alt={alt}
     width={width}
     height={height}
-    className="w-full h-[200px] object-cover rounded-md aspect-[2/3]"
+    className="w-full h-[200px] object-cover rounded-md aspect-2/3"
     loading="lazy"
-    placeholder="blur"
     blurDataURL={`${src}&w=16&q=1`}
   />
 );

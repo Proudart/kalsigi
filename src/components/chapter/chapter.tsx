@@ -100,7 +100,7 @@ export default async function Chapter({ params }: any) {
         {summary?.synopsis && (
           <div className="max-w-3xl mx-auto mt-4 mb-4 space-y-4">
             <section
-              className="bg-background-50 p-4 rounded-lg shadow-sm"
+              className="bg-background-50 p-4 rounded-lg shadow-xs"
               aria-label="Chapter Synopsis"
             >
               <h2 className="text-lg font-semibold text-text-900 mb-2">
@@ -136,7 +136,7 @@ export default async function Chapter({ params }: any) {
           <div className="max-w-3xl mx-auto mt-4 mb-4 space-y-4">
             {summary.tldr && (
               <section
-                className="bg-background-50 p-4 rounded-lg shadow-sm"
+                className="bg-background-50 p-4 rounded-lg shadow-xs"
                 aria-label="Chapter Summary"
               >
                 <h2 className="text-lg font-semibold text-text-900 mb-2">

@@ -29,7 +29,7 @@ export default async function SignUpPage() {
           className="mr-4 h-11 w-11"
         />
       </Link>
-      <div className="w-full max-w-xl space-y-8 rounded-lg p-6 shadow sm:p-8  bg-accent-300">
+      <div className="w-full max-w-xl space-y-8 rounded-lg p-6 shadow-sm sm:p-8  bg-accent-300">
         <h2 className="text-2xl font-bold ">Sign in to your account</h2>
         <SignInForm />
       </div>

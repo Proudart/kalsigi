@@ -26,7 +26,7 @@ const SeriesImage = ({
       alt={alt}
       width={width}
       height={height}
-      className="object-cover w-full aspect-[2/3]"
+      className="object-cover w-full aspect-2/3"
       loading="lazy"
     />
   );
@@ -75,11 +75,11 @@ const DiscoverManga: React.FC = () => {
     <section className="mt-8 bg-background-100 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4 text-text-900">Discover Manga</h2>
       <div className="flex flex-col sm:flex-row gap-4 mb-4">
-        <div className="flex flex-grow">
+        <div className="flex grow">
           <Input
             type="text"
             placeholder="Search manga..."
-            className="flex-grow"
+            className="grow"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />

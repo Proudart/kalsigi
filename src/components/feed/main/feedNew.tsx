@@ -41,9 +41,8 @@ const MangaImage = ({
       alt={alt}
       width={60}
       height={80}
-      className="w-[60px] h-[80px] object-cover rounded-md aspect-[2/3]"
+      className="w-[60px] h-[80px] object-cover rounded-md aspect-2/3"
       loading="lazy"
-      placeholder="blur"
       blurDataURL={`${src}&w=16&q=1`}
     />
   );

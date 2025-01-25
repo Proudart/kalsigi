@@ -70,7 +70,7 @@ function Series() {
   };
 
   return (
-    <div className="bg-background-100 min-h-screen space-y-12 flex-grow container mx-auto px-4 py-8">
+    <div className="bg-background-100 min-h-screen space-y-12 grow container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold text-center text-text-800 mb-8">Bookmarks</h1>
 
       {error && <p className="text-red-500">no series bookmarked</p>}
@@ -87,7 +87,7 @@ function Series() {
               </Link>
               <button
                 onClick={() => handleRemoveBookmark(series.url)}
-                className="mt-2 px-4 py-2 bg-red-500 text-white font-medium rounded hover:bg-red-600 transition-colors duration-300"
+                className="mt-2 px-4 py-2 bg-red-500 text-white font-medium rounded-sm hover:bg-red-600 transition-colors duration-300"
               >
                 Remove
               </button>

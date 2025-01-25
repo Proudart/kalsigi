@@ -23,7 +23,7 @@ const Feed = dynamic(() => import("../components/feed/main/feed"), {
 
 export default function Home() {
   return (
-    <div className="space-y-12 flex-grow container mx-auto px-4 py-8">
+    <div className="space-y-12 grow container mx-auto px-4 py-8">
       <DiscoverManga />
       <Updated />
       <Continue />

@@ -82,7 +82,7 @@ const MangaGenreFilter = ({ genres, statusOptions, onFilter }: Props) => {
             type="text"
             value={searchQuery}
             onChange={handleSearchInputChange}
-            className="w-full px-3 py-2 bg-background-100 border rounded-lg border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-500 text-text-900"
+            className="w-full px-3 py-2 bg-background-100 border rounded-lg border-primary-300 focus:outline-hidden focus:ring-2 focus:ring-primary-500 text-text-900"
             placeholder="Enter title..."
           />
         </div>
@@ -93,7 +93,7 @@ const MangaGenreFilter = ({ genres, statusOptions, onFilter }: Props) => {
             <select
               value={sortBy}
               onChange={handleSortByChange}
-              className="w-full px-3 py-2 bg-background-100 border rounded-lg border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-500 text-text-900"
+              className="w-full px-3 py-2 bg-background-100 border rounded-lg border-primary-300 focus:outline-hidden focus:ring-2 focus:ring-primary-500 text-text-900"
             >
               <option value="title">Title</option>
               <option value="release_date">Release Date</option>
@@ -107,7 +107,7 @@ const MangaGenreFilter = ({ genres, statusOptions, onFilter }: Props) => {
             <select
               value={sortOrder}
               onChange={handleSortOrderChange}
-              className="w-full px-3 py-2 bg-background-100 border rounded-lg border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-500 text-text-900"
+              className="w-full px-3 py-2 bg-background-100 border rounded-lg border-primary-300 focus:outline-hidden focus:ring-2 focus:ring-primary-500 text-text-900"
             >
               <option value="asc">Ascending</option>
               <option value="desc">Descending</option>
@@ -123,14 +123,14 @@ const MangaGenreFilter = ({ genres, statusOptions, onFilter }: Props) => {
               name="start"
               value={dateRange.start}
               onChange={handleDateRangeChange}
-              className="flex-1 px-3 py-2 bg-background-100 border rounded-lg border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-500 text-text-900"
+              className="flex-1 px-3 py-2 bg-background-100 border rounded-lg border-primary-300 focus:outline-hidden focus:ring-2 focus:ring-primary-500 text-text-900"
             />
             <input
               type="date"
               name="end"
               value={dateRange.end}
               onChange={handleDateRangeChange}
-              className="flex-1 px-3 py-2 bg-background-100 border rounded-lg border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-500 text-text-900"
+              className="flex-1 px-3 py-2 bg-background-100 border rounded-lg border-primary-300 focus:outline-hidden focus:ring-2 focus:ring-primary-500 text-text-900"
             />
           </div>
         </div>

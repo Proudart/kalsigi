@@ -19,7 +19,7 @@ export default function Home() {
   return (
     <div className="w-full p-4 bg-background-100 dark:bg-background-900 text-text-900 dark:text-text-100">
       <button
-        className="p-2 bg-primary-500 dark:bg-primary-700 text-white rounded"
+        className="p-2 bg-primary-500 dark:bg-primary-700 text-white rounded-sm"
       >
         hello
       </button>

@@ -67,7 +67,7 @@ function SearchBox() {
         <IconSearch className="text-text-50 cursor-pointer" />
       </div>
       <input
-        className="w-full pl-12 pr-3 py-2 rounded-md bg-background-800 text-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+        className="w-full pl-12 pr-3 py-2 rounded-md bg-background-800 text-primary-200 focus:outline-hidden focus:ring-2 focus:ring-primary-500 focus:border-transparent"
         placeholder="Search"
         value={searchTerm}
         onChange={handleChange}

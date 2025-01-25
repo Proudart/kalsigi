@@ -41,7 +41,7 @@ export default function GenerateTags({
                 {seoTags.map((tag: string, index: number) => (
                     <div 
                         key={tag + index} 
-                        className="p-3 bg-secondary-100 dark:bg-secondary-800 rounded-md shadow-sm hover:shadow-md transition-shadow duration-300 text-text-700 dark:text-text-200 text-sm"
+                        className="p-3 bg-secondary-100 dark:bg-secondary-800 rounded-md shadow-xs hover:shadow-md transition-shadow duration-300 text-text-700 dark:text-text-200 text-sm"
                     >
                         {tag}
                     </div>

@@ -12,7 +12,7 @@ const Card = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
         ref={ref}
         className={cn(
           "transition-transform",
-          "rounded-lg border bg-card text-card-foreground shadow-sm",
+          "rounded-lg border bg-card text-card-foreground shadow-xs",
           className
         )}
         {...props}

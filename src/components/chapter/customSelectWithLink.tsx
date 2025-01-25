@@ -80,7 +80,7 @@ const CustomSelectWithLink: React.FC<CustomSelectWithLinkProps> = ({
         ref={buttonRef}
         id="dropdownDefaultButton"
         onClick={handleButtonClick}
-        className="w-full text-text-950 bg-primary-500 hover:bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-between"
+        className="w-full text-text-950 bg-primary-500 hover:bg-primary-600 focus:ring-4 focus:outline-hidden focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-between"
         type="button"
         aria-expanded={isOpen}
       >
@@ -96,7 +96,7 @@ const CustomSelectWithLink: React.FC<CustomSelectWithLinkProps> = ({
         <div
           ref={dropdownRef}
           id="dropdown"
-          className="absolute left-0 right-0 z-50 w-full mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 max-h-64 overflow-y-auto overflow-x-hidden"
+          className="absolute left-0 right-0 z-50 w-full mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 max-h-64 overflow-y-auto overflow-x-hidden"
         >
           <ul
             className="py-2 text-sm text-text-950 bg-primary-500"

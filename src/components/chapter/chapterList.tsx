@@ -104,7 +104,7 @@ const ListboxComponent: React.FC<ListboxComponentProps> = React.memo(
       return (
         <button disabled={isDisabled}>
           <Link
-            className={`px-4 py-2 font-bold rounded-full shadow-lg focus:shadow-outline-blue focus:outline-none ${
+            className={`px-4 py-2 font-bold rounded-full shadow-lg focus:shadow-outline-blue focus:outline-hidden ${
               isDisabled
                 ? "bg-gray-400 pointer-events-none"
                 : "bg-accent-500 hover:bg-accent-400"

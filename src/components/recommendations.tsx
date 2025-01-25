@@ -145,9 +145,9 @@ const Recommendations: React.FC<RecommendationsProps> = ({ genres, seriesId, cla
         className="group relative flex flex-col bg-background-100 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl"
         prefetch={true}
       >
-        <div className="relative aspect-[4/5] overflow-hidden">
+        <div className="relative aspect-4/5 overflow-hidden">
           {memoizedImage}
-          <div className="absolute inset-0 bg-gradient-to-t from-background-900/90 via-background-900/40 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-background-900/90 via-background-900/40 to-transparent" />
           
           {series.status && (
             <Badge className="absolute top-2 right-2 bg-primary-500">
@@ -156,14 +156,14 @@ const Recommendations: React.FC<RecommendationsProps> = ({ genres, seriesId, cla
           )}
           
           {series.rating && (
-            <div className="absolute top-2 left-2 flex items-center gap-1 bg-background-900/80 text-text-50 px-2 py-1 rounded">
+            <div className="absolute top-2 left-2 flex items-center gap-1 bg-background-900/80 text-text-50 px-2 py-1 rounded-sm">
               <Star className="w-4 h-4 text-yellow-400" />
               <span className="text-sm font-medium">{series.rating.toFixed(1)}</span>
             </div>
           )}
         </div>
 
-        <div className="p-4 flex flex-col gap-2 flex-grow">
+        <div className="p-4 flex flex-col gap-2 grow">
           <h3 className="text-lg font-semibold line-clamp-2 text-text-900 group-hover:text-primary-600 transition-colors">
             {series.title}
           </h3>
@@ -201,7 +201,7 @@ const Recommendations: React.FC<RecommendationsProps> = ({ genres, seriesId, cla
 
   const LoadingSkeleton = () => (
     <div className="flex flex-col gap-4 bg-background-100 rounded-lg p-4">
-      <Skeleton className="w-full aspect-[2/3] rounded-lg" />
+      <Skeleton className="w-full aspect-2/3 rounded-lg" />
       <Skeleton className="h-6 w-3/4" />
       <Skeleton className="h-4 w-full" />
       <div className="flex gap-2">

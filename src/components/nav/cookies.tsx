@@ -70,13 +70,13 @@ const CookieConsent = React.memo(() => {
         </span>
         <div className="flex space-x-4">
           <button
-            className="bg-green-500 py-2 px-8 rounded text-white"
+            className="bg-green-500 py-2 px-8 rounded-sm text-white"
             onClick={acceptCookie}
           >
             Accept
           </button>
           <button
-            className="bg-red-500 py-2 px-8 rounded text-white"
+            className="bg-red-500 py-2 px-8 rounded-sm text-white"
             onClick={rejectCookie}
           >
             Reject

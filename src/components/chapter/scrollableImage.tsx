@@ -58,7 +58,7 @@ const ScrollableImage: React.FC<ScrollableImageProps> = (props) => {
     disabled:bg-background-300 disabled:text-text-500
     dark:bg-primary-700 dark:text-background-50 dark:hover:bg-primary-600
     dark:disabled:bg-background-700 dark:disabled:text-text-600
-    focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50`;
+    focus:outline-hidden focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50`;
 
   return (
     <div ref={imageRef} className={`image-container ${containerClasses[mode as keyof typeof containerClasses]} `}>

@@ -125,7 +125,7 @@ const Bookmark: React.FC<BookmarkProps> = ({ title }) => {
 
   const bookmarkButtonClass = useMemo(
     () =>
-      classNames("px-6 py-2 font-semibold rounded transition duration-150", {
+      classNames("px-6 py-2 font-semibold rounded-sm transition duration-150", {
         "bg-accent-400 hover:bg-blue-600": bookmarked,
         "bg-gray-200 hover:bg-gray-300 text-gray-800": !bookmarked,
       }),

@@ -27,7 +27,7 @@ const MainSeriesInfo: React.FC<MainSeriesInfoProps> = ({ data }) => {
                 <div className="flex flex-col md:flex-row gap-6 lg:gap-8">
                     {/* Cover Image Section */}
                     <div className="w-full md:w-[300px] lg:w-[400px] shrink-0">
-                        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg 
+                        <div className="relative aspect-3/4 w-full overflow-hidden rounded-lg 
                             shadow-lg bg-background-100 dark:bg-background-800">
                             <Image
                                 src={data.cover_image_url}

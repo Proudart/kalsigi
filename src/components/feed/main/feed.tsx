@@ -22,7 +22,7 @@ import { Clock, BookOpen } from "lucide-react";
       alt={alt}
       width={150}
       height={200}
-      className="object-cover w-full aspect-[2/3]"
+      className="object-cover w-full aspect-2/3"
       loading="lazy"
     />
   );

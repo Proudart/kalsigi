@@ -52,7 +52,6 @@ const MyImage = memo(({
     height={800}
     loading={index <= 3 ? "eager" : "lazy"}
     priority={index <= 3}
-    placeholder="blur"
     blurDataURL={`https://image.kadkomi.com/process_image?url=${src}&width=${1}&height=${1}&quality=1&blur=true`}
     mode={mode}
     totalImages={totalImages}

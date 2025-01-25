@@ -12,7 +12,6 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get("search") || "";
     const genre = searchParams.get("genre") || "";
     const limit = 10;
-    console.log('search:', genre);
     let query = sql`
       SELECT
         title,

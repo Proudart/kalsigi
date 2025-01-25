@@ -52,8 +52,7 @@ const Bookmark: React.FC<BookmarkProps> = ({ title }) => {
       const kkt = getCookie("kkt") ? getCookie("kkt") + "" : "";
       if (!kkt) {
         // Handle case where user is not logged in
-        console.log("Please log in to rate");
-        return;
+ssss        return;
       }
 
       try {

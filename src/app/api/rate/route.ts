@@ -5,7 +5,6 @@ import { and } from "drizzle-orm";
 
 export async function POST(request: Request) {
   const { seriesUrl, rating, userId } = await request.json();
-  console.log(seriesUrl, rating, userId);
   // Check if userId is provided
   if (!userId) {
     return new Response("User ID is required", { status: 400 });

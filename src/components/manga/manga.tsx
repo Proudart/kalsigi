@@ -22,7 +22,6 @@ export default async function Manga({
     // `http://localhost:3000/api/title?url=${modifiedTitle}`
   );
   const data = await res.json();
-  console.log(data)
 
   return (
     <div className="bg-backgroundmain min-h-screen overflow-y-auto">

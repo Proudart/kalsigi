@@ -70,7 +70,7 @@ export const seriesRelations = relations(series, ({ many }) => ({
 
 // Keep existing tables with updated references to new series table
 export const ratings = pgTable("ratings", {
-  id: bigserial("id", { mode: "number" }).primaryKey(),
+  id: uuid("id").primaryKey().defaultRandom(),
   series_url: text("series_url").references(() => series.url),
   rating: integer("rating"),
   user_id: text("user_id"),

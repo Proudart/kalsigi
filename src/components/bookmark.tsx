@@ -8,41 +8,72 @@ interface BookmarkProps {
 }
 
 const Bookmark: React.FC<BookmarkProps> = ({ title }) => {
-
   const regex = /-\d{6}/;
   const modifiedTitle = title.replace(regex, '');
-
 
   const [rating, setRating] = useState<number>(0);
   const [bookmarked, setBookmarked] = useState<boolean>(false);
 
-  const fetchWithErrorHandling = async (modifiedTitle: string, options: RequestInit) => {
+  const fetchWithErrorHandling = async (url: string, options: RequestInit) => {
     try {
-      const response = await fetch(modifiedTitle, options);
+      const response = await fetch(url, options);
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
+      return await response.json();
     } catch (error) {
       console.error(error);
+      throw error;
     }
   };
 
+  // Fetch initial rating
+  useEffect(() => {
+    const fetchInitialRating = async () => {
+      const kkt = getCookie("kkt") ? getCookie("kkt") + "" : "";
+      if (!kkt) return;
+
+      try {
+        const response = await fetch(`/api/rate?seriesUrl=${modifiedTitle}&userId=${kkt}`);
+        const data = await response.json();
+        if (data && data.rating) {
+          setRating(data.rating);
+        }
+      } catch (error) {
+        console.error("Error fetching initial rating:", error);
+      }
+    };
+
+    fetchInitialRating();
+  }, [modifiedTitle]);
+
   const handleRating = useCallback(
     async (newRating: number) => {
-      setRating(newRating);
       const kkt = getCookie("kkt") ? getCookie("kkt") + "" : "";
+      if (!kkt) {
+        // Handle case where user is not logged in
+        console.log("Please log in to rate");
+        return;
+      }
 
-      await fetchWithErrorHandling("/api/rate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          seriesUrl: modifiedTitle,
-          rating: newRating,
-          userId: kkt,
-        }),
-      });
+      try {
+        await fetchWithErrorHandling("/api/rate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            seriesUrl: modifiedTitle,
+            rating: newRating,
+            userId: kkt,
+          }),
+        });
+        setRating(newRating);
+      } catch (error) {
+        console.error("Error setting rating:", error);
+        // Optionally reset rating if the request failed
+        // setRating(prevRating);
+      }
     },
     [modifiedTitle]
   );
@@ -132,7 +163,5 @@ const Bookmark: React.FC<BookmarkProps> = ({ title }) => {
     </div>
   );
 };
-
-
 
 export default Bookmark;

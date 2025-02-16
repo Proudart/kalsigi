@@ -7,7 +7,6 @@ const Share = dynamic(() => import("../share"));
 
 const ChapterSearch = dynamic(() => import("./chapterSearch"));
 
-
 const MainSeriesInfo = dynamic(() => import("./mainSeriesInfo"));
 const Recommended = dynamic(() => import("../recommendations"));
 export default async function Manga({

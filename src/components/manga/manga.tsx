@@ -4,7 +4,6 @@ const Bookmark = dynamic(() => import("../bookmark"));
 const SeriesChat = dynamic(() => import("./seriesChat"));
 
 const Share = dynamic(() => import("../share"));
-
 const ChapterSearch = dynamic(() => import("./chapterSearch"));
 
 const MainSeriesInfo = dynamic(() => import("./mainSeriesInfo"));

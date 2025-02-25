@@ -86,7 +86,6 @@ function SeriesContent() {
   const getParamValue = (key: string, defaultValue: string = "") => {
     return searchParams?.get(key) || defaultValue;
   };
-
   const page = parseInt(getParamValue("page", "1"), 10);
   const selectedGenres = getParamValue("genres").split(",").filter(Boolean);
   const searchQuery = getParamValue("search");

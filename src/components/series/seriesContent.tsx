@@ -106,7 +106,8 @@ function SeriesContent() {
     )}&sortBy=${sortBy}&sortOrder=${sortOrder}&minRating=${minRating}&status=${status.join(
       ","
     )}`,
-    getSeries
+    getSeries,
+    { revalidateOnFocus: false, dedupingInterval: 60000 }
   );
 
   useEffect(() => {

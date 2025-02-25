@@ -78,4 +78,4 @@ function formatDistanceToNow(date: Date) {
   return result;
 }
 
-export const revalidate = 0;
+export const revalidate = 3600;

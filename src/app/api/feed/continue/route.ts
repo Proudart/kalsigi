@@ -46,4 +46,4 @@ export async function GET(request: Request) {
   return NextResponse.json(result);
 }
 
-export const revalidate = 0;
+export const revalidate = 3600;

@@ -16,7 +16,8 @@ const getSeries = async (url: string) => {
 function Series() {
   const { data, isLoading } = useSWR(
     `api/search-all`,
-    getSeries
+    getSeries,
+    { revalidateOnFocus: false, dedupingInterval: 60000 }
   );
 
   if (isLoading) return <div>Error loading data.</div>;

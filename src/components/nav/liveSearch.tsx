@@ -27,7 +27,8 @@ function SearchBox() {
   // Fetching data only if searchTerm is not empty
   const { data: searchResults = [] } = useSWR(
     searchTerm ? `/api/searchbar?query=${searchTerm}` : null,
-    getSeries
+    getSeries,
+    { revalidateOnFocus: false, dedupingInterval: 60000 }
   );
 
   useEffect(() => {

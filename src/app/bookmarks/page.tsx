@@ -39,7 +39,8 @@ function Series() {
   
   const { data: seriesData, error, mutate } = useSWR(
     bookmarkedSeries ? `/api/bookmark?series=${bookmarkedSeries.join(',')}` : null, 
-    getSeries
+    getSeries,
+    { revalidateOnFocus: false, dedupingInterval: 60000 }
   );
 
   const handleRemoveBookmark = async (url: string) => {

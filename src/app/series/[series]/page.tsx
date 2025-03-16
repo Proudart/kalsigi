@@ -171,6 +171,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
   }
 }
 
+
 export async function generateStaticParams() {
   try {
     const res = await fetch(`https://www.${process.env.site_name}.com/api/titles`);

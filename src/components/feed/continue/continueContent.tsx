@@ -30,6 +30,7 @@ const SeriesImage = ({
   );
 };
 
+
   function formatDistanceToNow(date: Date) {
     const diff = Date.now() - date.getTime();
     const years = Math.floor(diff / 31536000000);

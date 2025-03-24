@@ -1,6 +1,5 @@
 "use client";
 
-
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -146,6 +145,8 @@ export const Link = React.forwardRef<
           router.push(String(props.href));
         }
       }}
+      className={`${props.className || ''} cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-opacity-75 rounded`}
+      role={props.role || 'link'}
       {...props}
     >
       {children}

@@ -29,6 +29,7 @@ import { Clock, BookOpen } from "lucide-react";
   
   async function fetchMangaData(genre: string, offset: number): Promise<Manga[]> {
     const url = `https://www.${process.env.site_name}.com/api/feed/genre?offset=${offset}&genre=${genre}`;
+    // const url = `http://localhost:3000/api/feed/genre?offset=${offset}&genre=${genre}`;
     const res = await fetch(url, {
       next: { revalidate: 100 },
     });
@@ -43,7 +44,6 @@ import { Clock, BookOpen } from "lucide-react";
   async function GenreFeed({ title }: Props) {
     const manga = await fetchMangaData(title, 0);
     if (manga.length < 10) return null;
-    
     return (
       <section>
         <div className="">
@@ -57,33 +57,39 @@ import { Clock, BookOpen } from "lucide-react";
                   <div className="relative overflow-hidden rounded-lg">
                     <Link href={`/series/${serie.url}-${serie.url_code}`} prefetch={true}>
                       <MangaImage src={serie.cover_image_url} alt={serie.title} />
-                      {(serie.chapters[0].published_at.includes("h") ||
-                        (serie.chapters[0].published_at.includes("m") && 
-                         !serie.chapters[0].published_at.includes("mo"))) && (
-                        <Badge className="absolute top-2 right-2 bg-accent-500 text-text-50">
-                          Updated
-                        </Badge>
-                      )}
+                      {serie.chapters && serie.chapters.length > 0 && 
+                        ((serie.chapters[0].published_at.includes("h") ||
+                          (serie.chapters[0].published_at.includes("m") && 
+                           !serie.chapters[0].published_at.includes("mo"))) && (
+                          <Badge className="absolute top-2 right-2 bg-accent-500 text-text-50">
+                            Updated
+                          </Badge>
+                        ))}
                     </Link>
                     <BookmarkButton seriesUrl={serie.url} />
                   </div>
                   <div className="space-y-2">
-                  <Link href={`/series/${serie.url}-${serie.url_code}/chapter-${serie.chapters[0].chapter_number}`} prefetch={true}>
+                    {serie.chapters && serie.chapters.length > 0 ? (
+                      <Link href={`/series/${serie.url}-${serie.url_code}/chapter-${serie.chapters[0].chapter_number}`} prefetch={true}>
+                        <h3 className="font-semibold text-sm text-text-900 line-clamp-2 space-y-2">
+                          {serie.title}
+                        </h3>
+                        <div className="flex items-center justify-between text-xs text-text-600">
+                          <div className="flex items-center">
+                            <BookOpen className="w-3 h-3 mr-1" />
+                            <span className="truncate">Chapter {serie.chapters[0].chapter_number}</span>
+                          </div>
+                          <div className="flex items-center">
+                            <Clock className="w-3 h-3 mr-1" />
+                            <span>{serie.chapters[0].published_at}</span>
+                          </div>
+                        </div>
+                      </Link>
+                    ) : (
                       <h3 className="font-semibold text-sm text-text-900 line-clamp-2 space-y-2">
                         {serie.title}
                       </h3>
-                    <div className="flex items-center justify-between text-xs text-text-600">
-                      <div className="flex items-center">
-                        <BookOpen className="w-3 h-3 mr-1" />
-                        <span className="truncate">Chapter {serie.chapters[0].chapter_number}</span>
-                      </div>
-                      <div className="flex items-center">
-                        <Clock className="w-3 h-3 mr-1" />
-                        <span>{serie.chapters[0].published_at}</span>
-                      </div>
-                    </div>
-                    </Link>
-
+                    )}
                   </div>
                 </div>
               ))}
@@ -102,5 +108,3 @@ import { Clock, BookOpen } from "lucide-react";
       </div>
     );
   }
-
-  

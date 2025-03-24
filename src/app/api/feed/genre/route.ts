@@ -38,6 +38,9 @@ export async function GET(request: Request) {
 
   let result = await prepared.execute();
 
+  // Filter out series that have no chapters
+  result = result.filter((manga: { chapters: any[] }) => manga.chapters.length > 0);
+
   result.forEach((manga: { chapters: any[] }) => {
     manga.chapters.sort((a, b) => b.chapter_number - a.chapter_number);
     manga.chapters.splice(1, manga.chapters.length - 1);

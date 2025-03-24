@@ -32,9 +32,26 @@ export async function POST(request: Request) {
     };
 
     const sanitizedSeriesTitle = sanitizeTitle(seriesTitle);
-
+    
     // Start a transaction to ensure both updates succeed or fail together
     const result = await db.transaction(async (tx) => {
+      // First, get the series to find its ID
+      const seriesData = await tx
+        .select({
+          id: series.id,
+          total_views: series.total_views,
+          today_views: series.today_views
+        })
+        .from(series)
+        .where(eq(series.url, sanitizedSeriesTitle))
+        .limit(1);
+
+      if (!seriesData.length) {
+        throw new Error(`Series not found: ${sanitizedSeriesTitle}`);
+      }
+
+      const seriesId = seriesData[0].id;
+
       // Update series views
       const seriesUpdate = await tx
         .update(series)
@@ -43,17 +60,13 @@ export async function POST(request: Request) {
           today_views: sql`${series.today_views} + 1`,
           updated_at: new Date(),
         })
-        .where(eq(series.url, sanitizedSeriesTitle))
+        .where(eq(series.id, seriesId))
         .returning({ 
           total_views: series.total_views,
           today_views: series.today_views 
         });
 
-      if (!seriesUpdate.length) {
-        throw new Error(`Series not found: ${sanitizedSeriesTitle}`);
-      }
-
-      // Update chapter views
+      // Update chapter views - using series_id instead of title
       const chapterUpdate = await tx
         .update(chapters)
         .set({
@@ -62,14 +75,14 @@ export async function POST(request: Request) {
         })
         .where(
           and(
-            eq(chapters.title, seriesTitle),
+            eq(chapters.series_id, seriesId),
             sql`CAST(${chapters.chapter_number} AS decimal) = CAST(${chapterNumber} AS decimal)`
           )
         )
         .returning({ views: chapters.views });
 
       if (!chapterUpdate.length) {
-        throw new Error(`Chapter not found: ${chapterNumber}`);
+        throw new Error(`Chapter not found: ${chapterNumber} for series ID: ${seriesId}`);
       }
 
       return {

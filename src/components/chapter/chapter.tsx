@@ -1,4 +1,3 @@
-import { Key } from "react";
 import { Link } from "../../components/link";
 
 import GenerateTags from "./generateTags";

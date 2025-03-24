@@ -1,13 +1,14 @@
+import { Suspense } from "react";
+import { Link } from "../link";
+import Loader from "../load";
 import dynamic from "next/dynamic";
-const Bookmark = dynamic(() => import("../bookmark"));
 
-const SeriesChat = dynamic(() => import("./seriesChat"));
+// Lazy load components for better performance
+const EnhancedManga = dynamic(() => import("./enhancedManga"), {
+  loading: () => <Loader />,
+  ssr: true
+});
 
-const Share = dynamic(() => import("../share"));
-const ChapterSearch = dynamic(() => import("./chapterSearch"));
-
-const MainSeriesInfo = dynamic(() => import("./mainSeriesInfo"));
-const Recommended = dynamic(() => import("../recommendations"));
 export default async function Manga({
   params,
 }: {
@@ -16,35 +17,54 @@ export default async function Manga({
   const title = params.series;
   const regex = /-\d{6}/;
   const modifiedTitle = title.replace(regex, "");
-  const res = await fetch(
-    `https://www.${process.env.site_name}.com/api/title?url=${modifiedTitle}`
-    // `http://localhost:3000/api/title?url=${modifiedTitle}`
-  );
-  const data = await res.json();
-
-  return (
-    <div className="bg-backgroundmain min-h-screen overflow-y-auto">
-      <MainSeriesInfo data={data} />
-      <div className="mx-auto p-4 mt-6 flex justify-evenly items-center flex-wrap">
-        <Bookmark title={title} />
-        <Share
-          url={`https://www.${process.env.site_name}.com/series/${title}`}
-          title={data.title}
-        />
+  
+  try {
+    // Fetch data with a 15-second timeout to prevent long loading times
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    
+    const res = await fetch(
+      `https://www.${process.env.site_name}.com/api/title?url=${modifiedTitle}`,
+      { 
+        signal: controller.signal,
+        cache: 'force-cache',
+        next: { revalidate: 3600 } // Revalidate every hour
+      }
+    );
+    
+    clearTimeout(timeoutId);
+    
+    if (!res.ok) {
+      throw new Error(`Failed to fetch data: ${res.status}`);
+    }
+    
+    const data = await res.json();
+    
+    return <EnhancedManga data={data} title={title} />;
+  } catch (error) {
+    // Enhanced error handling with fallback UI
+    console.error("Error fetching series data:", error);
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <div className="bg-background-800 p-8 rounded-xl shadow-lg text-center max-w-md">
+          <h1 className="text-2xl font-bold text-text-50 mb-4">Series Not Found</h1>
+          <p className="text-text-300 mb-6">
+            We couldnt find the series youre looking for. This might be due to:
+          </p>
+          <ul className="text-text-300 list-disc text-left mb-6 pl-8">
+            <li>The series has been removed</li>
+            <li>The URL is incorrect</li>
+            <li>Our servers are experiencing issues</li>
+          </ul>
+          <Link
+            href="/"
+            prefetch={true}
+            className="bg-primary-600 text-text-50 px-6 py-2 rounded-lg inline-flex items-center hover:bg-primary-700 transition-colors"
+          >
+            Return to Home
+          </Link>
+        </div>
       </div>
-      <div className="container mx-auto p-4 mt-6 h-max-[450px]">
-        <ChapterSearch data={data} title={title} />
-      </div>
-      <div className="container mx-auto p-4 mt-6">
-        <Recommended genres={data.genre} seriesId={data.id} />
-      </div>
-
-      <div className="container mx-auto p-4 mt-6">
-        <SeriesChat seriesId={data.id} />
-      </div>
-      <div className="container mx-auto p-4 mt-6"></div>
-    </div>
-  );
+    );
+  }
 }
-
-

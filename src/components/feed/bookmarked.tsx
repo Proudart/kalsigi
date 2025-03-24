@@ -1,6 +1,6 @@
 'use client';
 
-    import { Clock, BookOpen, Bookmark, BookmarkCheck } from "lucide-react";
+import { Clock, BookOpen, Bookmark, BookmarkCheck } from "lucide-react";
 import { useState, useEffect, useCallback, memo } from 'react';
 import { getCookie, setCookie } from 'cookies-next';
 
@@ -15,7 +15,6 @@ type Manga = {
   }];
 };
 
-// BookmarkButton Component
 import React from 'react';
 
 const BookmarkButton = React.memo(function BookmarkButton({ seriesUrl }: { seriesUrl: string }) {
@@ -86,9 +85,11 @@ const BookmarkButton = React.memo(function BookmarkButton({ seriesUrl }: { serie
             : 'bg-gray-800/80 hover:bg-gray-700/80'}
           shadow-sm hover:shadow-md
           ${isShaking ? 'animate-[wiggle_0.5s_ease-in-out]' : ''}
-          hover:scale-105
+          hover:scale-105 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50
         `}
-        aria-label={isBookmarked ? "Remove bookmark" : "Add bookmark"}
+        aria-label={isBookmarked ? "Remove from bookmarks" : "Add to bookmarks"}
+        aria-pressed={isBookmarked}
+        title={isBookmarked ? "Remove from bookmarks" : "Add to bookmarks"}
       >
         {isBookmarked ? (
           <BookmarkCheck className="w-5 h-5 text-primary-600" />

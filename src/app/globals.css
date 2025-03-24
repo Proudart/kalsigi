@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 
+
 @config '../../tailwind.config.js';
 
 /*
@@ -81,8 +82,8 @@
     --accent-800: #352a3c;
     --accent-900: #1b151e;
     --accent-950: #0d0a0f;
-    
   }
+  
   .dark {
     --text-50: #0b0f0d;
     --text-100: #151e1a;
@@ -143,6 +144,38 @@
     --accent-800: #cec3d5;
     --accent-900: #e7e1ea;
     --accent-950: #f3f0f5;
-    
+  }
+}
+
+@layer base {
+  /* Focus styles for keyboard users */
+  *:focus-visible {
+    outline: 2px solid theme('colors.primary.500');
+    outline-offset: 2px;
+  }
+  
+  /* Add cursor pointers to interactive elements */
+  button, 
+  [role="button"],
+  .cursor-pointer,
+  a {
+    cursor: pointer;
+  }
+  
+  /* Improve text contrast for accessibility */
+  body {
+    @apply text-text-800;
+  }
+  
+  /* Skip to content link for keyboard users */
+  .skip-to-content {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary-600 focus:text-white focus:rounded;
+  }
+}
+
+/* Add transition properties */
+@layer utilities {
+  .transition-interactive {
+    @apply transition-all duration-200 ease-in-out;
   }
 }

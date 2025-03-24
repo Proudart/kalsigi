@@ -44,7 +44,6 @@ const SeriesChat: React.FC<{ seriesId: string }> = ({ seriesId }) => {
     }
   };
   
-
   const buildMessageTree = (messages: SeriesMessage[]): SeriesMessage[] => {
     const messageMap = new Map<string, SeriesMessage>();
     const rootMessages: SeriesMessage[] = [];
@@ -145,46 +144,58 @@ const SeriesChat: React.FC<{ seriesId: string }> = ({ seriesId }) => {
       <div className={`bg-background-100 p-4 rounded-lg shadow-xs border border-background-300 ${depth > 0 ? 'ml-4 mt-2' : 'mb-4'}`}>
         <div className="flex justify-between items-center mb-2">
           <p className="font-semibold text-text-800">{message.username}</p>
-          <p className="text-sm text-text-500">{new Date(message.createdAt).toLocaleDateString()}</p>
+          <p className="text-sm text-text-500">
+            <time dateTime={new Date(message.createdAt).toISOString()}>{new Date(message.createdAt).toLocaleDateString()}</time>
+          </p>
         </div>
         <p className="text-text-700 mb-3">{message.content}</p>
         <div className="flex space-x-4">
           <button 
             onClick={() => handleLikeDislike(message.id, 'likes')}
-            className="flex items-center space-x-1 text-primary-600 hover:text-primary-800 transition-colors"
+            className="flex items-center space-x-1 text-primary-600 hover:text-primary-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-md p-1"
+            aria-label={`Like this comment (${message.likes} likes)`}
+            title="Like"
           >
-            <IconThumbUp size={18} />
+            <IconThumbUp size={18} aria-hidden="true" />
             <span>{message.likes}</span>
           </button>
           <button 
             onClick={() => handleLikeDislike(message.id, 'dislikes')}
-            className="flex items-center space-x-1 text-secondary-600 hover:text-secondary-800 transition-colors"
+            className="flex items-center space-x-1 text-secondary-600 hover:text-secondary-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-secondary-500 rounded-md p-1"
+            aria-label={`Dislike this comment (${message.dislikes} dislikes)`}
+            title="Dislike"
           >
-            <IconThumbDown size={18} />
+            <IconThumbDown size={18} aria-hidden="true" />
             <span>{message.dislikes}</span>
           </button>
           {user && (
             <button 
               onClick={() => setReplyingTo(message.id)}
-              className="flex items-center space-x-1 text-accent-600 hover:text-accent-800 transition-colors"
+              className="flex items-center space-x-1 text-accent-600 hover:text-accent-800 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-500 rounded-md p-1"
+              aria-label={`Reply to ${message.username}'s comment`}
+              title="Reply"
             >
-              <IconMessageReply size={18} />
+              <IconMessageReply size={18} aria-hidden="true" />
               <span>Reply</span>
             </button>
           )}
         </div>
         {isReplying && user.name ? (
-          <div className="mt-4">
+          <div className="mt-4" aria-live="polite">
+            <label htmlFor={`reply-to-${message.id}`} className="sr-only">Reply to {message.username}</label>
             <textarea
+              id={`reply-to-${message.id}`}
               ref={textareaRef}
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value.slice(0, MAX_MESSAGE_LENGTH))}
               className="w-full p-2 border border-background-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none bg-background-50 text-text-800"
-              placeholder="Write a reply..."
+              placeholder={`Reply to ${message.username}...`}
               rows={3}
+              maxLength={MAX_MESSAGE_LENGTH}
+              aria-describedby={`char-count-${message.id}`}
             />
             <div className="flex justify-between items-center mt-2">
-              <span className="text-sm text-text-500">
+              <span id={`char-count-${message.id}`} className="text-sm text-text-500">
                 {replyContent.length}/{MAX_MESSAGE_LENGTH} characters
               </span>
               <div className="space-x-2">
@@ -193,24 +204,32 @@ const SeriesChat: React.FC<{ seriesId: string }> = ({ seriesId }) => {
                     setReplyingTo(null);
                     setReplyContent('');
                   }}
-                  className="px-3 py-1 text-text-600 hover:text-text-800 transition-colors"
+                  className="px-3 py-1 text-text-600 hover:text-text-800 transition-colors cursor-pointer rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  aria-label="Cancel reply"
+                  title="Cancel"
                 >
-                  <IconX size={18} />
+                  <IconX size={18} aria-hidden="true" />
                 </button>
                 <button
                   onClick={handleReply}
-                  className="bg-primary-600 text-white px-3 py-1 rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center space-x-2"
+                  className="bg-primary-600 text-white px-3 py-1 rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center space-x-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                  aria-label="Send reply"
+                  disabled={!replyContent.trim() || replyContent.length > MAX_MESSAGE_LENGTH}
                 >
-                  <IconSend size={18} />
+                  <IconSend size={18} aria-hidden="true" />
                   <span>Reply</span>
                 </button>
               </div>
             </div>
           </div>
         ) : null}
-        {message.replies && message.replies.map(reply => (
-          <MessageComponent key={reply.id} message={reply} depth={depth + 1} />
-        ))}
+        {message.replies && message.replies.length > 0 && (
+          <div className="mt-3">
+            {message.replies.map(reply => (
+              <MessageComponent key={reply.id} message={reply} depth={depth + 1} />
+            ))}
+          </div>
+        )}
       </div>
     );
   });
@@ -221,22 +240,30 @@ const SeriesChat: React.FC<{ seriesId: string }> = ({ seriesId }) => {
     <div className="mt-8 bg-background-50 p-6 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-6 text-text-900">Series Discussion</h2>
       <div className="space-y-6">
-        {messages.map((message) => (
-          <MessageComponent key={message.id} message={message} depth={0} />
-        ))}
+        {messages.length > 0 ? (
+          messages.map((message) => (
+            <MessageComponent key={message.id} message={message} depth={0} />
+          ))
+        ) : (
+          <p className="text-text-700 text-center py-4">No comments yet. Be the first to start the discussion!</p>
+        )}
       </div>
       {user && user.name ? (
         <div className="mt-6">
+          <label htmlFor="new-comment" className="sr-only">Write a comment</label>
           <textarea
+            id="new-comment"
             onClick={() => setReplyingTo(null)}
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value.slice(0, MAX_MESSAGE_LENGTH))}
             className="w-full p-3 border border-background-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none bg-background-50 text-text-800"
             placeholder="Write a comment..."
             rows={4}
+            maxLength={MAX_MESSAGE_LENGTH}
+            aria-describedby="comment-char-count"
           />
           <div className="flex justify-between items-center mt-2">
-            <span className="text-sm text-text-500">
+            <span id="comment-char-count" className="text-sm text-text-500">
               {newMessage.length}/{MAX_MESSAGE_LENGTH} characters
             </span>
             <button
@@ -246,17 +273,21 @@ const SeriesChat: React.FC<{ seriesId: string }> = ({ seriesId }) => {
                   setNewMessage('');
                 }
               }}
-              className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center space-x-2"
+              className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center space-x-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+              aria-label="Send comment"
+              disabled={!newMessage.trim() || newMessage.length > MAX_MESSAGE_LENGTH}
             >
-              <IconSend size={18} />
+              <IconSend size={18} aria-hidden="true" />
               <span>Send</span>
             </button>
           </div>
         </div>
       ) : (
-        <p className="mt-6 text-text-700">
-          Please <a href="/signin" className="text-primary-600 hover:text-primary-800 underline">log in</a> to join the discussion.
-        </p>
+        <div className="mt-6 p-4 bg-background-200 rounded-lg text-text-700 text-center">
+          <p>
+            Please <a href="/signin" className="text-primary-600 hover:text-primary-800 underline focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-sm">log in</a> to join the discussion.
+          </p>
+        </div>
       )}
     </div>
   );

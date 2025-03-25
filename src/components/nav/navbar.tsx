@@ -5,6 +5,8 @@ import type { StaticImageData } from "next/image"
 import { ThemeToggle } from "../ui/themeToggle"
 import Auth from "../auth/auth"
 import LiveSearch from "./liveSearch"
+import dynamic from "next/dynamic"
+const NavbarClient = dynamic(() => import("./navbarClient"), { ssr: true })
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -52,6 +54,8 @@ export default function Navbar({ logo }: Props) {
             <ThemeToggle />
           </div>
           <Auth />
+      <NavbarClient />
+
         </div>
       </div>
     </header>

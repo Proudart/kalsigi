@@ -1,8 +1,30 @@
 import { Suspense } from "react";
-import Chapter from "../../../../components/chapter/chapter";
+import dynamic from "next/dynamic";
+import { Metadata } from "next";
 import Script from "next/script";
 import Loader from "../../../../components/load";
-import { Metadata } from "next";
+
+// Enhanced components with better loading strategy
+const Chapter = dynamic(() => import("../../../../components/chapter/chapter"), {
+  loading: () => <ChapterSkeleton />,
+  ssr: true
+});
+
+// Skeleton loader for chapter component
+function ChapterSkeleton() {
+  return (
+    <div className="animate-pulse">
+      <div className="max-w-6xl mx-auto">
+        <div className="h-16 w-3/4 bg-neutral-200 dark:bg-neutral-800 rounded-md mx-auto mt-8"></div>
+        <div className="mt-8 space-y-4 max-w-3xl mx-auto">
+          <div className="h-4 bg-neutral-200 dark:bg-neutral-800 rounded-md w-full"></div>
+          <div className="h-[500px] bg-neutral-200 dark:bg-neutral-800 rounded-md w-full"></div>
+          <div className="h-10 bg-neutral-200 dark:bg-neutral-800 rounded-md w-full"></div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // Types based on your database schema
 interface ChapterData {
@@ -22,6 +44,7 @@ interface ChapterData {
     synopsis?: string;
   };
 }
+
 interface SeriesData {
   genre: any;
   id: string;
@@ -36,10 +59,7 @@ interface SeriesData {
   status: string | null;
   publisher: string;
   chapters: ChapterData[];
-
 }
-
-
 
 async function fetchChapterData(url: string): Promise<SeriesData> {
   const siteName = process.env.site_name;
@@ -48,7 +68,7 @@ async function fetchChapterData(url: string): Promise<SeriesData> {
     {
       method: "GET",
       next: {
-        revalidate: 60 * 60 * 24, // Revalidate every 24 hours
+        revalidate: 60 * 60 * 6, // Revalidate every 6 hours for better performance
       },
     }
   );
@@ -59,6 +79,7 @@ async function fetchChapterData(url: string): Promise<SeriesData> {
 
   return response.json();
 }
+
 export async function generateMetadata({ params }: any): Promise<Metadata> {
   const { series, chapter } = await params;
   const siteName = process.env.site_name;
@@ -90,6 +111,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
     ].filter(Boolean).join(", ");
 
     const description = `Read ${data.title} ${chapterTitle} online. ${summary.tldr || ''} ${data.description?.slice(0, 150)}... Continue reading at ${siteName}.`;
+    
     return {
       title: fullTitle,
       description: description.trim(),
@@ -137,13 +159,16 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
   }
 }
 
-
 export async function generateStaticParams() {
   try {
     const response = await fetch(
-      `https://www.${process.env.site_name}.com/api/chapters`
+      `https://www.${process.env.site_name}.com/api/chapters`,
+      {
+        next: { 
+          revalidate: 60 * 60 * 24 // Cache for a day
+        }
+      }
     );
-    // const response = await fetch(http://localhost:3000/api/chapters);
 
     const seriesData = await response.json();
 
@@ -169,7 +194,7 @@ export default async function ChapterPage(props: any) {
   const modifiedUrl = series.replace(regex, "");
 
   const data = await fetchChapterData(modifiedUrl);
-
+  
   // Structured Data implementation
   const jsonLd = {
     "@context": "https://schema.org",
@@ -188,7 +213,7 @@ export default async function ChapterPage(props: any) {
       "name": process.env.site_name,
       "logo": {
         "@type": "ImageObject",
-        "url": `${process.env.NEXT_PUBLIC_BASE_URL}/skaihua.png`
+        "url": `${process.env.NEXT_PUBLIC_BASE_URL}/logo.png`
       }
     },
     "datePublished": data.chapters[0]?.published_at,
@@ -207,7 +232,7 @@ export default async function ChapterPage(props: any) {
   };
 
   return (
-    <div>
+    <div className=" min-h-screen">
       <Script
         id="structured-data"
         type="application/ld+json"

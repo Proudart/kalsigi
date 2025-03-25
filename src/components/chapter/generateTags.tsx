@@ -1,3 +1,9 @@
+// src/components/chapter/generateTags.tsx
+"use client";
+
+import React from 'react';
+import { Calendar, BookOpen, Tag, Info } from 'lucide-react';
+
 interface GenerateTagsProps {
     title: string;
     chapter: string;
@@ -17,55 +23,87 @@ export default function GenerateTags({
     datePublished,
     publisher,
 }: GenerateTagsProps) {
-    const generateSEOTags = () => {
-        const formattedDate = new Date(datePublished).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-        
-        return [
-            `Released: ${formattedDate}`,
-            `Read at ${process.env.site_name}`,
-        ];
-    };
-
-    const seoTags = generateSEOTags();
+    // Format the date for display
+    const formattedDate = new Date(datePublished).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    
+    // Extract chapter number
+    const chapterNumber = chapter.replace(/^chapter-/i, "");
+    
+    // Parse keywords into an array
+    const keywordsArray = summary?.keywords 
+        ? (Array.isArray(summary.keywords) 
+            ? summary.keywords 
+            : summary.keywords.split(',').map(k => k.trim()))
+        : [];
 
     return (
-        <div className="p-6 rounded-lg shadow-lg w-full md:w-3/4 mx-auto mt-8 bg-background-600 transition-colors duration-300 min-w-full">
-            <h3 className="mb-4 text-xl font-bold text-primary-800 dark:text-primary-200">
-                Series Information
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {seoTags.map((tag: string, index: number) => (
-                    <div 
-                        key={tag + index} 
-                        className="p-3 bg-secondary-100 dark:bg-secondary-800 rounded-md shadow-xs hover:shadow-md transition-shadow duration-300 text-text-700 dark:text-text-200 text-sm"
-                    >
-                        {tag}
+        <div className="bg-background-100 dark:bg-background-800 rounded-lg shadow-sm border border-background-200 dark:border-background-700 transition-colors duration-300">
+            <div className="p-6">
+                <h3 className="text-xl font-bold text-text-900 dark:text-text-100 mb-6 flex items-center">
+                    <Info className="w-5 h-5 mr-2 text-primary-600 dark:text-primary-400" />
+                    Chapter Information
+                </h3>
+                
+                <div className="space-y-6">
+                    {/* Publication details */}
+                    <div>
+                        <h4 className="text-sm font-medium text-text-700 dark:text-text-300 mb-3 flex items-center">
+                            <BookOpen className="w-4 h-4 mr-2 text-secondary-600 dark:text-secondary-400" />
+                            Publication Details
+                        </h4>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="bg-background-50 dark:bg-background-900 p-4 rounded-lg border border-background-200 dark:border-background-700">
+                                <div className="flex items-center text-text-900 dark:text-text-100">
+                                    <Calendar className="w-4 h-4 mr-2 text-primary-600 dark:text-primary-400" />
+                                    <span className="font-medium">Published:</span>
+                                </div>
+                                <p className="mt-1 text-text-700 dark:text-text-300 pl-6">{formattedDate}</p>
+                            </div>
+                            
+                            <div className="bg-background-50 dark:bg-background-900 p-4 rounded-lg border border-background-200 dark:border-background-700">
+                                <div className="flex items-center text-text-900 dark:text-text-100">
+                                    <BookOpen className="w-4 h-4 mr-2 text-primary-600 dark:text-primary-400" />
+                                    <span className="font-medium">Publisher:</span>
+                                </div>
+                                <p className="mt-1 text-text-700 dark:text-text-300 pl-6">{publisher || 'Unknown'}</p>
+                            </div>
+                        </div>
                     </div>
-                ))}
-            </div>
-            
-            {summary?.keywords && (
-                <div className="mt-4">
-                    <h4 className="mb-3 text-lg font-semibold text-primary-800 dark:text-primary-200">
-                        Chapter Themes
-                    </h4>
-                    <div className="flex flex-wrap gap-2">
-                        {(Array.isArray(summary.keywords) ? summary.keywords : summary.keywords.split(','))
-                            .map((keyword: string, index: number) => (
-                                <span 
-                                    key={index}
-                                    className="px-3 py-1 bg-primary-100 dark:bg-primary-800 text-primary-800 dark:text-primary-100 rounded-full text-sm"
-                                >
-                                    {keyword.trim()}
-                                </span>
-                            ))}
+                    
+                    {/* Chapter tags */}
+                    {keywordsArray.length > 0 && (
+                        <div>
+                            <h4 className="text-sm font-medium text-text-700 dark:text-text-300 mb-3 flex items-center">
+                                <Tag className="w-4 h-4 mr-2 text-secondary-600 dark:text-secondary-400" />
+                                Chapter Themes
+                            </h4>
+                            
+                            <div className="flex flex-wrap gap-2">
+                                {keywordsArray.map((keyword, index) => (
+                                    <span 
+                                        key={index}
+                                        className="px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 rounded-full text-sm shadow-sm hover:shadow-md transition-shadow"
+                                    >
+                                        {keyword}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                    
+                    {/* Read info */}
+                    <div className="text-center pt-2">
+                        <p className="text-sm text-text-600 dark:text-text-400">
+                            You are reading <span className="font-medium text-text-900 dark:text-text-100">{title}</span> - Chapter {chapterNumber} on <span className="text-primary-600 dark:text-primary-400">skaihua</span>
+                        </p>
                     </div>
                 </div>
-            )}
+            </div>
         </div>
     );
 }

@@ -2,6 +2,8 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
+
+
 const FacebookShareButton = dynamic(() =>
   import("react-share").then((mod) => mod.FacebookShareButton)
 );
@@ -20,6 +22,7 @@ const TwitterShareButton = dynamic(() =>
 const WhatsappShareButton = dynamic(() =>
   import("react-share").then((mod) => mod.WhatsappShareButton)
 );
+
 
 const IconBrandFacebook = dynamic(() =>
   import("@tabler/icons-react").then((mod) => mod.IconBrandFacebook)
@@ -40,15 +43,17 @@ const IconBrandReddit = dynamic(() =>
   import("@tabler/icons-react").then((mod) => mod.IconBrandReddit)
 );
 
+
 type ShareButtonProps = {
   children: React.ReactNode;
   className?: string;
 };
 
+
 const ShareButton = ({ children, className, ...props }: ShareButtonProps) => (
   <div
     className={[
-      "flex items-center justify-center w-10 h-10 rounded-full bg-background-300 text-text-800 hover:bg-background-400 transition-colors duration-200",
+      "flex flex-wrap items-center justify-center w-10 h-10 rounded-full bg-background-300 text-text-800 hover:bg-background-400 transition-colors duration-200",
       className,
     ].join(" ")}
     {...props}
@@ -65,7 +70,7 @@ export default React.memo(function Share({
   title: string;
 }) {
   return (
-    <div className="flex items-center justify-center space-x-2 p-2">
+    <div className="flex flex-wrap items-center justify-center gap-2">
       <FacebookShareButton url={url} title={title}>
         <ShareButton>
           <IconBrandFacebook className="w-5 h-5" />

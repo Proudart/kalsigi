@@ -50,10 +50,6 @@ const nextConfig = withPWA({
     ];
 },
   reactStrictMode: true,
-  i18n: {
-    locales: ['en'],
-    defaultLocale: 'en'
-  },
 
   images: {
     minimumCacheTTL: 31536000,

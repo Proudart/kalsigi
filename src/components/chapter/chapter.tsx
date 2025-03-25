@@ -56,7 +56,7 @@ export default function Chapter({ params }: any) {
       try {
 
         const res = await fetch(
-            `https://www.${process.env.site_name}.com/api/chapter?series=${modifiedTitle}`
+            `https://www.skaihua.com/api/chapter?series=${modifiedTitle}`
         );
         
         if (!res.ok) throw new Error("Failed to fetch chapter data");

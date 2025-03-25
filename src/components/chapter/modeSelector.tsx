@@ -11,7 +11,7 @@ const ModeSelector: React.FC<ModeSelectorProps> = ({ currentMode, onModeChange }
     `px-4 py-2 rounded-md transition-all duration-200 font-medium text-sm
     ${currentMode === buttonMode
       ? 'bg-primary-600 text-background-50 shadow-md transform scale-105'
-      : 'bg-background-200 text-text-700 hover:bg-background-300 hover:text-text-800 dark:bg-background-800 dark:text-text-300 dark:hover:bg-background-700 dark:hover:text-text-200'
+      : 'bg-background-200 text-text-700 hover:bg-background-300 hover:text-text-800    '
     }`;
 
   return (

@@ -96,7 +96,7 @@ const CustomSelectWithLink: React.FC<CustomSelectWithLinkProps> = ({
         <div
           ref={dropdownRef}
           id="dropdown"
-          className="absolute left-0 right-0 z-50 w-full mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 max-h-64 overflow-y-auto overflow-x-hidden"
+          className="absolute left-0 right-0 z-50 w-full mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow-sm  max-h-64 overflow-y-auto overflow-x-hidden"
         >
           <ul
             className="py-2 text-sm text-text-950 bg-primary-500"

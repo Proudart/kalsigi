@@ -131,12 +131,12 @@ const ReadingSettings = ({
   
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50">
-      <div className="bg-background-100 dark:bg-background-800 rounded-lg shadow-lg w-full max-w-md p-6">
+      <div className="bg-background-100  rounded-lg shadow-lg w-full max-w-md p-6">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-text-900 dark:text-text-100">Reading Settings</h3>
+          <h3 className="text-lg font-semibold text-text-900 ">Reading Settings</h3>
           <button 
             onClick={onClose}
-            className="p-1 rounded-full hover:bg-background-200 dark:hover:bg-background-700 text-text-500 hover:text-text-700 dark:text-text-400 dark:hover:text-text-200 transition-colors"
+            className="p-1 rounded-full hover:bg-background-200  text-text-500 hover:text-text-700   transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -145,14 +145,14 @@ const ReadingSettings = ({
         <div className="space-y-6">
           {/* Reading mode */}
           <div>
-            <h4 className="text-sm font-medium text-text-700 dark:text-text-300 mb-2">Reading Mode</h4>
+            <h4 className="text-sm font-medium text-text-700  mb-2">Reading Mode</h4>
             <div className="grid grid-cols-3 gap-3">
               <button
                 onClick={() => onModeChange('vertical')}
                 className={`flex flex-col items-center p-3 rounded-lg border transition-colors ${
                   currentMode === 'vertical'
-                    ? 'bg-primary-100 dark:bg-primary-900 border-primary-300 dark:border-primary-700 text-primary-800 dark:text-primary-200'
-                    : 'border-background-300 dark:border-background-600 hover:bg-background-200 dark:hover:bg-background-700'
+                    ? 'bg-primary-100  border-primary-300  text-primary-800 '
+                    : 'border-background-300  hover:bg-background-200 '
                 }`}
               >
                 <Maximize className="w-5 h-5 mb-1" />
@@ -163,8 +163,8 @@ const ReadingSettings = ({
                 onClick={() => onModeChange('horizontal')}
                 className={`flex flex-col items-center p-3 rounded-lg border transition-colors ${
                   currentMode === 'horizontal'
-                    ? 'bg-primary-100 dark:bg-primary-900 border-primary-300 dark:border-primary-700 text-primary-800 dark:text-primary-200'
-                    : 'border-background-300 dark:border-background-600 hover:bg-background-200 dark:hover:bg-background-700'
+                    ? 'bg-primary-100  border-primary-300  text-primary-800 '
+                    : 'border-background-300  hover:bg-background-200 '
                 }`}
               >
                 <Minimize className="w-5 h-5 mb-1 transform rotate-90" />
@@ -175,8 +175,8 @@ const ReadingSettings = ({
                 onClick={() => onModeChange('webtoon')}
                 className={`flex flex-col items-center p-3 rounded-lg border transition-colors ${
                   currentMode === 'webtoon'
-                    ? 'bg-primary-100 dark:bg-primary-900 border-primary-300 dark:border-primary-700 text-primary-800 dark:text-primary-200'
-                    : 'border-background-300 dark:border-background-600 hover:bg-background-200 dark:hover:bg-background-700'
+                    ? 'bg-primary-100  border-primary-300  text-primary-800 '
+                    : 'border-background-300  hover:bg-background-200 '
                 }`}
               >
                 <Layers className="w-5 h-5 mb-1" />
@@ -187,14 +187,14 @@ const ReadingSettings = ({
           
           {/* Image quality */}
           <div>
-            <h4 className="text-sm font-medium text-text-700 dark:text-text-300 mb-2">Image Quality</h4>
+            <h4 className="text-sm font-medium text-text-700  mb-2">Image Quality</h4>
             <div className="grid grid-cols-3 gap-3">
               <button
                 onClick={() => onQualityChange('low')}
                 className={`p-2 rounded-lg border transition-colors ${
                   currentQuality === 'low'
-                    ? 'bg-primary-100 dark:bg-primary-900 border-primary-300 dark:border-primary-700 text-primary-800 dark:text-primary-200'
-                    : 'border-background-300 dark:border-background-600 hover:bg-background-200 dark:hover:bg-background-700'
+                    ? 'bg-primary-100  border-primary-300  text-primary-800 '
+                    : 'border-background-300  hover:bg-background-200 '
                 }`}
               >
                 Low
@@ -204,8 +204,8 @@ const ReadingSettings = ({
                 onClick={() => onQualityChange('medium')}
                 className={`p-2 rounded-lg border transition-colors ${
                   currentQuality === 'medium'
-                    ? 'bg-primary-100 dark:bg-primary-900 border-primary-300 dark:border-primary-700 text-primary-800 dark:text-primary-200'
-                    : 'border-background-300 dark:border-background-600 hover:bg-background-200 dark:hover:bg-background-700'
+                    ? 'bg-primary-100  border-primary-300  text-primary-800 '
+                    : 'border-background-300  hover:bg-background-200 '
                 }`}
               >
                 Medium
@@ -215,8 +215,8 @@ const ReadingSettings = ({
                 onClick={() => onQualityChange('high')}
                 className={`p-2 rounded-lg border transition-colors ${
                   currentQuality === 'high'
-                    ? 'bg-primary-100 dark:bg-primary-900 border-primary-300 dark:border-primary-700 text-primary-800 dark:text-primary-200'
-                    : 'border-background-300 dark:border-background-600 hover:bg-background-200 dark:hover:bg-background-700'
+                    ? 'bg-primary-100  border-primary-300  text-primary-800 '
+                    : 'border-background-300  hover:bg-background-200 '
                 }`}
               >
                 High
@@ -226,14 +226,14 @@ const ReadingSettings = ({
           
           {/* Background theme */}
           <div>
-            <h4 className="text-sm font-medium text-text-700 dark:text-text-300 mb-2">Background Theme</h4>
+            <h4 className="text-sm font-medium text-text-700  mb-2">Background Theme</h4>
             <div className="grid grid-cols-3 gap-3">
               <button
                 onClick={() => onBackgroundChange('light')}
                 className={`flex flex-col items-center p-3 rounded-lg border transition-colors ${
                   currentBackgroundTheme === 'light'
-                    ? 'bg-primary-100 dark:bg-primary-900 border-primary-300 dark:border-primary-700 text-primary-800 dark:text-primary-200'
-                    : 'border-background-300 dark:border-background-600 hover:bg-background-200 dark:hover:bg-background-700'
+                    ? 'bg-primary-100  border-primary-300  text-primary-800 '
+                    : 'border-background-300  hover:bg-background-200 '
                 }`}
               >
                 <Sun className="w-5 h-5 mb-1" />
@@ -244,8 +244,8 @@ const ReadingSettings = ({
                 onClick={() => onBackgroundChange('dark')}
                 className={`flex flex-col items-center p-3 rounded-lg border transition-colors ${
                   currentBackgroundTheme === 'dark'
-                    ? 'bg-primary-100 dark:bg-primary-900 border-primary-300 dark:border-primary-700 text-primary-800 dark:text-primary-200'
-                    : 'border-background-300 dark:border-background-600 hover:bg-background-200 dark:hover:bg-background-700'
+                    ? 'bg-primary-100  border-primary-300  text-primary-800 '
+                    : 'border-background-300  hover:bg-background-200 '
                 }`}
               >
                 <Moon className="w-5 h-5 mb-1" />
@@ -256,8 +256,8 @@ const ReadingSettings = ({
                 onClick={() => onBackgroundChange('system')}
                 className={`flex flex-col items-center p-3 rounded-lg border transition-colors ${
                   currentBackgroundTheme === 'system'
-                    ? 'bg-primary-100 dark:bg-primary-900 border-primary-300 dark:border-primary-700 text-primary-800 dark:text-primary-200'
-                    : 'border-background-300 dark:border-background-600 hover:bg-background-200 dark:hover:bg-background-700'
+                    ? 'bg-primary-100  border-primary-300  text-primary-800 '
+                    : 'border-background-300  hover:bg-background-200 '
                 }`}
               >
                 <Monitor className="w-5 h-5 mb-1" />
@@ -427,7 +427,7 @@ export default function ChapterContent({ panels, title, chapter, onPanelChange }
               <button
                 onClick={() => handleNavigate("prev")}
                 disabled={currentIndex === 0}
-                className="p-2 rounded-lg bg-background-200 dark:bg-background-800 text-text-900 dark:text-text-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-lg bg-background-200  text-text-900  disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 aria-label="Previous panel"
               >
                 <ChevronLeft className="w-5 h-5" />
@@ -440,7 +440,7 @@ export default function ChapterContent({ panels, title, chapter, onPanelChange }
               <button
                 onClick={() => handleNavigate("next")}
                 disabled={currentIndex === panels.length - 1}
-                className="p-2 rounded-lg bg-background-200 dark:bg-background-800 text-text-900 dark:text-text-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-lg bg-background-200  text-text-900  disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 aria-label="Next panel"
               >
                 <ChevronRight className="w-5 h-5" />
@@ -498,7 +498,7 @@ export default function ChapterContent({ panels, title, chapter, onPanelChange }
   return (
     <div 
       ref={contentRef}
-      className={`relative bg-background-50 dark:bg-background-950 ${
+      className={`relative bg-background-50  ${
         isFullscreen ? "fixed inset-0 z-50 overflow-y-auto" : ""
       }`}
     >

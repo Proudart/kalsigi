@@ -154,16 +154,16 @@ export default function ChapterNavigation({
   const nextChapterNumber = !isNextDisabled ? chapters[currentIndex - 1] : null;
 
   return (
-    <div className="rounded-lg overflow-hidden shadow-sm border border-background-200 dark:border-background-700">
+    <div className="rounded-lg overflow-hidden shadow-sm border border-background-200 ">
       {/* Top navigation */}
-      <div className="grid grid-cols-3 bg-background-100 dark:bg-background-800">
+      <div className="grid grid-cols-3 bg-background-100 ">
         <Link
           href={isPrevDisabled ? "#" : `/series/${url}-${urlCode}/chapter-${prevChapterNumber}`}
           aria-disabled={isPrevDisabled}
           className={`flex items-center justify-center py-3 px-4 text-sm font-medium transition-colors ${
             isPrevDisabled 
-              ? "text-text-400 dark:text-text-600 cursor-not-allowed" 
-              : "text-text-800 dark:text-text-200 hover:bg-background-200 dark:hover:bg-background-700"
+              ? "text-text-400  cursor-not-allowed" 
+              : "text-text-800  hover:bg-background-200 "
           }`}
         >
           <ChevronLeft className="w-4 h-4 mr-1" />
@@ -172,7 +172,7 @@ export default function ChapterNavigation({
         
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className="flex items-center justify-center py-3 px-4 text-text-800 dark:text-text-200 hover:bg-background-200 dark:hover:bg-background-700 transition-colors"
+          className="flex items-center justify-center py-3 px-4 text-text-800  hover:bg-background-200  transition-colors"
         >
           Chapter {currentChapter}
           <ChevronDown className={`w-4 h-4 ml-1 transform transition-transform duration-200 ${
@@ -185,8 +185,8 @@ export default function ChapterNavigation({
           aria-disabled={isNextDisabled}
           className={`flex items-center justify-center py-3 px-4 text-sm font-medium transition-colors ${
             isNextDisabled 
-              ? "text-text-400 dark:text-text-600 cursor-not-allowed" 
-              : "text-text-800 dark:text-text-200 hover:bg-background-200 dark:hover:bg-background-700"
+              ? "text-text-400  cursor-not-allowed" 
+              : "text-text-800  hover:bg-background-200 "
           }`}
         >
           Next
@@ -198,7 +198,7 @@ export default function ChapterNavigation({
       {isDropdownOpen && (
         <div
           ref={dropdownRef}
-          className="max-h-64 overflow-y-auto border-t border-background-200 dark:border-background-700 bg-background-50 dark:bg-background-900"
+          className="max-h-64 overflow-y-auto border-t border-background-200  bg-background-50 "
         >
           <ul className="py-1">
             {chapters.map((chapterNum, index) => (
@@ -207,7 +207,7 @@ export default function ChapterNavigation({
                 ref={chapterNum === currentChapter ? selectedItemRef : null}
                 className={`${
                   chapterNum === currentChapter
-                    ? "bg-primary-100 dark:bg-primary-900"
+                    ? "bg-primary-100 "
                     : ""
                 }`}
               >
@@ -215,10 +215,10 @@ export default function ChapterNavigation({
                   href={`/series/${url}-${urlCode}/chapter-${chapterNum}`}
                   prefetch={Math.abs(parseInt(chapterNum) - parseInt(currentChapter)) <= 2}
                   onClick={() => setIsDropdownOpen(false)}
-                  className={`block px-4 py-2 text-sm hover:bg-background-200 dark:hover:bg-background-700 transition-colors ${
+                  className={`block px-4 py-2 text-sm hover:bg-background-200  transition-colors ${
                     chapterNum === currentChapter
-                      ? "font-medium text-primary-700 dark:text-primary-300"
-                      : "text-text-700 dark:text-text-300"
+                      ? "font-medium text-primary-700 "
+                      : "text-text-700 "
                   }`}
                 >
                   Chapter {chapterNum}

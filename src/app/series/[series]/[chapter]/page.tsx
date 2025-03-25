@@ -15,11 +15,11 @@ function ChapterSkeleton() {
   return (
     <div className="animate-pulse">
       <div className="max-w-6xl mx-auto">
-        <div className="h-16 w-3/4 bg-neutral-200 dark:bg-neutral-800 rounded-md mx-auto mt-8"></div>
+        <div className="h-16 w-3/4 bg-neutral-200  rounded-md mx-auto mt-8"></div>
         <div className="mt-8 space-y-4 max-w-3xl mx-auto">
-          <div className="h-4 bg-neutral-200 dark:bg-neutral-800 rounded-md w-full"></div>
-          <div className="h-[500px] bg-neutral-200 dark:bg-neutral-800 rounded-md w-full"></div>
-          <div className="h-10 bg-neutral-200 dark:bg-neutral-800 rounded-md w-full"></div>
+          <div className="h-4 bg-neutral-200  rounded-md w-full"></div>
+          <div className="h-[500px] bg-neutral-200  rounded-md w-full"></div>
+          <div className="h-10 bg-neutral-200  rounded-md w-full"></div>
         </div>
       </div>
     </div>

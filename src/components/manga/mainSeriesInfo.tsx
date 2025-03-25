@@ -28,7 +28,7 @@ const MainSeriesInfo: React.FC<MainSeriesInfoProps> = ({ data }) => {
                     {/* Cover Image Section */}
                     <div className="w-full md:w-[300px] lg:w-[400px] shrink-0">
                         <div className="relative aspect-3/4 w-full overflow-hidden rounded-lg 
-                            shadow-lg bg-background-100 dark:bg-background-800">
+                            shadow-lg bg-background-100 ">
                             <Image
                                 src={data.cover_image_url}
                                 alt={data.title}
@@ -45,10 +45,10 @@ const MainSeriesInfo: React.FC<MainSeriesInfoProps> = ({ data }) => {
                         {/* Title and Rating */}
                         <div>
                             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold 
-                                text-text-950 dark:text-text-50 mb-3">
+                                text-text-950  mb-3">
                                 {data.title}
                             </h1>
-                            <div className="flex items-center gap-2 text-text-800 dark:text-text-200">
+                            <div className="flex items-center gap-2 text-text-800 ">
                                 <span className="text-lg font-semibold">
                                     {data.averageRating.toFixed(1)}
                                 </span>
@@ -62,9 +62,9 @@ const MainSeriesInfo: React.FC<MainSeriesInfoProps> = ({ data }) => {
                                 <span 
                                     key={index} 
                                     className="px-3 py-1.5 text-sm rounded-full
-                                    bg-primary-100 dark:bg-primary-800
-                                    text-primary-900 dark:text-primary-100
-                                    hover:bg-primary-200 dark:hover:bg-primary-700
+                                    bg-primary-100 
+                                    text-primary-900 
+                                    hover:bg-primary-200 
                                     transition-colors duration-200"
                                 >
                                     {genre}
@@ -73,36 +73,36 @@ const MainSeriesInfo: React.FC<MainSeriesInfoProps> = ({ data }) => {
                         </div>
 
                         {/* Description */}
-                        <div className="prose dark:prose-invert max-w-none">
-                            <p className="text-text-800 dark:text-text-200 leading-relaxed">
+                        <div className="prose  max-w-none">
+                            <p className="text-text-800  leading-relaxed">
                                 {data.description}
                             </p>
                         </div>
 
                         {/* Stats Grid */}
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                            <div className="p-4 rounded-lg bg-background-100 dark:bg-background-800">
-                                <dt className="text-sm text-text-700 dark:text-text-300">Chapters</dt>
-                                <dd className="mt-1 text-lg font-semibold text-text-900 dark:text-text-50">
+                            <div className="p-4 rounded-lg bg-background-100 ">
+                                <dt className="text-sm text-text-700 ">Chapters</dt>
+                                <dd className="mt-1 text-lg font-semibold text-text-900 ">
                                     {data.total_chapters}
                                 </dd>
                             </div>
-                            <div className="p-4 rounded-lg bg-background-100 dark:bg-background-800">
-                                <dt className="text-sm text-text-700 dark:text-text-300">Status</dt>
-                                <dd className="mt-1 text-lg font-semibold text-text-900 dark:text-text-50">
+                            <div className="p-4 rounded-lg bg-background-100 ">
+                                <dt className="text-sm text-text-700 ">Status</dt>
+                                <dd className="mt-1 text-lg font-semibold text-text-900 ">
                                     {data.status}
                                 </dd>
                             </div>
-                            <div className="p-4 rounded-lg bg-background-100 dark:bg-background-800">
-                                <dt className="text-sm text-text-700 dark:text-text-300">Author</dt>
-                                <dd className="mt-1 text-lg font-semibold text-text-900 dark:text-text-50">
+                            <div className="p-4 rounded-lg bg-background-100 ">
+                                <dt className="text-sm text-text-700 ">Author</dt>
+                                <dd className="mt-1 text-lg font-semibold text-text-900 ">
                                     {data.author || "N/A"}
                                 </dd>
                             </div>
                             {data.artist && (
-                                <div className="p-4 rounded-lg bg-background-100 dark:bg-background-800">
-                                    <dt className="text-sm text-text-700 dark:text-text-300">Artist</dt>
-                                    <dd className="mt-1 text-lg font-semibold text-text-900 dark:text-text-50">
+                                <div className="p-4 rounded-lg bg-background-100 ">
+                                    <dt className="text-sm text-text-700 ">Artist</dt>
+                                    <dd className="mt-1 text-lg font-semibold text-text-900 ">
                                         {data.artist}
                                     </dd>
                                 </div>
@@ -110,7 +110,7 @@ const MainSeriesInfo: React.FC<MainSeriesInfoProps> = ({ data }) => {
                         </div>
 
                         {/* Last Updated */}
-                        <div className="text-sm text-text-700 dark:text-text-300">
+                        <div className="text-sm text-text-700 ">
                             Last Updated: {new Date(data.updated_at).toLocaleDateString()}
                         </div>
                     </div>

@@ -97,7 +97,7 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <main className="bg-background-100 dark:bg-background-100">
+              <main className="bg-background-100 ">
                 <Navbar logo={logo}></Navbar>
                 <div className="min-h-dvh">{children}</div>
                 <Cookie />

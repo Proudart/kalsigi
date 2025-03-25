@@ -18,7 +18,7 @@ export default function Footer({ logo }: Props) {
 
   return (
     <footer className="border-b" role="contentinfo" aria-label="Site footer">
-      <hr className="my-6 dark:border-gray-200 border-gray-700 sm:mx-auto lg:my-8" />
+      <hr className="my-6  border-gray-700 sm:mx-auto lg:my-8" />
 
       <div className="container items-center content-center justify-center text-center align-middle mx-xl place-items-center sm:flex sm:items-center sm:justify-between">
         <Link

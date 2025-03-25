@@ -179,13 +179,13 @@ export default function SettingsForm() {
     };
 
     return (
-      <div className="mx-auto p-6 space-y-8 bg-background-300 dark:bg-background-900 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-primary-800 dark:text-primary-200">
+      <div className="mx-auto p-6 space-y-8 bg-background-300  rounded-lg shadow-lg">
+        <h1 className="text-3xl font-bold text-primary-800 ">
           Account Settings
         </h1>
 
         <form onSubmit={handleChangePassword} className="space-y-4">
-          <h2 className="text-2xl font-semibold text-primary-700 dark:text-primary-300 flex items-center">
+          <h2 className="text-2xl font-semibold text-primary-700  flex items-center">
             <IconLock className="mr-2" size={24} /> Change Password
           </h2>
           <div className="space-y-4">
@@ -196,7 +196,7 @@ export default function SettingsForm() {
               placeholder="Current Password"
               required
               disabled={isLoading.password}
-              className="w-full bg-background-50 dark:bg-background-800 text-text-800 dark:text-text-200 border-primary-300 dark:border-primary-700"
+              className="w-full bg-background-50  text-text-800  border-primary-300 "
             />
             <Input
               type="password"
@@ -205,7 +205,7 @@ export default function SettingsForm() {
               placeholder="New Password"
               required
               disabled={isLoading.password}
-              className="w-full bg-background-50 dark:bg-background-800 text-text-800 dark:text-text-200 border-primary-300 dark:border-primary-700"
+              className="w-full bg-background-50  text-text-800  border-primary-300 "
             />
             <Input
               type="password"
@@ -214,7 +214,7 @@ export default function SettingsForm() {
               placeholder="Confirm New Password"
               required
               disabled={isLoading.password}
-              className="w-full bg-background-50 dark:bg-background-800 text-text-800 dark:text-text-200 border-primary-300 dark:border-primary-700"
+              className="w-full bg-background-50  text-text-800  border-primary-300 "
             />
             <Button 
               type="submit" 
@@ -234,7 +234,7 @@ export default function SettingsForm() {
         </form>
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-primary-700 dark:text-primary-300 flex items-center">
+          <h2 className="text-2xl font-semibold text-primary-700  flex items-center">
             <IconHistory className="mr-2" size={24} /> Manage Data
           </h2>
           <div className="flex space-x-4">
@@ -270,13 +270,13 @@ export default function SettingsForm() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-primary-700 dark:text-primary-300 flex items-center">
+          <h2 className="text-2xl font-semibold text-primary-700  flex items-center">
             <IconTrash className="mr-2" size={24} /> Delete Account
           </h2>
-          <p className="text-text-700 dark:text-text-300">
+          <p className="text-text-700 ">
             Deleting your account will permanently remove all your data from the platform.
           </p>
-          <p className="text-text-700 dark:text-text-300">
+          <p className="text-text-700 ">
             This action cannot be undone.
           </p>
 
@@ -289,7 +289,7 @@ export default function SettingsForm() {
                 placeholder="Enter your current password"
                 required
                 disabled={isLoading.account}
-                className="w-full bg-background-50 dark:bg-background-800 text-text-800 dark:text-text-200 border-primary-300 dark:border-primary-700"
+                className="w-full bg-background-50  text-text-800  border-primary-300 "
               />
               <div className="flex space-x-4">
                 <Button 

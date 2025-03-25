@@ -56,8 +56,8 @@ const ScrollableImage: React.FC<ScrollableImageProps> = (props) => {
   const buttonClass = `px-4 py-2 rounded-md transition-all duration-200 font-medium text-sm
     bg-primary-600 text-background-50 hover:bg-primary-700
     disabled:bg-background-300 disabled:text-text-500
-    dark:bg-primary-700 dark:text-background-50 dark:hover:bg-primary-600
-    dark:disabled:bg-background-700 dark:disabled:text-text-600
+      
+     
     focus:outline-hidden focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50`;
 
   return (
@@ -71,7 +71,7 @@ const ScrollableImage: React.FC<ScrollableImageProps> = (props) => {
         />
       </div>
       {mode !== "scroll" && (
-        <div className="mt-4 flex justify-between items-center bg-background-100 dark:bg-background-800 p-4 rounded-lg shadow-md">
+        <div className="mt-4 flex justify-between items-center bg-background-100  p-4 rounded-lg shadow-md">
           <button
             onClick={() => onNavigate("prev")}
             disabled={currentIndex === 0}
@@ -80,7 +80,7 @@ const ScrollableImage: React.FC<ScrollableImageProps> = (props) => {
           >
             Previous
           </button>
-          <span className="text-sm font-medium text-text-700 dark:text-text-300">
+          <span className="text-sm font-medium text-text-700 ">
             {`${currentIndex + 1} / ${totalImages}`}
           </span>
           <button

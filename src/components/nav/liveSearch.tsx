@@ -15,6 +15,7 @@ const getSeries = async (url: string) => {
 };
 
 interface SearchResult {
+  url_code: any;
   title: string;
   url: string;
 }
@@ -81,7 +82,7 @@ function SearchBox() {
             {searchResults.map(
               (result: SearchResult, index: React.Key | null | undefined) => (
                 <Link
-                  href={{ pathname: `/series/${result.url}` }}
+                  href={{ pathname: `/series/${result.url}-${result.url_code}` }}
                   key={index}
                   onClick={handleExpandToggle}
                   prefetch={true}

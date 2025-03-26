@@ -24,6 +24,7 @@ export async function GET(request: Request): Promise<Response> {
     .select({
       title: series.title,
       url: series.url,
+      url_code: series.url_code,
     })
     .from(series)
     .where(ilike(series.title, `%${search}%`))

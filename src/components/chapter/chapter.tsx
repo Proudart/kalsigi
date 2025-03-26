@@ -59,6 +59,10 @@ export default function Chapter({ params }: any) {
             `https://www.skaihua.com/api/chapter?series=${modifiedTitle}`
         );
         
+        // const res = await fetch(
+        //   `http://localhost:3000/api/chapter?series=${modifiedTitle}`
+        // );
+
         if (!res.ok) throw new Error("Failed to fetch chapter data");
         
         const data = await res.json();

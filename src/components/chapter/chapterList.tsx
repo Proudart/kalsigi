@@ -77,7 +77,7 @@ const ListboxComponent: React.FC<ListboxComponentProps> = React.memo(
         seriesHistory = decompressData(compressedData);
       }
       const latestEntry = chapters[0];
-      const newEntry = { title: url, chapter: Number(chapter.split("-")[1]), latest: latestEntry, timestamp };
+      const newEntry = { title: url, chapter: Number(chapter.split("-")[1]), latest: Number(latestEntry), timestamp };
       const updatedSeriesHistory = seriesHistory.filter(
         (entry: any) => entry.title !== title
       );

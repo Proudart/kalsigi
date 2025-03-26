@@ -67,13 +67,12 @@ export default function ChapterNavigation({
       const newEntry = { 
         title: url, 
         chapter: Number(currentChapter), 
-        latest: latestEntry, 
+        latest: Number(latestEntry), 
         timestamp,
-        coverImage: url ? `/covers/${url}.jpg` : null // Assuming cover images follow this pattern
       };
 
       const updatedHistory = seriesHistory.filter(
-        (entry: any) => entry.title !== title
+        (entry: any) => entry.title !== url
       );
 
       updatedHistory.unshift(newEntry); // Add to beginning of the array

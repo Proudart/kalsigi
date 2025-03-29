@@ -1,9 +1,11 @@
+// src/components/feed/main/feedNew.tsx
 'use server'
 
 import Image from "next/image";
-import { ScrollArea } from "../../../components/ui/scroll-area"
+import { ScrollArea } from "../../../components/ui/scroll-area";
 import { ChevronRight } from "lucide-react";
 import { Link } from "../../../components/link";
+import FeedNewSkeleton from "./feedNewSkeleton";
 
 type Manga = {
   title: string;
@@ -26,8 +28,8 @@ async function fetchMangaData(sort: string, offset: number): Promise<Manga[]> {
 
   if (!res.ok) throw new Error('Failed to fetch manga data');
   return await res.json();
-
 }
+
 const MangaImage = ({
   src,
   alt,
@@ -54,15 +56,32 @@ type Props = {
 
 export default async function FeedNew({ title }: Props) {
   let data: Manga[] = [];
+  let error: Error | null = null;
+  
   try {
     data = await fetchMangaData(title, 0);
-  } catch (error) {
+  } catch (err) {
+    error = err instanceof Error ? err : new Error('Unknown error occurred');
     console.error('Error fetching manga data:', error);
-    return null;
   }
+
+  // Show error message if fetch failed
+  if (error) {
+    return (
+      <section>
+        <h2 className="text-2xl font-bold mb-4">{title}</h2>
+        <div className="h-[400px] w-full rounded-md border bg-background-300 flex items-center justify-center">
+          <p className="text-text-600">Unable to load data. Please try again later.</p>
+        </div>
+      </section>
+    );
+  }
+
+  // Return null if no data to display
   if (data.length === 0) {
     return null;
   }
+
   return (
     <section>
       <h2 className="text-2xl font-bold mb-4">{title}</h2>
@@ -81,7 +100,11 @@ export default async function FeedNew({ title }: Props) {
                 </Link>
               </h3>
               {manga.chapters.map((chapter) => (
-                <Link href={`/series/${manga.url}-${manga.url_code}/chapter-${manga.chapters[0].chapter_number}`} key={chapter.chapter_number} className="text-sm text-muted-foreground" prefetch={true}>
+                <Link 
+                  href={`/series/${manga.url}-${manga.url_code}/chapter-${manga.chapters[0].chapter_number}`} 
+                  key={chapter.chapter_number} 
+                  className="text-sm text-muted-foreground block" 
+                  prefetch={true}>
                   chapter-{chapter.chapter_number} - {chapter.published_at}
                 </Link>
               ))}

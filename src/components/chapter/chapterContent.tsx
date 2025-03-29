@@ -96,7 +96,7 @@ const MangaPanel = memo(({
         className={`
           ${mode === "horizontal" ? "max-h-[calc(100vh-200px)] w-auto" : "w-full h-auto"} 
           ${mode !== "webtoon" ? "shadow-md" : ""}
-          ${mode === "vertical" ? "mb-4" : ""}
+          ${mode === "vertical" ? "" : ""}
           rounded-md cursor-pointer transition-opacity
         `}
         onClick={onClick}

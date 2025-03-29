@@ -147,7 +147,7 @@ export default function EnhancedManga({ data, title }: { data: any; title: strin
             {/* Chapters & Info Tabs */}
             <div id="chapters-section" className="bg-background-800 rounded-xl shadow-lg border border-background-700 overflow-hidden">
               <Tabs defaultValue="chapters" value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="w-full bg-background-700">
+                <TabsList className="w-full bg-background-700 text-text-100 ">
                   <TabsTrigger value="chapters" className="flex-1 py-3">
                     <BookOpen className="w-4 h-4 mr-2" aria-hidden="true" /> 
                     Chapters ({data.chapters?.length || 0})

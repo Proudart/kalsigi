@@ -24,7 +24,6 @@ const ShareMenu = lazy(() => import("../share"));
 const Recommended = lazy(() => import("../recommendations"));
 
 export default function Chapter({ params }: any) {
-  const { theme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [chapterData, setChapterData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -149,7 +148,7 @@ export default function Chapter({ params }: any) {
         </div>
       </header>
 
-      <main className="bg-background-50  min-h-screen pb-20">
+      <main className="bg-background-100  min-h-screen pb-20">
         {/* Title Section */}
         <div className="max-w-6xl mx-auto px-4 pt-8 pb-6">
           <nav aria-label="Breadcrumb" className="mb-4">
@@ -239,8 +238,8 @@ export default function Chapter({ params }: any) {
 
         {/* Share section */}
         <div id="share-section" className="max-w-3xl mx-auto px-4 mb-8">
-          <div className="bg-background-100  p-6 rounded-lg shadow-sm border border-background-200 ">
-            <h2 className="text-xl font-semibold text-text-900 ">Share this chapter</h2>
+          <div className="bg-background-800  p-6 rounded-lg shadow-sm border border-background-200 ">
+            <h2 className="text-xl font-semibold text-text-100 ">Share this chapter</h2>
             <ShareMenu
               url={`https://www.${process.env.site_name}.com/series/${title}/${chapter}`}
               title={`${chapterData?.title} - ${chapter?.toString().replace(/-/g, " ")}`}
@@ -252,7 +251,7 @@ export default function Chapter({ params }: any) {
         {summary?.tldr && (
           <div className="max-w-3xl mx-auto px-4 mb-8">
             <section className="bg-background-100  p-6 rounded-lg shadow-sm border border-background-200" aria-label="Chapter Summary">
-              <h2 className="text-xl font-semibold text-text-900 ">
+              <h2 className="text-xl font-semibold text-text-100 ">
                 Quick Summary
               </h2>
               <p className="text-text-700  leading-relaxed">{summary.tldr}</p>

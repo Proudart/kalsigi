@@ -223,10 +223,10 @@ const Recommendations: React.FC<RecommendationsProps> = ({ genres, seriesId, cla
   const skeletonCount = getItemsPerRow();
   return (
     <section 
-      className={`bg-primary-500 p-6 rounded-lg shadow-lg ${className || ''}`}
+      className={`bg-primary-800 p-6 rounded-lg shadow-lg ${className || ''}`}
       aria-label="Similar Series Recommendations"
     >
-      <h2 className="text-2xl font-bold mb-6 text-text-900">
+      <h2 className="text-2xl font-bold mb-6 text-text-100">
         Similar Series You Might Enjoy
       </h2>
       

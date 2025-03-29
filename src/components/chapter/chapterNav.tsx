@@ -155,14 +155,14 @@ export default function ChapterNavigation({
   return (
     <div className="rounded-lg overflow-hidden shadow-sm border border-background-200 ">
       {/* Top navigation */}
-      <div className="grid grid-cols-3 bg-background-100 ">
+      <div className="grid grid-cols-3 bg-background-800 ">
         <Link
           href={isPrevDisabled ? "#" : `/series/${url}-${urlCode}/chapter-${prevChapterNumber}`}
           aria-disabled={isPrevDisabled}
-          className={`flex items-center justify-center py-3 px-4 text-sm font-medium transition-colors ${
+          className={`flex items-center justify-center py-3 px-4 text-sm font-medium transition-colors  ${
             isPrevDisabled 
-              ? "text-text-400  cursor-not-allowed" 
-              : "text-text-800  hover:bg-background-200 "
+              ? "text-text-500  cursor-not-allowed" 
+              : "text-text-100  hover:bg-background-200 hover:text-text-800 "
           }`}
         >
           <ChevronLeft className="w-4 h-4 mr-1" />
@@ -171,7 +171,7 @@ export default function ChapterNavigation({
         
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className="flex items-center justify-center py-3 px-4 text-text-800  hover:bg-background-200  transition-colors"
+          className="flex items-center justify-center py-3 px-4 text-text-100  hover:bg-background-200  hover:text-text-800  transition-colors"
         >
           Chapter {currentChapter}
           <ChevronDown className={`w-4 h-4 ml-1 transform transition-transform duration-200 ${
@@ -184,8 +184,8 @@ export default function ChapterNavigation({
           aria-disabled={isNextDisabled}
           className={`flex items-center justify-center py-3 px-4 text-sm font-medium transition-colors ${
             isNextDisabled 
-              ? "text-text-400  cursor-not-allowed" 
-              : "text-text-800  hover:bg-background-200 "
+              ? "text-text-500  cursor-not-allowed" 
+              : "text-text-100  hover:bg-background-200 hover:text-text-800  "
           }`}
         >
           Next
@@ -197,7 +197,7 @@ export default function ChapterNavigation({
       {isDropdownOpen && (
         <div
           ref={dropdownRef}
-          className="max-h-64 overflow-y-auto border-t border-background-200  bg-background-50 "
+          className="max-h-64 overflow-y-auto border-t border-background-200  bg-background-800 "
         >
           <ul className="py-1">
             {chapters.map((chapterNum, index) => (
@@ -214,10 +214,10 @@ export default function ChapterNavigation({
                   href={`/series/${url}-${urlCode}/chapter-${chapterNum}`}
                   prefetch={Math.abs(parseInt(chapterNum) - parseInt(currentChapter)) <= 2}
                   onClick={() => setIsDropdownOpen(false)}
-                  className={`block px-4 py-2 text-sm hover:bg-background-200  transition-colors ${
+                  className={`block px-4 py-2 text-sm hover:bg-background-200 hover:text-text-800  transition-colors ${
                     chapterNum === currentChapter
                       ? "font-medium text-primary-700 "
-                      : "text-text-700 "
+                      : "text-text-100 "
                   }`}
                 >
                   Chapter {chapterNum}

@@ -221,8 +221,8 @@ const ChapterChat: React.FC<{ chapterId: string }> = ({ chapterId }) => {
   MessageComponent.displayName = 'MessageComponent';
 
   return (
-    <div className="mt-8 bg-background-50 p-6 rounded-lg shadow-md  align-center mx-auto">
-      <h2 className="text-2xl font-bold mb-6 text-text-900">Chapter Discussion</h2>
+    <div className="mt-8 bg-background-800 p-6 rounded-lg shadow-md  align-center mx-auto">
+      <h2 className="text-2xl font-bold mb-6 text-text-100">Chapter Discussion</h2>
       <div className="space-y-6">
         {messages.map((message) => (
           <MessageComponent key={message.id} message={message} depth={0} />

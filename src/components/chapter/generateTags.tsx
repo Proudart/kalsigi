@@ -41,9 +41,9 @@ export default function GenerateTags({
         : [];
 
     return (
-        <div className="bg-background-100  rounded-lg shadow-sm border border-background-200  transition-colors duration-300">
+        <div className="bg-background-800  rounded-lg shadow-sm border border-background-200  transition-colors duration-300">
             <div className="p-6">
-                <h3 className="text-xl font-bold text-text-900  mb-6 flex items-center">
+                <h3 className="text-xl font-bold text-text-100  mb-6 flex items-center">
                     <Info className="w-5 h-5 mr-2 text-primary-600 " />
                     Chapter Information
                 </h3>
@@ -51,13 +51,13 @@ export default function GenerateTags({
                 <div className="space-y-6">
                     {/* Publication details */}
                     <div>
-                        <h4 className="text-sm font-medium text-text-700  mb-3 flex items-center">
+                        <h4 className="text-sm font-medium text-text-200  mb-3 flex items-center">
                             <BookOpen className="w-4 h-4 mr-2 text-secondary-600 " />
                             Publication Details
                         </h4>
                         
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="bg-background-50  p-4 rounded-lg border border-background-200 ">
+                            <div className="bg-background-200  p-4 rounded-lg border border-background-200 ">
                                 <div className="flex items-center text-text-900 ">
                                     <Calendar className="w-4 h-4 mr-2 text-primary-600 " />
                                     <span className="font-medium">Published:</span>
@@ -65,7 +65,7 @@ export default function GenerateTags({
                                 <p className="mt-1 text-text-700  pl-6">{formattedDate}</p>
                             </div>
                             
-                            <div className="bg-background-50  p-4 rounded-lg border border-background-200 ">
+                            <div className="bg-background-200  p-4 rounded-lg border border-background-200 ">
                                 <div className="flex items-center text-text-900 ">
                                     <BookOpen className="w-4 h-4 mr-2 text-primary-600 " />
                                     <span className="font-medium">Publisher:</span>
@@ -98,8 +98,8 @@ export default function GenerateTags({
                     
                     {/* Read info */}
                     <div className="text-center pt-2">
-                        <p className="text-sm text-text-600 ">
-                            You are reading <span className="font-medium text-text-900 ">{title}</span> - Chapter {chapterNumber} on <span className="text-primary-600 ">skaihua</span>
+                        <p className="text-sm text-text-300 ">
+                            You are reading <span className="font-medium text-text-50 ">{title}</span> - Chapter {chapterNumber} on <span className="text-primary-100 ">skaihua</span>
                         </p>
                     </div>
                 </div>

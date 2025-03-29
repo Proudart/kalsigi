@@ -237,15 +237,15 @@ const SeriesChat: React.FC<{ seriesId: string }> = ({ seriesId }) => {
   MessageComponent.displayName = 'MessageComponent';
 
   return (
-    <div className="mt-8 bg-background-50 p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-text-900">Series Discussion</h2>
+    <div className="mt-8 bg-background-700 p-6 rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-6 text-text-100">Series Discussion</h2>
       <div className="space-y-6">
         {messages.length > 0 ? (
           messages.map((message) => (
             <MessageComponent key={message.id} message={message} depth={0} />
           ))
         ) : (
-          <p className="text-text-700 text-center py-4">No comments yet. Be the first to start the discussion!</p>
+          <p className="text-text-100 text-center py-4">No comments yet. Be the first to start the discussion!</p>
         )}
       </div>
       {user && user.name ? (

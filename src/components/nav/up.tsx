@@ -26,9 +26,15 @@ const ScrollToTopButton: React.FC = () => {
     }, []);
 
     return (
-        <div onClick={scrollToTop} className={`fixed z-50 bottom-7 left-4 ${showButton ? 'opacity-100 transition-opacity duration-300' : 'opacity-0 transition-opacity duration-300 hidden'}`}>
-            <IconArrowUp className="w-8 h-8 p-1 text-2xl text-white rounded-full bg-primary-500 border border-white" />
-        </div>
+        showButton && (
+            <button
+                onClick={scrollToTop}
+                className="fixed bottom-6 left-6 p-3 rounded-full bg-primary-600 text-white shadow-lg hover:bg-primary-700 transition-colors z-40"
+                aria-label="Scroll to top"
+            >
+                <IconArrowUp className="w-4 h-4" />
+            </button>
+        )
     );
 };
 

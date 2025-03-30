@@ -504,7 +504,7 @@ export default function ChapterContent({ panels, title, chapter, onPanelChange }
     >
       {/* Floating controls */}
       <div 
-        className={`fixed bottom-6 right-6 flex flex-col gap-3 transition-opacity duration-300 z-40 ${
+        className={`fixed bottom-18 right-6 flex flex-col gap-3 transition-opacity duration-300 z-40 ${
           isNavigationVisible ? "opacity-100" : "opacity-0"
         }`}
       >
@@ -513,7 +513,7 @@ export default function ChapterContent({ panels, title, chapter, onPanelChange }
           className="p-3 rounded-full bg-primary-600 text-white shadow-lg hover:bg-primary-700 transition-colors"
           aria-label="Reading settings"
         >
-          <Settings className="w-5 h-5" />
+          <Settings className="w-4 h-4" />
         </button>
         
         <button
@@ -522,9 +522,9 @@ export default function ChapterContent({ panels, title, chapter, onPanelChange }
           aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
         >
           {isFullscreen ? (
-            <Minimize className="w-5 h-5" />
+            <Minimize className="w-4 h-4" />
           ) : (
-            <Maximize className="w-5 h-5" />
+            <Maximize className="w-4 h-4" />
           )}
         </button>
       </div>

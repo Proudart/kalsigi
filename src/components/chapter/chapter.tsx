@@ -4,8 +4,6 @@
 import { useState, useEffect, lazy } from "react";
 import { Link } from "../../components/link";
 import GenerateTags from "./generateTags";
-import { useTheme } from 'next-themes';
-import Image from "next/image";
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -281,15 +279,7 @@ export default function Chapter({ params }: any) {
         </div>
 
         {/* Scroll to top button */}
-        {isScrolled && (
-          <button
-            onClick={scrollToTop}
-            className="fixed bottom-6 right-6 p-3 rounded-full bg-primary-600 text-white shadow-lg hover:bg-primary-700 transition-colors z-40"
-            aria-label="Scroll to top"
-          >
-            <ArrowUp className="w-5 h-5" />
-          </button>
-        )}
+        
       </main>
     </>
   );

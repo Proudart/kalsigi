@@ -89,8 +89,9 @@ export default React.memo(function BugReport() {
   return (
     <div className="fixed z-50 bottom-5 right-4">
       <Dialog open={opens} onOpenChange={setOpen} defaultOpen={false}>
-        <DialogTrigger>
-          <IconBug className="w-8 h-8 p-1 text-2xl text-white rounded-full bg-primary-500 border border-white" />
+        <DialogTrigger                 className="fixed bottom-6 right-6 p-3 rounded-full bg-primary-600 text-white shadow-lg hover:bg-primary-700 transition-colors z-40"
+        >
+          <IconBug className="w-4 h-4" />
         </DialogTrigger>
         <DialogContent className="p-4 text-main bg-background-600 rounded-2xl md:p-8">
           <DialogHeader>

@@ -5,7 +5,7 @@ import { db } from "../util/db";
 const baseURL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3000"
-    : `https://www.skaihua.com`;
+    : `https://www.manhwacall.com`;
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -14,11 +14,11 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-  trustedOrigins: ["http://localhost:3000", "https://www.skaihua.com"],
+  trustedOrigins: ["http://localhost:3000", "https://www.manhwacall.com"],
   advanced: {
     useSecureCookies: process.env.NODE_ENV === "production",
   },
-  baseURL: "https://www.skaihua.com",
+  baseURL: "https://www.manhwacall.com",
 });
 
 

@@ -29,7 +29,7 @@ interface User {
 import { createAuthClient } from "better-auth/react";
 import { useCallback, useMemo } from "react";
 const baseURL = process.env.NODE_ENV === 'production' 
-  ? 'https://www.skaihua.com'
+  ? 'https://www.manhwacall.com'
   : 'http://localhost:3000';
 const { useSession } = createAuthClient({baseURL: baseURL});
 

@@ -2,7 +2,7 @@ import "./globals.css";
 import { Poppins } from "next/font/google";
 import dynamic from "next/dynamic";
 import { Toaster } from "../components/ui/toaster";
-import logo from "../../public/skaihua.webp";
+import logo from "../../public/manhwacall.webp";
 import PlausibleProvider from "next-plausible";
 import { ThemeProvider } from "next-themes";
 import { Suspense } from "react";
@@ -72,11 +72,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/skaihua-144.png", sizes: "144x144", type: "image/png" },
-      { url: "/skaihua-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/skaihua-512.png", sizes: "512x512", type: "image/png" },
+      { url: "/manhwacall-144.png", sizes: "144x144", type: "image/png" },
+      { url: "/manhwacall-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/manhwacall-512.png", sizes: "512x512", type: "image/png" },
     ],
-    apple: [{ url: "/skaihua.webp", sizes: "192x192", type: "image/webp" }],
+    apple: [{ url: "/manhwacall.webp", sizes: "192x192", type: "image/webp" }],
   },
 };
 

@@ -3,7 +3,7 @@ export const metadata = {
   title: "about",
   description: `The only manga sites you'll need are those that bring together your favourite or most popular translators into one place, such as Reaperscans and Asurascans, and that is what we do at ${process.env.site_name}.`, 
   icons: {
-    icon: "/skaihua.webp",
+    icon: "/manhwacall.webp",
   },
   keywords: ["Manga", "Read Manga", "Read Manga Online", "Manga Online", "Manga Reader", "Manga Scans", "English Manga", "Manga Sites", "Manga Website", "Manga Translation", "Manga Translated", "Manga Scans Online", "Manga Website", "Where Can I Read Manga", "Read Manga", "Manga Website"],
 

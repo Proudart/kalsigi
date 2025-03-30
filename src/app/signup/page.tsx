@@ -21,7 +21,7 @@ export default async function SignUpPage() {
         className="mb-8 flex items-center justify-center text-2xl font-semibold lg:mb-10"
       >
         <Image
-          src="/skaihua.webp"
+          src="/manhwacall.webp"
           alt={process.env.site_name as string}
           width={50}
           height={50}

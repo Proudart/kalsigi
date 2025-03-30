@@ -1,45 +1,45 @@
 {
-    "name": "skaihua",
-    "short_name": "skaihua",
-    "description": "The only manga sites you'll need are those that bring together your favourite or most popular translators into one place, such as Reaperscans and Asurascans, and that is what we do at skaihua.",
+    "name": "manhwacall",
+    "short_name": "manhwacall",
+    "description": "The only manga sites you'll need are those that bring together your favourite or most popular translators into one place, such as Reaperscans and Asurascans, and that is what we do at manhwacall.",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#141f1b",
     "theme_color": "#c3d5ce",
     "icons": [
       {
-        "src": "/skaihua-192.png",
+        "src": "/manhwacall-192.png",
         "sizes": "192x192",
         "type": "image/png",
         "purpose": "any"
       },
       {
-        "src": "/skaihua-512.png",
+        "src": "/manhwacall-512.png",
         "sizes": "512x512",
         "type": "image/png",
         "purpose": "any"
       },
       {
-        "src": "/skaihua.png",
+        "src": "/manhwacall.png",
         "sizes": "500x500",
         "type": "image/png",
         "purpose": "any"
       },
       {
-        "src": "/skaihua-144.png",
+        "src": "/manhwacall-144.png",
         "sizes": "144x144",
         "type": "image/png",
         "purpose": "any"
       }
     ],"screenshots": [
     {
-      "src": "/skaihua-desktop.png",
+      "src": "/manhwacall-desktop.png",
       "sizes": "1278x801",
       "type": "image/png",
       "form_factor": "wide"
     },
     {
-      "src": "/skaihua-phone.png",
+      "src": "/manhwacall-phone.png",
       "sizes": "821x934",
       "type": "image/png"
     }

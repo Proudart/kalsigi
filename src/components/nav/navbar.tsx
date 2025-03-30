@@ -25,7 +25,7 @@ export default function Navbar({ logo }: Props) {
           <Link href="/" className="flex items-center">
             <Image
               src={logo || "/placeholder.svg"}
-              alt={'skaihua logo'}
+              alt={'manhwacall logo'}
               width={40}
               height={40}
               className="mr-2"

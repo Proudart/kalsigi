@@ -99,7 +99,7 @@ export default function GenerateTags({
                     {/* Read info */}
                     <div className="text-center pt-2">
                         <p className="text-sm text-text-300 ">
-                            You are reading <span className="font-medium text-text-50 ">{title}</span> - Chapter {chapterNumber} on <span className="text-primary-100 ">skaihua</span>
+                            You are reading <span className="font-medium text-text-50 ">{title}</span> - Chapter {chapterNumber} on <span className="text-primary-100 ">manhwacall</span>
                         </p>
                     </div>
                 </div>

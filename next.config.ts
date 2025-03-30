@@ -77,7 +77,7 @@ const nextConfig = withPWA({
     },
     {
       source: '/komic/:path*',
-      destination: 'https://cnn.skaihua.com/komic/:path*'
+      destination: 'https://cnn.manhwacall.com/komic/:path*'
     }
   ];
   },

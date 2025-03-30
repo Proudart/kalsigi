@@ -53,7 +53,7 @@ export default function Chapter({ params }: any) {
       try {
 
         const res = await fetch(
-            `https://www.skaihua.com/api/chapter?series=${modifiedTitle}`
+            `https://www.manhwacall.com/api/chapter?series=${modifiedTitle}`
         );
         
         // const res = await fetch(

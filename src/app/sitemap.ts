@@ -5,6 +5,7 @@ interface SitemapEntry {
   lastModified: string | Date;
 }
 
+
 const SITEMAP_CONFIG = {
   START_DATE: process.env.SITEMAP_START_DATE || '2024-01-14',
   BACKDATE_FROM: process.env.SITEMAP_BACKDATE_FROM || '2024-01-11',

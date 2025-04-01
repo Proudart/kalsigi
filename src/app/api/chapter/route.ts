@@ -86,7 +86,6 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Series not found" }, { status: 404 });
     }
 
-    console.log("Fetched series data:", result);
 
     const chaptersWithSummary = result.chapters.map((chapter: { summary: { tldr: any; synopsis: any; keywords: any; }; }) => ({
       ...chapter,

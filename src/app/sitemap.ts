@@ -6,11 +6,11 @@ interface SitemapEntry {
 }
 
 const SITEMAP_CONFIG = {
-  START_DATE: process.env.SITEMAP_START_DATE || '2025-01-14',
-  BACKDATE_FROM: process.env.SITEMAP_BACKDATE_FROM || '2025-01-11',
+  START_DATE: process.env.SITEMAP_START_DATE || '2024-01-14',
+  BACKDATE_FROM: process.env.SITEMAP_BACKDATE_FROM || '2024-01-11',
   URLS_PER_DAY: {
-    MIN: 50,
-    MAX: 100
+    MIN: 500,
+    MAX: 1000
   }
 };
 

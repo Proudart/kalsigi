@@ -58,7 +58,6 @@ export async function POST(request: Request) {
         .set({
           total_views: sql`${series.total_views} + 1`,
           today_views: sql`${series.today_views} + 1`,
-          updated_at: new Date(),
         })
         .where(eq(series.id, seriesId))
         .returning({ 
@@ -71,7 +70,6 @@ export async function POST(request: Request) {
         .update(chapters)
         .set({
           views: sql`${chapters.views} + 1`,
-          updated_at: new Date(),
         })
         .where(
           and(

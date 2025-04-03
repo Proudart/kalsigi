@@ -19,8 +19,8 @@ export async function GET(request: Request) {
   let orderByClause;
   let result;
   if (order === "Latest Updates") {
-    orderByClause = (series: { last_update: any }, { desc }: any) => [
-      desc(series.last_update),
+    orderByClause = (series: { updated_at: any }, { desc }: any) => [
+      desc(series.updated_at),
     ];
   } else if (order === "Trending") {
     orderByClause = (series: { today_views: any }, { desc }: any) => [

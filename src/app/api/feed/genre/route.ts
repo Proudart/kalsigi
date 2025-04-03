@@ -18,8 +18,8 @@ export async function GET(request: Request) {
     },
     limit: 25,
     offset: offset,
-    orderBy: (series: { last_update: any }, { desc }: any) => [
-      desc(series.last_update),
+    orderBy: (series: { updated_at: any }, { desc }: any) => [
+      desc(series.updated_at),
     ],
     where: sql`updated_at IS NOT NULL AND genres @> ARRAY[${genre}]`,
     with: {

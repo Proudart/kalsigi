@@ -11,7 +11,6 @@ interface MangaData {
     author: string;
     artist?: string;
     status: string;
-    last_update: string;
     averageRating: number;
     description: string;
 }

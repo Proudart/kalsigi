@@ -52,13 +52,13 @@ export default function Chapter({ params }: any) {
       setIsLoading(true);
       try {
 
-        const res = await fetch(
-            `https://www.manhwacall.com/api/chapter?series=${modifiedTitle}`
-        );
-        
         // const res = await fetch(
-        //   `http://localhost:3000/api/chapter?series=${modifiedTitle}`
+        //     `https://www.manhwacall.com/api/chapter?series=${modifiedTitle}`
         // );
+        
+        const res = await fetch(
+          `http://localhost:3000/api/chapter?series=${modifiedTitle}`
+        );
 
         if (!res.ok) throw new Error("Failed to fetch chapter data");
         
@@ -101,47 +101,47 @@ export default function Chapter({ params }: any) {
   return (
     <>
       {/* Fixed header with navigation controls */}
-      <header className="sticky top-0 z-30 bg-background-100/90  backdrop-blur-md border-b border-background-300  shadow-sm">
+      <header className="sticky top-0 z-30 bg-background-100/90 backdrop-blur-md border-b border-background-300 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Link 
-              href={`/series/${title}`} 
-              className="flex items-center text-text-900  hover:text-primary-600  transition-colors"
-            >
-              <BookOpen className="w-5 h-5 mr-2" />
-              <span className="font-medium max-w-[150px] sm:max-w-xs truncate">{chapterData?.title}</span>
-            </Link>
+        <Link 
+          href={`/series/${title}`} 
+          className="flex items-center text-text-900 hover:text-primary-600 transition-colors"
+        >
+          <BookOpen className="w-5 h-5 mr-2" />
+          <span className="font-medium max-w-[150px] sm:max-w-xs truncate">{chapterData?.title}</span>
+        </Link>
           </div>
           
           <div className="flex items-center space-x-4">
-            <div className="hidden sm:flex items-center text-text-600 ">
-              <Eye className="w-4 h-4 mr-1" />
-              <span>{views.toLocaleString()}</span>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              {prevChapter && (
-                <Link 
-                  href={`/series/${title}/chapter-${prevChapter}`}
-                  aria-label="Previous chapter"
-                  className="p-2 rounded-full text-text-700  hover:text-primary-600  hover:bg-background-200  transition-colors"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </Link>
-              )}
-              
-              <span className="text-sm font-medium">Ch. {chapterNumber}</span>
-              
-              {nextChapter && (
-                <Link 
-                  href={`/series/${title}/chapter-${nextChapter}`}
-                  aria-label="Next chapter"
-                  className="p-2 rounded-full text-text-700  hover:text-primary-600  hover:bg-background-200  transition-colors"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </Link>
-              )}
-            </div>
+        <div className="hidden sm:flex items-center text-text-600">
+          <Eye className="w-4 h-4 mr-1" />
+          <span>{views.toLocaleString()}</span>
+        </div>
+        
+        <div className="flex items-center space-x-2">
+          {prevChapter && (
+            <Link 
+          href={`/series/${title}/chapter-${prevChapter}`}
+          aria-label="Previous chapter"
+          className="p-2 rounded-full text-text-700 hover:text-primary-600 hover:bg-background-200 transition-colors"
+            >
+          <ChevronLeft className="w-5 h-5" />
+            </Link>
+          )}
+          
+          <span className="text-sm font-medium">Ch. {chapterNumber}</span>
+          
+          {nextChapter && (
+            <Link 
+          href={`/series/${title}/chapter-${nextChapter}`}
+          aria-label="Next chapter"
+          className="p-2 rounded-full text-text-700 hover:text-primary-600 hover:bg-background-200 transition-colors"
+            >
+          <ChevronRight className="w-5 h-5" />
+            </Link>
+          )}
+        </div>
           </div>
         </div>
       </header>
@@ -216,7 +216,7 @@ export default function Chapter({ params }: any) {
         </div>
 
         {/* Chapter content */}
-        <article className="max-w-3xl mx-auto px-4 mb-8">
+        <article className="max-w-3xl mx-auto mb-8">
           {striked ? (
             <div className="py-24 text-center bg-background-100  rounded-lg border border-background-200 x">
               <div className="max-w-md mx-auto">

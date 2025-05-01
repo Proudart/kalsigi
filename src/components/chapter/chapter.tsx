@@ -40,7 +40,7 @@ export default function Chapter({ params }: any) {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, []);1
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

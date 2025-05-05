@@ -42,8 +42,10 @@ export default function ChapterNavigation({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState<number>(-1);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const selectedItemRef = useRef<HTMLLIElement>(null);
   
+  // Update current index when chapters or current chapter changes
   useEffect(() => {
     if (chapters) {
       const index = chapters.findIndex(ch => ch === currentChapter);
@@ -51,8 +53,8 @@ export default function ChapterNavigation({
     }
   }, [chapters, currentChapter]);
   
+  // Track reading history
   useEffect(() => {
-    // Track reading history
     const trackReadingHistory = setTimeout(() => {
       const timestamp = new Date().toISOString();
       const cookieName = "seriesHistory";
@@ -109,41 +111,56 @@ export default function ChapterNavigation({
     return () => clearTimeout(addViewTimer);
   }, [title, currentChapter]);
 
-  // Close dropdown when clicking outside
+  // Apply scroll to the dropdown after it's opened
   useEffect(() => {
-    if (isDropdownOpen && selectedItemRef.current) {
-      const container = dropdownRef.current;
-      const selectedItem = selectedItemRef.current;
-
-      if (container) {
-        const containerRect = container.getBoundingClientRect();
-        const selectedRect = selectedItem.getBoundingClientRect();
-
-        // Scroll to selected item if outside visible area
-        if (
-          selectedRect.top < containerRect.top ||
-          selectedRect.bottom > containerRect.bottom
-        ) {
-          const scrollOffset =
-            selectedItem.offsetTop -
-            container.clientHeight / 2 +
-            selectedItem.clientHeight / 2;
-          container.scrollTop = Math.max(0, scrollOffset);
-        }
-      }
+    if (isDropdownOpen && dropdownRef.current && selectedItemRef.current) {
+      // Wait for the dropdown to render completely
+      requestAnimationFrame(() => {
+        if (!dropdownRef.current || !selectedItemRef.current) return;
+        
+        const container = dropdownRef.current;
+        const selectedItem = selectedItemRef.current;
+        
+        // Calculate position to center the selected item
+        const containerHeight = container.clientHeight;
+        const itemHeight = selectedItem.clientHeight;
+        const itemTop = selectedItem.offsetTop;
+        
+        // Center the item in the visible area of the dropdown
+        container.scrollTop = itemTop - (containerHeight / 2) + (itemHeight / 2);
+      });
     }
+  }, [isDropdownOpen]);
 
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+  // Toggle dropdown
+  const toggleDropdown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDropdownOpen(prev => !prev);
+  };
+
+  // Close dropdown when clicking outside (excludes the dropdown toggle button)
+  useEffect(() => {
+    if (!isDropdownOpen) return;
+    
+    const handleClickOutside = (e: MouseEvent) => {
+      // Don't close if clicking the toggle button
+      if (buttonRef.current && buttonRef.current.contains(e.target as Node)) {
+        return;
+      }
+      
+      // Close if clicking outside the dropdown
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setIsDropdownOpen(false);
       }
     };
-
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
+    
+    // Use capture phase to ensure we catch the event before other handlers
+    document.addEventListener('mousedown', handleClickOutside, true);
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside, true);
+    };
   }, [isDropdownOpen]);
 
   // Navigation actions
@@ -153,16 +170,16 @@ export default function ChapterNavigation({
   const nextChapterNumber = !isNextDisabled ? chapters[currentIndex - 1] : null;
 
   return (
-    <div className="rounded-lg overflow-hidden shadow-sm border border-background-200 ">
+    <div className="rounded-lg overflow-hidden shadow-sm border border-background-200">
       {/* Top navigation */}
-      <div className="grid grid-cols-3 bg-background-800 ">
+      <div className="grid grid-cols-3 bg-background-800">
         <Link
           href={isPrevDisabled ? "#" : `/series/${url}-${urlCode}/chapter-${prevChapterNumber}`}
           aria-disabled={isPrevDisabled}
-          className={`flex items-center justify-center py-3 px-4 text-sm font-medium transition-colors  ${
+          className={`flex items-center justify-center py-3 px-4 text-sm font-medium transition-colors ${
             isPrevDisabled 
-              ? "text-text-500  cursor-not-allowed" 
-              : "text-text-100  hover:bg-background-200 hover:text-text-800 "
+              ? "text-text-500 cursor-not-allowed" 
+              : "text-text-100 hover:bg-background-200 hover:text-text-800"
           }`}
         >
           <ChevronLeft className="w-4 h-4 mr-1" />
@@ -170,8 +187,12 @@ export default function ChapterNavigation({
         </Link>
         
         <button
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className="flex items-center justify-center py-3 px-4 text-text-100  hover:bg-background-200  hover:text-text-800  transition-colors"
+          ref={buttonRef}
+          type="button"
+          onClick={toggleDropdown}
+          className="flex items-center justify-center py-3 px-4 text-text-100 hover:bg-background-200 hover:text-text-800 transition-colors"
+          aria-expanded={isDropdownOpen}
+          aria-controls="chapter-dropdown"
         >
           Chapter {currentChapter}
           <ChevronDown className={`w-4 h-4 ml-1 transform transition-transform duration-200 ${
@@ -184,8 +205,8 @@ export default function ChapterNavigation({
           aria-disabled={isNextDisabled}
           className={`flex items-center justify-center py-3 px-4 text-sm font-medium transition-colors ${
             isNextDisabled 
-              ? "text-text-500  cursor-not-allowed" 
-              : "text-text-100  hover:bg-background-200 hover:text-text-800  "
+              ? "text-text-500 cursor-not-allowed" 
+              : "text-text-100 hover:bg-background-200 hover:text-text-800"
           }`}
         >
           Next
@@ -193,20 +214,21 @@ export default function ChapterNavigation({
         </Link>
       </div>
       
-      {/* Chapter dropdown */}
+      {/* Chapter dropdown - position it absolutely so it doesn't affect page layout */}
       {isDropdownOpen && (
         <div
+          id="chapter-dropdown"
           ref={dropdownRef}
-          className="max-h-64 overflow-y-auto border-t border-background-200  bg-background-800 "
+          className="max-h-64 overflow-y-auto border-t border-background-200 bg-background-800 relative"
         >
           <ul className="py-1">
-            {chapters.map((chapterNum, index) => (
+            {chapters.map((chapterNum) => (
               <li
                 key={chapterNum}
                 ref={chapterNum === currentChapter ? selectedItemRef : null}
                 className={`${
                   chapterNum === currentChapter
-                    ? "bg-primary-100 "
+                    ? "bg-primary-100"
                     : ""
                 }`}
               >
@@ -214,10 +236,10 @@ export default function ChapterNavigation({
                   href={`/series/${url}-${urlCode}/chapter-${chapterNum}`}
                   prefetch={Math.abs(parseInt(chapterNum) - parseInt(currentChapter)) <= 2}
                   onClick={() => setIsDropdownOpen(false)}
-                  className={`block px-4 py-2 text-sm hover:bg-background-200 hover:text-text-800  transition-colors ${
+                  className={`block px-4 py-2 text-sm hover:bg-background-200 hover:text-text-800 transition-colors ${
                     chapterNum === currentChapter
-                      ? "font-medium text-primary-700 "
-                      : "text-text-100 "
+                      ? "font-medium text-primary-700"
+                      : "text-text-100"
                   }`}
                 >
                   Chapter {chapterNum}

@@ -100,6 +100,7 @@ const MangaPanel = memo(({
           rounded-md cursor-pointer transition-opacity
         `}
         onClick={onClick}
+        unoptimized={true}
       />
     </div>
   );
@@ -475,7 +476,7 @@ export default function ChapterContent({ panels, title, chapter, onPanelChange }
       case "vertical":
       default:
         return (
-          <div className="space-y-4">
+          <div className="">
             {panels.map((panel, index) => (
               <MangaPanel
                 key={panel}

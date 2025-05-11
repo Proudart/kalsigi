@@ -55,7 +55,7 @@ export default function Chapter({ params }: any) {
         const res = await fetch(
             `https://www.manhwacall.com/api/chapter?series=${modifiedTitle}`
         );
-        
+         
         // const res = await fetch(
         //   `http://localhost:3000/api/chapter?series=${modifiedTitle}`
         // );

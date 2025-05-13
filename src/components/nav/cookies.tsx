@@ -20,6 +20,16 @@ const CookieConsent = React.memo(() => {
     let timeoutId: NodeJS.Timeout;
     
     const checkConsent = async () => {
+      // Check if the request is from a bot (set by middleware)
+      const isBot = getCookie("is-bot") === "true";
+      
+      // If it's a bot, keep showConsent as true to hide the banner
+      if (isBot) {
+        setShowConsent(true);
+        return;
+      }
+      
+      // Otherwise, proceed with normal logic for human visitors
       const consent = await hasCookie("localConsent");
       if (!consent) {
         // Delay banner rendering by 3 seconds after LCP
@@ -62,7 +72,7 @@ const CookieConsent = React.memo(() => {
           Policy.
           <Link
             className="text-blue-500"
-            href="https://www.cookiepolicygenerator.com/live.php?token=0u740S0Og1qR8oiFMMHCJtPnHFHLlGyR"
+            href="https://www.  .com/live.php?token=0u740S0Og1qR8oiFMMHCJtPnHFHLlGyR"
           >
             {" "}
             Learn more

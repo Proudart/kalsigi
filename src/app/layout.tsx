@@ -88,28 +88,77 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* CHANGE: Use regular style tag instead of styled-jsx */}
+        <style dangerouslySetInnerHTML={{ __html: `
+    #initial-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--background-100);
+      z-index: 9999;
+      transition: opacity 0.3s;
+    }
+    .spinner {
+      width: 4rem;
+      height: 4rem;
+      border-radius: 50%;
+      border: 0.3rem solid var(--primary-200);
+      border-top: 0.3rem solid var(--primary-600);
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `}} />
+  <script dangerouslySetInnerHTML={{
+    __html: `
+      // Remove the loader when everything is fully loaded
+      window.addEventListener('load', function() {
+        const loader = document.getElementById('initial-loader');
+        if (loader) {
+          loader.style.opacity = '0';
+          setTimeout(function() {
+            loader.style.display = 'none';
+          }, 300);
+        }
+      });
+    `
+  }} />
+      </head>
       <PlausibleProvider domain={process.env.PLAUSIBLE as string}>
         <body className={inter.className}>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                function getThemePreference() {
-                  if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-                    return localStorage.getItem('theme');
+          {/* ADDED: Add the spinner element to the DOM */}
+          <div id="initial-loader">
+            <div className="spinner"></div>
+          </div>
+          
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  function getThemePreference() {
+                    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+                      return localStorage.getItem('theme');
+                    }
+                    return window.matchMedia('(prefers-color-scheme: dark)').matches
+                      ? 'dark'
+                      : 'light';
                   }
-                  return window.matchMedia('(prefers-color-scheme: dark)').matches
-                    ? 'dark'
-                    : 'light';
-                }
-                
-                const theme = getThemePreference();
-                document.documentElement.classList.add(theme);
-                document.documentElement.style.colorScheme = theme;
-              })()
-            `,
-          }}
-        />
+                  
+                  const theme = getThemePreference();
+                  document.documentElement.classList.add(theme);
+                  document.documentElement.style.colorScheme = theme;
+                })()
+              `,
+            }}
+          />
           <Suspense fallback={<Loader></Loader>}>
             <ThemeProvider
               attribute="class"

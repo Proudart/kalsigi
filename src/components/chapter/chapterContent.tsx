@@ -26,8 +26,7 @@ interface ChapterContentProps {
   panels: string[];
   title: string;
   chapter: string;
-  onPanelChange: (index: number) => void;
-}
+  }
 
 // Memoized image component
 const MangaPanel = memo(({
@@ -273,7 +272,7 @@ const ReadingSettings = ({
 };
 
 // Main component
-export default function ChapterContent({ panels, title, chapter, onPanelChange }: ChapterContentProps) {
+export default function ChapterContent({ panels, title, chapter }: ChapterContentProps) {
   const [mode, setMode] = useState<ReadingMode>("vertical");
   const [quality, setQuality] = useState<ImageQuality>("high");
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -333,11 +332,10 @@ export default function ChapterContent({ panels, title, chapter, onPanelChange }
         
         if (!isNaN(index)) {
           setCurrentIndex(index);
-          onPanelChange(index);
         }
       }
     },
-    [onPanelChange]
+    [setCurrentIndex] 
   );
   
   // Set up observer for vertical/webtoon mode

@@ -34,7 +34,7 @@ const nextConfig = withPWA({
             {
               key: 'Access-Control-Allow-Origin',
               value: process.env.NODE_ENV === 'production' 
-                ? `https://www.${process.env.site_name}.com` 
+                ? '*' // This will be replaced with more specific logic below
                 : 'http://localhost:3000',
             },
             {
@@ -71,7 +71,7 @@ const nextConfig = withPWA({
 
   },
   async rewrites() {
-    return [{
+    return [{ 
       source: '/sitemap.xml',
       destination: '/sitemap',
     },

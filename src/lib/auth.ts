@@ -14,11 +14,17 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-  trustedOrigins: ["http://localhost:3000", "https://www.manhwacall.com"],
+  trustedOrigins: [
+    "http://localhost:3000", 
+    "https://www.manhwacall.com", 
+    "https://manhwacall.com"
+  ],
   advanced: {
     useSecureCookies: process.env.NODE_ENV === "production",
   },
-  baseURL: "https://www.manhwacall.com",
+  baseURL: process.env.NODE_ENV === "production" 
+    ? "https://www.manhwacall.com"
+    : "http://localhost:3000",
 });
 
 

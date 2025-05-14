@@ -6,6 +6,10 @@ const baseURL = process.env.NODE_ENV === 'development'
 
 export const authClient = createAuthClient({
     baseURL: baseURL,
-    trustedOrigins: [baseURL],
+    trustedOrigins: [
+        'http://localhost:3000', 
+        'https://www.manhwacall.com', 
+        'https://manhwacall.com'
+    ],
     emailAndPassword: { enabled: true },
 });

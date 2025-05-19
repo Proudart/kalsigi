@@ -131,6 +131,7 @@ export default async function Chapter({ params }: any) {
             </ol>
           </nav>
           
+          
           <h1 className="text-3xl sm:text-4xl font-bold text-text-950 ">
             {chapterData?.title} - {chapter?.toString().replace(/-/g, " ")}
           </h1>

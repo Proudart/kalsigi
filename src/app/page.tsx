@@ -1,7 +1,7 @@
 // src/app/page.tsx
 import React, { Suspense } from "react";
 import dynamic from "next/dynamic";
-
+import { lazyHydrate } from 'next-lazy-hydration-on-scroll';
 // Import skeleton components
 import DiscoverMangaSkeleton from "../components/feed/main/discoverMangaSkeleton";
 import FeedNewSkeleton from "../components/feed/main/feedNewSkeleton";
@@ -10,25 +10,38 @@ import ContinueSkeleton from "../components/feed/continue/continueSkeleton";
 import UpdatedSkeleton from "../components/feed/updated/updatedSkeleton";
 import RecommendedSkeleton from "../components/feed/recommended/recommendedSkeleton";
 
-// Dynamic imports with suspense
-const Continue = dynamic(() => import("../components/feed/continue/continue"), {
-  ssr: true,
+// Lazy hydrated components
+const Continue = lazyHydrate(() => import("../components/feed/continue/continue"), {
+  LoadingComponent: ContinueSkeleton,
+  wrapperElement: 'section'
 });
-const Recommended = dynamic(
+
+const Recommended = lazyHydrate(
   () => import("../components/feed/recommended/recommended"),
-  { ssr: true }
+  { 
+    LoadingComponent: RecommendedSkeleton,
+    wrapperElement: 'section'
+  }
 );
-const Updated = dynamic(() => import("../components/feed/updated/updated"), {
-  ssr: true,
+
+const Updated = lazyHydrate(() => import("../components/feed/updated/updated"), {
+  LoadingComponent: UpdatedSkeleton,
+  wrapperElement: 'section'
 });
+
 const FeedNew = dynamic(() => import("../components/feed/main/feedNew"), {
-  ssr: true,
+  loading: () => <FeedNewSkeleton />,
+  ssr: true
 });
-const DiscoverManga = dynamic(() => import("../components/feed/main/discoverManga"), {
-  ssr: true,
+
+const DiscoverManga = lazyHydrate(() => import("../components/feed/main/discoverManga"), {
+  LoadingComponent: DiscoverMangaSkeleton,
+  wrapperElement: 'section'
 });
+
 const Feed = dynamic(() => import("../components/feed/main/feed"), {
-  ssr: true,
+  loading: () => <FeedSkeleton />,
+  ssr: true
 });
 
 export default function Home() {

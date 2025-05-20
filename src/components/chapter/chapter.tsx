@@ -11,15 +11,38 @@ import {
   ArrowUp 
 } from "lucide-react";
 import { Suspense } from "react";
+import { lazyHydrate } from 'next-lazy-hydration-on-scroll';
 import dynamic from "next/dynamic";
 
 // Lazy-loaded components for better performance
-const ChapterNavigation = dynamic(() => import("./chapterNav"), { ssr: true });
-const ChapterContent = dynamic(() => import("./chapterContent"), { ssr: true });
-const ChapterChat = dynamic(() => import("./chapterChat"), { ssr: true });
-const ShareMenu = dynamic(() => import("../share"), { ssr: true });
-const Recommended = dynamic(() => import("../recommendations"), { ssr: true });
-const ToDoAction = dynamic(() => import("./toDoActions"), { ssr: true });
+const ChapterNavigation = dynamic(() => import("./chapterNav"), { 
+  ssr: true,
+  loading: () => <div className="h-12 w-full bg-background-200 rounded-md animate-pulse"></div>,
+});
+
+const ChapterContent = dynamic(() => import("./chapterContent"), { 
+  ssr: true,
+  loading: () => <div className="h-[60vh] animate-pulse bg-background-200 rounded-md"></div>,
+});
+
+const ChapterChat = dynamic(() => import("./chapterChat"), { 
+  ssr: true, 
+  loading: () => <div className="h-64 bg-background-200 rounded-md animate-pulse"></div>,
+});
+
+const ShareMenu = dynamic(() => import("../share"), { 
+  ssr: true, 
+  loading: () => <div className="h-12 bg-background-200 rounded-md animate-pulse"></div>,
+});
+
+const Recommended = dynamic(() => import("../recommendations"), { 
+  ssr: true, 
+  loading: () => <div className="h-64 bg-background-200 rounded-md animate-pulse"></div>,
+});
+
+const ToDoAction = lazyHydrate(() => import("./toDoActions"), { 
+  wrapperElement: 'div' 
+});
 
 // Client-side components
 
@@ -248,37 +271,3 @@ export default async function Chapter({ params }: any) {
     </>
   );
 }
-
-// Create a new file for this client component
-// src/components/chapter/ScrollToTopButton.tsx
-// "use client";
-// import { useState, useEffect } from 'react';
-// import { ArrowUp } from 'lucide-react';
-//
-// export default function ScrollToTopButton() {
-//   const [isScrolled, setIsScrolled] = useState(false);
-//
-//   useEffect(() => {
-//     const handleScroll = () => {
-//       setIsScrolled(window.scrollY > 300);
-//     };
-//     window.addEventListener('scroll', handleScroll);
-//     return () => window.removeEventListener('scroll', handleScroll);
-//   }, []);
-//
-//   const scrollToTop = () => {
-//     window.scrollTo({ top: 0, behavior: 'smooth' });
-//   };
-//
-//   if (!isScrolled) return null;
-//
-//   return (
-//     <button
-//       onClick={scrollToTop}
-//       className="fixed bottom-6 right-6 p-3 rounded-full bg-primary-600 text-white shadow-lg hover:bg-primary-700 transition-colors"
-//       aria-label="Scroll to top"
-//     >
-//       <ArrowUp className="w-5 h-5" />
-//     </button>
-//   );
-// }

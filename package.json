@@ -2,7 +2,7 @@
   "name": "kadkomi",
   "version": "0.1.0",
   "private": true,
-  "scripts": {    
+  "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -46,6 +46,7 @@
     "lucide-react": "^0.503.0",
     "million": "^3.1.11",
     "next": "^15.3.1",
+    "next-lazy-hydration-on-scroll": "^1.2.0",
     "next-plausible": "^3.12.4",
     "next-pwa": "^5.6.0",
     "next-themes": "^0.4.6",

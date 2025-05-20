@@ -1,30 +1,30 @@
 import { Suspense } from "react";
-import dynamic from "next/dynamic";
+import { lazyHydrate } from 'next-lazy-hydration-on-scroll';
 import { Metadata } from "next";
 import Script from "next/script";
 import Loader from "../../../../components/load";
-
-// Enhanced components with better loading strategy
-const Chapter = dynamic(() => import("../../../../components/chapter/chapter"), {
-  loading: () => <ChapterSkeleton />,
-  ssr: true
-});
 
 // Skeleton loader for chapter component
 function ChapterSkeleton() {
   return (
     <div className="animate-pulse">
       <div className="max-w-6xl mx-auto">
-        <div className="h-16 w-3/4 bg-neutral-200  rounded-md mx-auto mt-8"></div>
+        <div className="h-16 w-3/4 bg-neutral-200 rounded-md mx-auto mt-8"></div>
         <div className="mt-8 space-y-4 max-w-3xl mx-auto">
-          <div className="h-4 bg-neutral-200  rounded-md w-full"></div>
-          <div className="h-[500px] bg-neutral-200  rounded-md w-full"></div>
-          <div className="h-10 bg-neutral-200  rounded-md w-full"></div>
+          <div className="h-4 bg-neutral-200 rounded-md w-full"></div>
+          <div className="h-[500px] bg-neutral-200 rounded-md w-full"></div>
+          <div className="h-10 bg-neutral-200 rounded-md w-full"></div>
         </div>
       </div>
     </div>
   );
 }
+
+// Enhanced components with better loading strategy
+const Chapter = lazyHydrate(() => import("../../../../components/chapter/chapter"), {
+  LoadingComponent: ChapterSkeleton,
+  wrapperElement: 'div'
+});
 
 // Types based on your database schema
 interface ChapterData {
@@ -185,62 +185,5 @@ export async function generateStaticParams() {
 }
 
 export default async function ChapterPage(props: any) {
-  const params = await props.params;
-  const { series, chapter } = await params;
-  const siteName = process.env.site_name;
-  const baseUrl = `https://www.${siteName}.com`;
-
-  const regex = /-\d{6}/;
-  const modifiedUrl = series.replace(regex, "");
-
-  const data = await fetchChapterData(modifiedUrl);
-  
-  // Structured Data implementation
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Chapter",
-    "name": `${data.title} - Chapter ${chapter}`,
-    "isPartOf": {
-      "@type": "ComicSeries",
-      "name": data.title,
-      "author": {
-        "@type": "Person",
-        "name": data.author
-      }
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": process.env.site_name,
-      "logo": {
-        "@type": "ImageObject",
-        "url": `${process.env.NEXT_PUBLIC_BASE_URL}/logo.png`
-      }
-    },
-    "datePublished": data.chapters[0]?.published_at,
-    "dateModified": data.chapters[0]?.updated_at,
-    "image": data.cover_image_url,
-    "url": `${process.env.NEXT_PUBLIC_BASE_URL}/series/${series}/${chapter}`,
-    "description": data.description,
-    "genre": data.genre,
-    "inLanguage": "en",
-    "accessMode": "visual",
-    "accessibilityFeature": ["readingOrder", "unlocked"],
-    "potentialAction": {
-      "@type": "ReadAction",
-      "target": `${process.env.NEXT_PUBLIC_BASE_URL}/series/${series}/${chapter}`
-    }
-  };
-
-  return (
-    <div className=" min-h-screen">
-      <Script
-        id="structured-data"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <Suspense fallback={<Loader />}>
-        <Chapter params={params} />
-      </Suspense>
-    </div>
-  );
+  return <Chapter {...props} wrapperProps={{ className: 'chapter-container' }} />;
 }

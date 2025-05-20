@@ -1,12 +1,13 @@
 import { Suspense } from "react";
 import { Link } from "../link";
 import Loader from "../load";
+import { lazyHydrate } from 'next-lazy-hydration-on-scroll';
 import dynamic from "next/dynamic";
 
 // Lazy load components for better performance
 const EnhancedManga = dynamic(() => import("./enhancedManga"), {
   loading: () => <Loader />,
-  ssr: true
+  ssr: true,
 });
 
 export default async function Manga({
@@ -40,7 +41,12 @@ export default async function Manga({
     
     const data = await res.json();
     
-    return <EnhancedManga data={data} title={title} />;
+    return (
+      <EnhancedManga 
+        data={data} 
+        title={title} 
+      />
+    );
   } catch (error) {
     // Enhanced error handling with fallback UI
     console.error("Error fetching series data:", error);

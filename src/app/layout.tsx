@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Poppins } from "next/font/google";
-import dynamic from "next/dynamic";
+import { lazyHydrate } from 'next-lazy-hydration-on-scroll';
 import { Toaster } from "../components/ui/toaster";
 import logo from "../../public/manhwacall.webp";
 import PlausibleProvider from "next-plausible";
@@ -8,14 +8,23 @@ import { ThemeProvider } from "next-themes";
 import { Suspense } from "react";
 import Loader from "../components/load";
 import type { Viewport, Metadata } from "next";
+import dynamic from "next/dynamic";
 
 const inter = Poppins({ subsets: ["latin"], weight: "400", preload: true });
 
-const Footer = dynamic(() => import("../components/nav/footer"), { ssr: true });
-const Cookie = dynamic(() => import("../components/nav/cookies"), {
-  ssr: true,
+const Footer = dynamic(() => import("../components/nav/footer"), { 
+  ssr: true, 
+  loading: () => <div /> 
 });
-const Navbar = dynamic(() => import("../components/nav/navbarWrapper"), { ssr: true });
+
+const Cookie = lazyHydrate(() => import("../components/nav/cookies"), {
+  wrapperElement: 'div'
+});
+
+const Navbar = dynamic(() => import("../components/nav/navbarWrapper"), { 
+  ssr: true, 
+  loading: () => <div /> 
+});
 
 
 
@@ -131,33 +140,33 @@ export default function RootLayout({
     `
   }} />
       </head>
-      <PlausibleProvider domain={process.env.PLAUSIBLE as string}>
-        <body className={inter.className}>
-          {/* ADDED: Add the spinner element to the DOM */}
-          <div id="initial-loader">
-            <div className="spinner"></div>
-          </div>
-          
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-                (function() {
-                  function getThemePreference() {
-                    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-                      return localStorage.getItem('theme');
-                    }
-                    return window.matchMedia('(prefers-color-scheme: dark)').matches
-                      ? 'dark'
-                      : 'light';
+      <body className={inter.className}>
+        {/* ADDED: Add the spinner element to the DOM */}
+        <div id="initial-loader">
+          <div className="spinner"></div>
+        </div>
+        
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                function getThemePreference() {
+                  if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+                    return localStorage.getItem('theme');
                   }
-                  
-                  const theme = getThemePreference();
-                  document.documentElement.classList.add(theme);
-                  document.documentElement.style.colorScheme = theme;
-                })()
-              `,
-            }}
-          />
+                  return window.matchMedia('(prefers-color-scheme: dark)').matches
+                    ? 'dark'
+                    : 'light';
+                }
+                
+                const theme = getThemePreference();
+                document.documentElement.classList.add(theme);
+                document.documentElement.style.colorScheme = theme;
+              })()
+            `,
+          }}
+        />
+        <PlausibleProvider domain={process.env.PLAUSIBLE as string}>
           <Suspense fallback={<Loader></Loader>}>
             <ThemeProvider
               attribute="class"
@@ -165,17 +174,17 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <main className="bg-background-100 ">
-                <Navbar logo={logo}></Navbar>
+              <main className="bg-background-100">
+                <Navbar logo={logo}  />
                 <div className="min-h-dvh">{children}</div>
-                <Cookie />
-                <Footer logo={logo}></Footer>
+                <Cookie wrapperProps={{ className: 'cookie-consent' }} />
+                <Footer logo={logo}  />
               </main>
               <Toaster />
             </ThemeProvider>
           </Suspense>
-        </body>
-      </PlausibleProvider>
+        </PlausibleProvider>
+      </body>
     </html>
   );
 }

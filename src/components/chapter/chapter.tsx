@@ -14,6 +14,7 @@ import { Suspense } from "react";
 import { lazyHydrate } from 'next-lazy-hydration-on-scroll';
 import dynamic from "next/dynamic";
 
+
 // Lazy-loaded components for better performance
 const ChapterNavigation = dynamic(() => import("./chapterNav"), { 
   ssr: true,

@@ -90,43 +90,45 @@ async function fetchSeriesData(url: string): Promise<Series> {
 
 // Helper function to check if URL has correct format and redirect if needed
 async function checkAndRedirectSeries(seriesParam: string) {
+  console.log(`[checkAndRedirectSeries] Checking series: ${seriesParam}`);
+  
   const regex = /-(\d{6})$/;
   const match = seriesParam.match(regex);
+  
+  // Extract base URL (with or without code)
+  const baseUrl = match ? seriesParam.replace(regex, '') : seriesParam;
+  console.log(`[checkAndRedirectSeries] Base URL: ${baseUrl}`);
 
-  if (!match) {
-    // No URL code found, need to fetch the correct one
-    try {
-      const data = await fetchSeriesData(seriesParam);
-      const correctUrl = `${data.url}-${data.url_code || '000000'}`;
-      console.log(`[checkAndRedirectSeries] Redirecting (no code): /series/${correctUrl}`);
-      permanentRedirect(`/series/${correctUrl}`);
-    } catch (error) {
-      // If we can't find the series, let it fall through to 404
-      return null;
-    }
-  }
-
-  // Extract the base URL without the code
-  const baseUrl = seriesParam.replace(regex, '');
-
+  let data: Series;
   try {
-    const data = await fetchSeriesData(baseUrl);
-    console.log(data)
-    const expectedCode = data.url_code || '000000';
-    const providedCode = match[1];
-
-    if (providedCode !== expectedCode) {
-      // Wrong URL code, redirect to correct one
-      const correctUrl = `${data.url}-${expectedCode}`;
-      console.log(`[checkAndRedirectSeries] Redirecting (wrong code): /series/${correctUrl}`);
-      permanentRedirect(`/series/${correctUrl}`);
-    }
-
-    return data;
+    // Only catch errors from the API call
+    data = await fetchSeriesData(baseUrl);
+    console.log(`[checkAndRedirectSeries] Fetched data for: ${data.title}`);
   } catch (error) {
-    // If we can't find the series, let it fall through to 404
+    console.error(`[checkAndRedirectSeries] Error fetching series data:`, error);
     return null;
   }
+
+  // All redirect logic happens outside try-catch
+  const expectedCode = data.url_code || '000000';
+  const providedCode = match?.[1];
+  
+  // Build the correct series URL
+  const correctUrl = `${data.url}-${expectedCode}`;
+
+  // Check if we need to redirect
+  if (!match) {
+    // No URL code found
+    console.log(`[checkAndRedirectSeries] Redirecting (no code): /series/${correctUrl}`);
+    permanentRedirect(`/series/${correctUrl}`);
+  } else if (providedCode !== expectedCode) {
+    // Wrong URL code
+    console.log(`[checkAndRedirectSeries] Redirecting (wrong code): /series/${correctUrl}`);
+    permanentRedirect(`/series/${correctUrl}`);
+  }
+
+  // URL is correct, return the data
+  return data;
 }
 
 export async function generateMetadata({ params }: any): Promise<Metadata> {
@@ -228,7 +230,12 @@ export default async function SingleSeries(props: any) {
   const params = await props.params;
   
   // Check and redirect if URL is incorrect
-  await checkAndRedirectSeries(params.series);
+  const data = await checkAndRedirectSeries(params.series);
+  
+  if (!data) {
+    // Series not found, Next.js will handle 404
+    throw new Error('Series not found');
+  }
   
   return (
     <>

@@ -83,56 +83,52 @@ async function fetchChapterData(url: string): Promise<SeriesData> {
   return response.json();
 }
 
-// Helper function to check if URL has correct format and redirect if needed
 async function checkAndRedirectChapter(seriesParam: string, chapterParam: string) {
+  console.log("checkAndRedirectChapter called with:", { seriesParam, chapterParam });
+  
   const regex = /-(\d{6})$/;
   const match = seriesParam.match(regex);
   
-  if (!match) {
-    // No URL code found, need to fetch the correct one
-    try {
-      const baseUrl = seriesParam;
-      const data = await fetchChapterData(baseUrl);
-      const correctSeriesUrl = `${data.url}-${data.url_code || '000000'}`;
-      permanentRedirect(`/series/${correctSeriesUrl}/${chapterParam}`);
-    } catch (error) {
-      // If we can't find the series, let it fall through to 404
-      return null;
-    }
-  }
+  // Extract base URL (with or without code)
+  const baseUrl = match ? seriesParam.replace(regex, '') : seriesParam;
+  console.log("Base URL:", baseUrl);
   
-  // Extract the base URL without the code
-  const baseUrl = seriesParam.replace(regex, '');
-  
+  let data;
   try {
-    const data = await fetchChapterData(baseUrl);
-    const expectedCode = data.url_code || '000000';
-    const providedCode = match[1];
-    
-    if (providedCode !== expectedCode) {
-      // Wrong URL code, redirect to correct one
-      const correctSeriesUrl = `${data.url}-${expectedCode}`;
-      permanentRedirect(`/series/${correctSeriesUrl}/${chapterParam}`);
-    }
-    
-    // Also check if the chapter exists
-    const chapterNumber = chapterParam.replace(/^chapter-/i, '');
-    const chapterExists = data.chapters.some(
-      (ch: ChapterData) => ch.chapter_number.toString() === chapterNumber
-    );
-    
-    if (!chapterExists) {
-      // Chapter doesn't exist, redirect to series page
-      const correctSeriesUrl = `${data.url}-${expectedCode}`;
-      permanentRedirect(`/series/${correctSeriesUrl}`);
-    }
-    
-    return data;
+    // Only catch errors from the API call
+    data = await fetchChapterData(baseUrl);
   } catch (error) {
-    // If we can't find the series, let it fall through to 404
+    console.error("Error fetching series data:", error);
     return null;
   }
+  
+  // Redirects happen outside the try-catch
+  const expectedCode = data.url_code || '000000';
+  const providedCode = match?.[1];
+  
+  // Build the correct series URL
+  const correctSeriesUrl = `${data.url}-${expectedCode}`;
+  
+  // Check if we need to redirect due to URL issues
+  if (!match || providedCode !== expectedCode) {
+    console.log(`Redirecting to correct URL: /series/${correctSeriesUrl}/${chapterParam}`);
+    permanentRedirect(`/series/${correctSeriesUrl}/${chapterParam}`);
+  }
+  
+  // Check if the chapter exists
+  const chapterNumber = chapterParam.replace(/^chapter-/i, '');
+  const chapterExists = data.chapters.some(
+    (ch: ChapterData) => ch.chapter_number.toString() === chapterNumber
+  );
+  
+  if (!chapterExists) {
+    console.log("Chapter not found, redirecting to series page:", `/series/${correctSeriesUrl}`);
+    permanentRedirect(`/series/${correctSeriesUrl}`);
+  }
+  
+  return data;
 }
+
 
 export async function generateMetadata({ params }: any): Promise<Metadata> {
   const { series, chapter } = await params;

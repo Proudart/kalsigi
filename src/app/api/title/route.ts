@@ -34,6 +34,7 @@ export async function GET(request: Request) {
         author: true,
         genre: true,
         total_chapters: true,
+        url_code: true,
       },
       with: {
         chapters: {

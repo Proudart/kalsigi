@@ -63,8 +63,10 @@ async function fetchChapterData(modifiedTitle: any) {
 }
 
 export default async function Chapter({ params }: any) {
-  const title = params.series;
-  const chapter = params.chapter;
+
+  const resolvedParams = await params;
+  const title = resolvedParams.series;
+  const chapter = resolvedParams.chapter;
   const chapterNumber = chapter.replace(/^chapter-/i, "");
   const regex = /-\d{6}/;
   const modifiedTitle = title.replace(regex, "");

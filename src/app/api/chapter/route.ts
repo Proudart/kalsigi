@@ -60,6 +60,8 @@ export async function GET(request: Request) {
         genre: true,
         total_chapters: true,
         url_code: true, // Make sure url_code is included
+        today_views: true,
+        total_views: true,
       },
       with: {
         chapters: {

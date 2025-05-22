@@ -35,6 +35,8 @@ export async function GET(request: Request) {
         genre: true,
         total_chapters: true,
         url_code: true,
+        today_views: true,
+        total_views: true,
       },
       with: {
         chapters: {

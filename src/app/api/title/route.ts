@@ -1,4 +1,3 @@
-// src/app/api/title/route.ts
 import { db } from "../../../util/db";
 import { NextResponse } from "next/server";
 import { series } from "@/util/schema";
@@ -18,6 +17,7 @@ export async function GET(request: Request) {
       return NextResponse.json(cachedResult);
     }
 
+
     const result = await db.query.series.findFirst({
       where: eq(series.url, url),
       columns: {
@@ -34,7 +34,6 @@ export async function GET(request: Request) {
         author: true,
         genre: true,
         total_chapters: true,
-        url_code: true, // Make sure url_code is included
       },
       with: {
         chapters: {
@@ -81,12 +80,12 @@ export async function GET(request: Request) {
     const sortedChapters = formattedChapters.sort((a, b) => {
       return b.chapter_number - a.chapter_number;
     });
-    // Prepare response data - make sure url_code is included
+
+    // Prepare response data
     const responseData = {
       ...result,
       chapters: sortedChapters,
       averageRating,
-      url_code: result.url_code || '000000', // Ensure url_code is always present
     };
 
     // Store the result in cache

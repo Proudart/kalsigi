@@ -1,4 +1,6 @@
+// src/app/series/[series]/[chapter]/page.tsx
 import { Suspense } from "react";
+import { permanentRedirect } from "next/navigation";
 import { lazyHydrate } from 'next-lazy-hydration-on-scroll';
 import { Metadata } from "next";
 import Script from "next/script";
@@ -58,6 +60,7 @@ interface SeriesData {
   artist: string | null;
   status: string | null;
   publisher: string;
+  url_code: string;
   chapters: ChapterData[];
 }
 
@@ -78,6 +81,57 @@ async function fetchChapterData(url: string): Promise<SeriesData> {
   }
 
   return response.json();
+}
+
+// Helper function to check if URL has correct format and redirect if needed
+async function checkAndRedirectChapter(seriesParam: string, chapterParam: string) {
+  const regex = /-(\d{6})$/;
+  const match = seriesParam.match(regex);
+  
+  if (!match) {
+    // No URL code found, need to fetch the correct one
+    try {
+      const baseUrl = seriesParam;
+      const data = await fetchChapterData(baseUrl);
+      const correctSeriesUrl = `${data.url}-${data.url_code || '000000'}`;
+      permanentRedirect(`/series/${correctSeriesUrl}/${chapterParam}`);
+    } catch (error) {
+      // If we can't find the series, let it fall through to 404
+      return null;
+    }
+  }
+  
+  // Extract the base URL without the code
+  const baseUrl = seriesParam.replace(regex, '');
+  
+  try {
+    const data = await fetchChapterData(baseUrl);
+    const expectedCode = data.url_code || '000000';
+    const providedCode = match[1];
+    
+    if (providedCode !== expectedCode) {
+      // Wrong URL code, redirect to correct one
+      const correctSeriesUrl = `${data.url}-${expectedCode}`;
+      permanentRedirect(`/series/${correctSeriesUrl}/${chapterParam}`);
+    }
+    
+    // Also check if the chapter exists
+    const chapterNumber = chapterParam.replace(/^chapter-/i, '');
+    const chapterExists = data.chapters.some(
+      (ch: ChapterData) => ch.chapter_number.toString() === chapterNumber
+    );
+    
+    if (!chapterExists) {
+      // Chapter doesn't exist, redirect to series page
+      const correctSeriesUrl = `${data.url}-${expectedCode}`;
+      permanentRedirect(`/series/${correctSeriesUrl}`);
+    }
+    
+    return data;
+  } catch (error) {
+    // If we can't find the series, let it fall through to 404
+    return null;
+  }
 }
 
 export async function generateMetadata({ params }: any): Promise<Metadata> {
@@ -185,5 +239,10 @@ export async function generateStaticParams() {
 }
 
 export default async function ChapterPage(props: any) {
+  const params = await props.params;
+  
+  // Check and redirect if URL is incorrect
+  await checkAndRedirectChapter(params.series, params.chapter);
+  
   return <Chapter {...props} wrapperProps={{ className: 'chapter-container' }} />;
 }

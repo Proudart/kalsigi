@@ -1,8 +1,9 @@
+// src/app/series/[series]/page.tsx
 import { Suspense } from "react";
+import { redirect, permanentRedirect } from "next/navigation";
 import Manga from "../../../components/manga/manga";
 import Loader from "../../../components/load";
 import { Metadata } from "next";
-
 
 function formatDate(dateString: any): any {
   const date = new Date(dateString);
@@ -41,6 +42,7 @@ function formatDate(dateString: any): any {
 
   return `${formattedDate} • ${relativeTime}`;
 }
+
 // Types based on the database schema
 type Chapter = {
   id: string;
@@ -84,6 +86,47 @@ async function fetchSeriesData(url: string): Promise<Series> {
   }
 
   return response.json();
+}
+
+// Helper function to check if URL has correct format and redirect if needed
+async function checkAndRedirectSeries(seriesParam: string) {
+  const regex = /-(\d{6})$/;
+  const match = seriesParam.match(regex);
+
+  if (!match) {
+    // No URL code found, need to fetch the correct one
+    try {
+      const data = await fetchSeriesData(seriesParam);
+      const correctUrl = `${data.url}-${data.url_code || '000000'}`;
+      console.log(`[checkAndRedirectSeries] Redirecting (no code): /series/${correctUrl}`);
+      permanentRedirect(`/series/${correctUrl}`);
+    } catch (error) {
+      // If we can't find the series, let it fall through to 404
+      return null;
+    }
+  }
+
+  // Extract the base URL without the code
+  const baseUrl = seriesParam.replace(regex, '');
+
+  try {
+    const data = await fetchSeriesData(baseUrl);
+    console.log(data)
+    const expectedCode = data.url_code || '000000';
+    const providedCode = match[1];
+
+    if (providedCode !== expectedCode) {
+      // Wrong URL code, redirect to correct one
+      const correctUrl = `${data.url}-${expectedCode}`;
+      console.log(`[checkAndRedirectSeries] Redirecting (wrong code): /series/${correctUrl}`);
+      permanentRedirect(`/series/${correctUrl}`);
+    }
+
+    return data;
+  } catch (error) {
+    // If we can't find the series, let it fall through to 404
+    return null;
+  }
 }
 
 export async function generateMetadata({ params }: any): Promise<Metadata> {
@@ -150,8 +193,6 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
           },
         ] : undefined,
       },
-      
-
     };
   } catch (error) {
     // Fallback metadata for errors
@@ -171,11 +212,9 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
   }
 }
 
-
 export async function generateStaticParams() {
   try {
     const res = await fetch(`https://www.${process.env.site_name}.com/api/titles`);
-    // const res = await fetch(http://localhost:3000/api/titles);
     const data = await res.json();
     return data.map((series: any) => ({
       series: series.url.toString() + '-' + (series.url_code ? series.url_code.toString() : '000000'),
@@ -187,6 +226,10 @@ export async function generateStaticParams() {
 
 export default async function SingleSeries(props: any) {
   const params = await props.params;
+  
+  // Check and redirect if URL is incorrect
+  await checkAndRedirectSeries(params.series);
+  
   return (
     <>
       <Suspense fallback={<Loader />}>

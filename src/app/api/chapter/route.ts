@@ -1,3 +1,4 @@
+// src/app/api/chapter/route.ts
 import { db } from "../../../util/db";
 import { NextResponse } from "next/server";
 import { series } from "@/util/schema";
@@ -20,6 +21,7 @@ interface Chapter {
 interface SeriesData {
   title: string;
   description: string;
+  url_code: string; // Make sure this is included
   chapters: Chapter[];
 }
 
@@ -57,7 +59,7 @@ export async function GET(request: Request) {
         author: true,
         genre: true,
         total_chapters: true,
-        url_code: true,
+        url_code: true, // Make sure url_code is included
       },
       with: {
         chapters: {
@@ -86,7 +88,6 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Series not found" }, { status: 404 });
     }
 
-
     const chaptersWithSummary = result.chapters.map((chapter: { summary: { tldr: any; synopsis: any; keywords: any; }; }) => ({
       ...chapter,
       summary: chapter.summary ? {
@@ -97,9 +98,11 @@ export async function GET(request: Request) {
     }));
 
     result.chapters = chaptersWithSummary;
+    
     // Format dates and sort chapters
     const formattedResult = {
       ...result,
+      url_code: result.url_code || '000000', // Ensure url_code is always present
       chapters: result.chapters
         .map((chapter: { published_at: any; content: string[] | null; }) => ({
           ...chapter,
@@ -164,8 +167,6 @@ function formatDate(dateString: any): any {
 
   return `${formattedDate} • ${relativeTime}`;
 }
-
-
 
 // Helper function to sort chapter content
 function sortChapterContent(content: string[] | null): string[] {

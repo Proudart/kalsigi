@@ -159,7 +159,7 @@ export default function EnhancedManga({ data, title }: { data: any; title: strin
                 </TabsList>
                 
                 <TabsContent value="chapters" className="p-0">
-                  <div className="p-4 bg-background-700/30 flex justify-between items-center">
+                  <div className="p-4 bg-background-700/30 flex justify-between items-center flex-wrap">
                   <h3 className="text-lg font-semibold text-text-50">Latest Chapters</h3>
                   <div className="flex gap-2">
                     <Button 

@@ -90,22 +90,18 @@ async function fetchSeriesData(url: string): Promise<Series> {
 
 // Helper function to check if URL has correct format and redirect if needed
 async function checkAndRedirectSeries(seriesParam: string) {
-  console.log(`[checkAndRedirectSeries] Checking series: ${seriesParam}`);
   
   const regex = /-(\d{6})$/;
   const match = seriesParam.match(regex);
   
   // Extract base URL (with or without code)
   const baseUrl = match ? seriesParam.replace(regex, '') : seriesParam;
-  console.log(`[checkAndRedirectSeries] Base URL: ${baseUrl}`);
 
   let data: Series;
   try {
     // Only catch errors from the API call
     data = await fetchSeriesData(baseUrl);
-    console.log(`[checkAndRedirectSeries] Fetched data for: ${data.title}`);
   } catch (error) {
-    console.error(`[checkAndRedirectSeries] Error fetching series data:`, error);
     return null;
   }
 
@@ -119,11 +115,9 @@ async function checkAndRedirectSeries(seriesParam: string) {
   // Check if we need to redirect
   if (!match) {
     // No URL code found
-    console.log(`[checkAndRedirectSeries] Redirecting (no code): /series/${correctUrl}`);
     permanentRedirect(`/series/${correctUrl}`);
   } else if (providedCode !== expectedCode) {
     // Wrong URL code
-    console.log(`[checkAndRedirectSeries] Redirecting (wrong code): /series/${correctUrl}`);
     permanentRedirect(`/series/${correctUrl}`);
   }
 

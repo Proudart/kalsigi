@@ -160,48 +160,66 @@ export default function EnhancedManga({ data, title }: { data: any; title: strin
                 
                 <TabsContent value="chapters" className="p-0">
                   <div className="p-4 bg-background-700/30 flex justify-between items-center">
-                    <h3 className="text-lg font-semibold text-text-50">Latest Chapters</h3>
-                    <div className="flex gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="text-xs bg-background-600 border-background-500 hover:bg-background-500"
-                        disabled={data.chapters?.length === 0}
-                        asChild
-                        aria-label={`Read latest chapter ${data.chapters && data.chapters.length > 0 ? data.chapters[0].chapter_number : ''}`}
-                      >
-                        <Link 
-                          href={data.chapters && data.chapters.length > 0 
-                            ? `/series/${title}/chapter-${data.chapters[0].chapter_number}`
-                            : '#'
-                          }
-                          prefetch={true}
-                        >
-                          Latest Chapter
-                        </Link>
-                      </Button>
-                    </div>
+                  <h3 className="text-lg font-semibold text-text-50">Latest Chapters</h3>
+                  <div className="flex gap-2">
+                    <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="text-xs bg-background-600 border-background-500 hover:bg-background-500"
+                    disabled={data.chapters?.length === 0}
+                    asChild
+                    aria-label={`Read first chapter ${data.chapters && data.chapters.length > 0 ? data.chapters[data.chapters.length - 1].chapter_number : ''}`}
+                    >
+                    <Link 
+                      href={data.chapters && data.chapters.length > 0 
+                      ? `/series/${title}/chapter-${data.chapters[data.chapters.length - 1].chapter_number}`
+                      : '#'
+                      }
+                      prefetch={true}
+                    >
+                      First Chapter
+                    </Link>
+                    </Button>
+                    <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="text-xs bg-background-600 border-background-500 hover:bg-background-500"
+                    disabled={data.chapters?.length === 0}
+                    asChild
+                    aria-label={`Read latest chapter ${data.chapters && data.chapters.length > 0 ? data.chapters[0].chapter_number : ''}`}
+                    >
+                    <Link 
+                      href={data.chapters && data.chapters.length > 0 
+                      ? `/series/${title}/chapter-${data.chapters[0].chapter_number}`
+                      : '#'
+                      }
+                      prefetch={true}
+                    >
+                      Latest Chapter
+                    </Link>
+                    </Button>
+                  </div>
                   </div>
                   
                   <ScrollArea className="h-[500px] p-4">
-                    <div className="space-y-2">
-                      {data.chapters
-                        ?.slice(0, visibleChapters)
-                        .map((chapter: { chapter_number: any; update_time?: string | undefined; published_at?: string; striked?: boolean | undefined; publisher?: string | undefined; }, index: number) => (
-                          <ChapterSearchCard 
-                            key={chapter.chapter_number} 
-                            chapter={{
-                              ...chapter,
-                              chapter_number: String(chapter.chapter_number),
-                              published_at: chapter.published_at || new Date().toISOString()
-                            }} 
-                            title={title}
-                            index={index} 
-                          />
-                        ))}
-                      
-                      {data.chapters?.length > visibleChapters && (
-                        <div className="flex justify-center pt-4">
+                  <div className="space-y-2">
+                    {data.chapters
+                    ?.slice(0, visibleChapters)
+                    .map((chapter: { chapter_number: any; update_time?: string | undefined; published_at?: string; striked?: boolean | undefined; publisher?: string | undefined; }, index: number) => (
+                      <ChapterSearchCard 
+                      key={chapter.chapter_number} 
+                      chapter={{
+                        ...chapter,
+                        chapter_number: String(chapter.chapter_number),
+                        published_at: chapter.published_at || new Date().toISOString()
+                      }} 
+                      title={title}
+                      index={index} 
+                      />
+                    ))}
+                    
+                    {data.chapters?.length > visibleChapters && (
+                    <div className="flex justify-center pt-4">
                           <Button
                             variant="outline"
                             onClick={loadMoreChapters}

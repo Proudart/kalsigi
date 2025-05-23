@@ -84,21 +84,18 @@ async function fetchChapterData(url: string): Promise<SeriesData> {
 }
 
 async function checkAndRedirectChapter(seriesParam: string, chapterParam: string) {
-  console.log("checkAndRedirectChapter called with:", { seriesParam, chapterParam });
   
   const regex = /-(\d{6})$/;
   const match = seriesParam.match(regex);
   
   // Extract base URL (with or without code)
   const baseUrl = match ? seriesParam.replace(regex, '') : seriesParam;
-  console.log("Base URL:", baseUrl);
   
   let data;
   try {
     // Only catch errors from the API call
     data = await fetchChapterData(baseUrl);
   } catch (error) {
-    console.error("Error fetching series data:", error);
     return null;
   }
   
@@ -111,7 +108,6 @@ async function checkAndRedirectChapter(seriesParam: string, chapterParam: string
   
   // Check if we need to redirect due to URL issues
   if (!match || providedCode !== expectedCode) {
-    console.log(`Redirecting to correct URL: /series/${correctSeriesUrl}/${chapterParam}`);
     permanentRedirect(`/series/${correctSeriesUrl}/${chapterParam}`);
   }
   
@@ -122,7 +118,6 @@ async function checkAndRedirectChapter(seriesParam: string, chapterParam: string
   );
   
   if (!chapterExists) {
-    console.log("Chapter not found, redirecting to series page:", `/series/${correctSeriesUrl}`);
     permanentRedirect(`/series/${correctSeriesUrl}`);
   }
   

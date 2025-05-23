@@ -225,7 +225,7 @@ export default async function Chapter({ params }: any) {
           <div className="bg-background-800 p-6 rounded-lg shadow-sm border border-background-200">
             <h2 className="text-xl font-semibold text-text-100">Share this chapter</h2>
             <ShareMenu
-              url={`https://www.${process.env.site_name}.com/series/${title}/${chapter}`}
+              url={`https://www.manhwacall.com/series/${title}/${chapter}`}
               title={`${chapterData?.title} - ${chapter?.toString().replace(/-/g, " ")}`}
             />
           </div>

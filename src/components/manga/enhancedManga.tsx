@@ -98,7 +98,7 @@ export default function EnhancedManga({ data, title }: { data: any; title: strin
             <div className="bg-background-800 rounded-xl p-4 shadow-lg border border-background-700">
               <h3 className="text-lg font-semibold mb-3 text-text-50">Share</h3>
               <ShareButton
-                url={`https://www.${process.env.site_name}.com/series/${title}`}
+                url={`https://www.manhwacall.com/series/${title}`}
                 title={data.title}
               />
             </div>

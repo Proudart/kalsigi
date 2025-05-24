@@ -15,7 +15,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations, sql } from "drizzle-orm";
 
-// Updated series table with new optimizations
+// Updated series table with publishers as array
 export const series = pgTable("series", {
   id: uuid("id").primaryKey().defaultRandom(),
   title: text("title").notNull(),
@@ -30,7 +30,7 @@ export const series = pgTable("series", {
   type: text("type").array(),
   release_date: timestamp("release_date", { withTimezone: true }),
   status: text("status"),
-  publisher: text("publisher").notNull(),
+  publisher: text("publisher").array().notNull(), // Changed to array
   total_views: integer("total_views").notNull().default(0),
   today_views: integer("today_views").notNull().default(0),
   last_update: timestamp("last_update", { withTimezone: true }),
@@ -38,11 +38,12 @@ export const series = pgTable("series", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 }, (table) => ({
-  titlePublisherUnique: primaryKey(table.title, table.publisher), // Ensure unique title per publisher
+  // Remove the unique constraint that included publisher since it's now an array
+  titleIdx: index("title_idx").on(table.title),
+  urlIdx: index("url_idx").on(table.url),
 }));
 
-
-// Updated chapters table with new optimizations
+// Updated chapters table - keep publisher as text since individual chapters come from specific publishers
 export const chapters = pgTable("chapters", {
   id: uuid("id").primaryKey().defaultRandom(),
   series_id: uuid("series_id").references(() => series.id, { onDelete: "cascade" }).notNull(),
@@ -50,13 +51,14 @@ export const chapters = pgTable("chapters", {
   title: text("title"),
   content: jsonb("content").notNull(),
   views: integer("views").notNull().default(0),
-  publisher: text("publisher").notNull(),
-  is_deleted: boolean("is_deleted").notNull().default(false),
+  publisher: text("publisher").notNull(), // Keep as text for individual chapters
+  striked: boolean("is_deleted").notNull().default(false), // Added striked field
   published_at: timestamp("published_at", { withTimezone: true }).notNull(),
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 }, (table) => ({
   chapterSeriesUnique: primaryKey(table.series_id, table.chapter_number),
+  seriesChapterIdx: index("series_chapter_idx").on(table.series_id, table.chapter_number),
 }));
 
 // Updated relationships
@@ -66,7 +68,6 @@ export const seriesRelations = relations(series, ({ many }) => ({
   bookmarks: many(bookmarks),
   messages: many(seriesMessages),
 }));
-
 
 // Keep existing tables with updated references to new series table
 export const ratings = pgTable("ratings", {
@@ -83,8 +84,6 @@ export const ratingsRelations = relations(ratings, ({ one }) => ({
     references: [series.url],
   }),
 }));
-
-
 
 export const bookmarks = pgTable("bookmarks", {
   id: text("id").primaryKey(),
@@ -185,8 +184,6 @@ export const userSeriesMessageInteractions = pgTable("usermseriesessageinteracti
   pk: primaryKey(table.userId, table.messageId),
 }));
 
-
-
 export const premiumUsers = pgTable("premiumusers", {
   id: bigserial("id", { mode: "number" }).primaryKey(),
   userId: text("user_id")
@@ -209,46 +206,46 @@ export const consult = pgTable("consult", {
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text('name').notNull(),
-email: text('email').notNull().unique(),
-emailVerified: boolean('email_verified').notNull(),
-createdAt: timestamp('created_at').notNull(),
-updatedAt: timestamp('updated_at').notNull()
+  email: text('email').notNull().unique(),
+  emailVerified: boolean('email_verified').notNull(),
+  createdAt: timestamp('created_at').notNull(),
+  updatedAt: timestamp('updated_at').notNull()
 });
 
 export const session = pgTable("session", {
   id: text("id").primaryKey(),
   expiresAt: timestamp('expires_at').notNull(),
-token: text('token').notNull().unique(),
-createdAt: timestamp('created_at').notNull(),
-updatedAt: timestamp('updated_at').notNull(),
-ipAddress: text('ip_address'),
-userAgent: text('user_agent'),
-userId: text('user_id').notNull().references(()=> user.id)
+  token: text('token').notNull().unique(),
+  createdAt: timestamp('created_at').notNull(),
+  updatedAt: timestamp('updated_at').notNull(),
+  ipAddress: text('ip_address'),
+  userAgent: text('user_agent'),
+  userId: text('user_id').notNull().references(()=> user.id)
 });
 
 export const account = pgTable("account", {
   id: text("id").primaryKey(),
   accountId: text('account_id').notNull(),
-providerId: text('provider_id').notNull(),
-userId: text('user_id').notNull().references(()=> user.id),
-accessToken: text('access_token'),
-refreshToken: text('refresh_token'),
-idToken: text('id_token'),
-accessTokenExpiresAt: timestamp('access_token_expires_at'),
-refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
-scope: text('scope'),
-password: text('password'),
-createdAt: timestamp('created_at').notNull(),
-updatedAt: timestamp('updated_at').notNull()
+  providerId: text('provider_id').notNull(),
+  userId: text('user_id').notNull().references(()=> user.id),
+  accessToken: text('access_token'),
+  refreshToken: text('refresh_token'),
+  idToken: text('id_token'),
+  accessTokenExpiresAt: timestamp('access_token_expires_at'),
+  refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
+  scope: text('scope'),
+  password: text('password'),
+  createdAt: timestamp('created_at').notNull(),
+  updatedAt: timestamp('updated_at').notNull()
 });
 
 export const verification = pgTable("verification", {
   id: text("id").primaryKey(),
   identifier: text('identifier').notNull(),
-value: text('value').notNull(),
-expiresAt: timestamp('expires_at').notNull(),
-createdAt: timestamp('created_at'),
-updatedAt: timestamp('updated_at')
+  value: text('value').notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
+  createdAt: timestamp('created_at'),
+  updatedAt: timestamp('updated_at')
 });
 
 export const chapterSummaries = pgTable("chapter_summaries", {
@@ -257,7 +254,7 @@ export const chapterSummaries = pgTable("chapter_summaries", {
   chapter: numeric("chapter", { precision: 10, scale: 2 }).notNull(),
   tldr: text("tldr"),
   synopsis: text("synopsis"),
-  keywords: jsonb("keywords"),
+  keywords: jsonb("keywords"),    
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 }, (table) => ({

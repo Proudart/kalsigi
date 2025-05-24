@@ -50,12 +50,7 @@ const nextConfig = withPWA({
     ];
 },
   reactStrictMode: true,
-  compiler: {
-    styledComponents: true,
-    removeConsole: {
-      exclude: ['error', 'warn'],
-    },
-  },
+  
   images: {
     minimumCacheTTL: 31536000,
     remotePatterns: [{

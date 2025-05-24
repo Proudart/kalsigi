@@ -21,7 +21,6 @@ const SeriesStats = dynamic(() => import("./seriesStats"), { ssr: true });
 export default function EnhancedManga({ data, title }: { data: any; title: string }) {
   const [activeTab, setActiveTab] = useState("chapters");
   const [visibleChapters, setVisibleChapters] = useState(20);
-  
   const [isSticky, setIsSticky] = useState(false);
 
   // Handle scroll events for sticky header
@@ -51,7 +50,7 @@ export default function EnhancedManga({ data, title }: { data: any; title: strin
             src={data.cover_image_url}
             alt={data.title}
             fill
-            className="object-cover opacity-40 blur-sm"
+            className="object-covesr opacity-40 blur-sm"
             priority
             sizes="100vw"
           />

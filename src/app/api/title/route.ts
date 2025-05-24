@@ -37,6 +37,7 @@ export async function GET(request: Request) {
         url_code: true,
         today_views: true,
         total_views: true,
+
       },
       with: {
         chapters: {
@@ -90,9 +91,9 @@ export async function GET(request: Request) {
       chapters: sortedChapters,
       averageRating,
     };
-
     // Store the result in cache
     offsetCache.set(url, responseData);
+    console.log("Data fetched from database:", responseData);
 
     return NextResponse.json(responseData);
   } catch (error) {

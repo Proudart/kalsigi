@@ -1,7 +1,5 @@
-import { Suspense } from "react";
 import { Link } from "../link";
 import Loader from "../load";
-import { lazyHydrate } from 'next-lazy-hydration-on-scroll';
 import dynamic from "next/dynamic";
 
 // Lazy load components for better performance
@@ -25,22 +23,18 @@ export default async function Manga({
     const timeoutId = setTimeout(() => controller.abort(), 15000);
     
     const res = await fetch(
-      `https://www.${process.env.site_name}.com/api/title?url=${modifiedTitle}`,
-      { 
-        signal: controller.signal,
-        cache: 'force-cache',
-        next: { revalidate: 3600 } // Revalidate every hour
-      }
+      `http://localhost:3000/api/title?url=${modifiedTitle}`
+
     );
     
     clearTimeout(timeoutId);
+
     
     if (!res.ok) {
       throw new Error(`Failed to fetch data: ${res.status}`);
     }
     
     const data = await res.json();
-    
     return (
       <EnhancedManga 
         data={data} 

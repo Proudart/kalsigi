@@ -24,7 +24,7 @@ function SearchBox() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const searchBoxRef = useRef<HTMLDivElement>(null);
-  
+   
   // Debounce search term to reduce API calls
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
   

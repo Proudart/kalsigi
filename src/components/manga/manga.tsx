@@ -21,12 +21,16 @@ export default async function Manga({
     // Fetch data with a 15-second timeout to prevent long loading times
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 15000);
-    
-    const res = await fetch(
-      `http://localhost:3000/api/title?url=${modifiedTitle}`
 
+    const res = await fetch(
+      `https://www.${process.env.site_name}.com/api/title?url=${modifiedTitle}`,
+      {
+        signal: controller.signal,
+        cache: 'force-cache',
+        next: { revalidate: 3600 } // Revalidate every hour
+      }
     );
-    
+
     clearTimeout(timeoutId);
 
     

@@ -17,6 +17,7 @@ export default async function Manga({
   const regex = /-\d{6}/;
   const modifiedTitle = title.replace(regex, "");
   
+  
   try {
     // Fetch data with a 15-second timeout to prevent long loading times
     const controller = new AbortController();

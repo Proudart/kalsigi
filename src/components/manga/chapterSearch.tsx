@@ -14,7 +14,7 @@ interface ChapterType {
 const ChapterSearch: React.FC<{ 
   data: { chapters: ChapterType[] }; 
   title: string;
-}> = ({ data, title }) => {
+}> = ({ data, title, }) => {
   const [searchResults, setSearchResults] = useState<ChapterType[]>(data.chapters);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -73,7 +73,7 @@ const ChapterSearch: React.FC<{
           searchResults.map((chapter, index) => (
             <Link
               key={`${chapter.chapter_number}-${index}`}
-              href={`/series/${title}/chapter-${chapter.chapter_number}`}
+              href={`/series/${title}/${chapter.publisher.toLowerCase().replace(/\s+/g, '-')}/chapter-${chapter.chapter_number}`}
               prefetch={true}
               className="group relative"
             >

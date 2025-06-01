@@ -90,7 +90,4 @@ const nextConfig = withPWA({
 
 
 
-export default MillionLint.next({
-  enabled: true,
-  rsc: true
-})(nextConfig);
+export default(nextConfig);

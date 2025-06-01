@@ -9,7 +9,7 @@ interface ChapterProps {
     update_time?: string;
     published_at: string;
     striked?: boolean;
-    publisher?: string;
+    publisher: string;
   };
   title: string;
   index: number;
@@ -60,7 +60,7 @@ const ChapterSearchCard: React.FC<ChapterProps> = ({ chapter, title, index }) =>
       transition={{ duration: 0.2, delay: Math.min(index * 0.05, 0.5) }}
     >
       <Link
-        href={`/series/${title}/chapter-${chapter.chapter_number}`}
+        href={`/series/${title}/${chapter.publisher.toLowerCase().replace(/\s+/g, '-')}/chapter-${chapter.chapter_number}`}
         prefetch={true}
         className="block"
         aria-label={`Read chapter ${chapter.chapter_number}`}

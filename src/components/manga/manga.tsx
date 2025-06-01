@@ -24,11 +24,11 @@ export default async function Manga({
     const timeoutId = setTimeout(() => controller.abort(), 15000);
 
     const res = await fetch(
-      `https://www.${process.env.site_name}.com/api/title?url=${modifiedTitle}`,
+      `https://www.manhwacall.com/api/title?url=${modifiedTitle}`,
       {
-        signal: controller.signal,
-        cache: 'force-cache',
-        next: { revalidate: 3600 } // Revalidate every hour
+      signal: controller.signal,
+      cache: 'force-cache',
+      next: { revalidate: 3600 } // Revalidate every hour
       }
     );
 

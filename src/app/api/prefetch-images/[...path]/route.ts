@@ -17,13 +17,15 @@ export async function GET(request: NextRequest) {
     const pathname = request.nextUrl.pathname.replace("/api/prefetch-images", "");
     
     // Extract series URL and chapter from pathname
-    const seriesMatch = pathname.match(/\/series\/([^\/]+)(?:\/([^\/]+))?/);
+    // Updated regex to handle the additional path segment
+    const seriesMatch = pathname.match(/\/series\/([^\/]+)(?:\/[^\/]+)?(?:\/(chapter-[^\/]+))?/);
     if (!seriesMatch) {
       return new Response(JSON.stringify({ images: [] }));
     }
 
     const seriesUrl = seriesMatch[1].replace(/-\d{6}$/, ""); // Remove URL code
-    let chapter = seriesMatch[2]; // Will be undefined for series pages
+    let chapter = seriesMatch[2]; // Updated index for chapter
+
     
     // First, fetch the series data
     const seriesData = await db.query.series.findFirst({

@@ -1,6 +1,6 @@
-// src/components/chapter/chapter.tsx
+// app/series/[series]/[publisher]/[chapter]/page.tsx
 import { Link } from "../../components/link";
-import GenerateTags from "./generateTags";
+import GenerateTags from "../../components/chapter/generateTags";
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -15,36 +15,39 @@ import { lazyHydrate } from 'next-lazy-hydration-on-scroll';
 import dynamic from "next/dynamic";
 
 // Lazy-loaded components for better performance
-const ChapterNavigation = dynamic(() => import("./chapterNav"), { 
+const ChapterNavigation = dynamic(() => import("../../components/chapter/chapterNav"), { 
   ssr: true,
   loading: () => <div className="h-12 w-full bg-background-200 rounded-md animate-pulse"></div>,
 });
 
-const ChapterContent = dynamic(() => import("./chapterContent"), { 
+const ChapterContent = dynamic(() => import("../../components/chapter/chapterContent"), { 
   ssr: true,
   loading: () => <div className="h-[60vh] animate-pulse bg-background-200 rounded-md"></div>,
 });
 
-const ChapterChat = dynamic(() => import("./chapterChat"), { 
+const ChapterChat = dynamic(() => import("../../components/chapter/chapterChat"), { 
   ssr: true, 
   loading: () => <div className="h-64 bg-background-200 rounded-md animate-pulse"></div>,
 });
 
-const ShareMenu = dynamic(() => import("../share"), { 
+const ShareMenu = dynamic(() => import("../../components/share"), { 
   ssr: true, 
   loading: () => <div className="h-12 bg-background-200 rounded-md animate-pulse"></div>,
 });
 
-const Recommended = dynamic(() => import("../recommendations"), { 
+const Recommended = dynamic(() => import("../../components/recommendations"), { 
   ssr: true, 
   loading: () => <div className="h-64 bg-background-200 rounded-md animate-pulse"></div>,
 });
 
-const ToDoAction = lazyHydrate(() => import("./toDoActions"), { 
+const ToDoAction = lazyHydrate(() => import("../../components/chapter/toDoActions"), { 
   wrapperElement: 'div' 
-});
+})
 
-// Client-side components
+// Helper function to format publisher for URL
+const formatPublisherForUrl = (publisher: string) => {
+  return publisher.toLowerCase().replace(/\s+/g, '-');
+};
 
 async function fetchChapterData(modifiedTitle: any) {
   try {
@@ -54,7 +57,7 @@ async function fetchChapterData(modifiedTitle: any) {
     );
     
     if (!res.ok) throw new Error("Failed to fetch chapter data");
-    
+
     return res.json();
   } catch (error) {
     console.error("Error fetching chapter data:", error);
@@ -63,10 +66,10 @@ async function fetchChapterData(modifiedTitle: any) {
 }
 
 export default async function Chapter({ params }: any) {
-
   const resolvedParams = await params;
   const title = resolvedParams.series;
   const chapter = resolvedParams.chapter;
+  const publisher = resolvedParams.group;
   const chapterNumber = chapter.replace(/^chapter-/i, "");
   const regex = /-\d{6}/;
   const modifiedTitle = title.replace(regex, "");
@@ -74,24 +77,57 @@ export default async function Chapter({ params }: any) {
   // Fetch chapter data server-side
   const chapterData = await fetchChapterData(modifiedTitle);
 
-  // Extract chapter-specific data
-  const currentChapterData = chapterData?.chapters?.find(
-    (item: { chapter_number: any }) => item.chapter_number == chapterNumber
+  // Find chapter from the specified publisher first, then fallback to any publisher
+  let currentChapterData = chapterData?.chapters?.find(
+    (item: any) => 
+      item.chapter_number == chapterNumber && 
+      formatPublisherForUrl(item.publisher || '') === publisher
   );
+
+  // If not found with specified publisher, try any publisher
+  if (!currentChapterData) {
+    currentChapterData = chapterData?.chapters?.find(
+      (item: { chapter_number: any, publisher: any }) => item.chapter_number == chapterNumber
+    );
+  }
 
   const panels = currentChapterData?.content || [];
   const striked = currentChapterData?.striked || false;
   const chapterId = currentChapterData?.id || null;
-  const publisher = currentChapterData?.publisher || null;
+  const currentPublisher = currentChapterData?.publisher || null;
   const date = currentChapterData?.published_at || null;
   const summary = currentChapterData?.summary || null;
   const views = currentChapterData?.views || 0;
 
-  // Find adjacent chapters for navigation
+  // Helper function to find best publisher for a chapter
+  const findBestPublisherForChapter = (chapterNum: string | number): string | null => {
+    const chapterOptions = chapterData?.chapters?.filter(
+      (item: any) => item.chapter_number == chapterNum
+    ) || [];
+    
+    // Prefer current publisher if available
+    const samePublisher = chapterOptions.find(
+      (item: any) => formatPublisherForUrl(item.publisher || '') === publisher
+    );
+    
+    if (samePublisher) {
+      return formatPublisherForUrl(samePublisher.publisher || '');
+    }
+    
+    // Otherwise return the first available publisher
+    return chapterOptions.length > 0 ? formatPublisherForUrl(chapterOptions[0].publisher || '') : null;
+  };
+
+  // Find adjacent chapters for navigation with proper publisher handling
   const chapters = chapterData?.chapters || [];
-  const currentIndex = chapters.findIndex((item: any) => item.chapter_number == chapterNumber);
-  const prevChapter = currentIndex < chapters.length - 1 ? chapters[currentIndex + 1]?.chapter_number : null;
-  const nextChapter = currentIndex > 0 ? chapters[currentIndex - 1]?.chapter_number : null;
+  const uniqueChapters = Array.from(new Set(chapters.map((item: any) => String(item.chapter_number)))).sort((a: any, b: any) => Number(b) - Number(a)) as string[]; // Sort descending for manga
+  
+  const currentIndex = uniqueChapters.findIndex((num: string) => num === String(chapterNumber));
+  const prevChapterNum = currentIndex < uniqueChapters.length - 1 ? uniqueChapters[currentIndex + 1] : null;
+  const nextChapterNum = currentIndex > 0 ? uniqueChapters[currentIndex - 1] : null;
+  
+  const prevChapterPublisher = prevChapterNum ? findBestPublisherForChapter(prevChapterNum) : null;
+  const nextChapterPublisher = nextChapterNum ? findBestPublisherForChapter(nextChapterNum) : null;
 
   return (
     <>
@@ -115,9 +151,9 @@ export default async function Chapter({ params }: any) {
             </div>
             
             <div className="flex items-center space-x-2">
-              {prevChapter && (
+              {prevChapterNum && prevChapterPublisher && (
                 <Link 
-                  href={`/series/${title}/chapter-${prevChapter}`}
+                  href={`/series/${title}/${prevChapterPublisher}/chapter-${prevChapterNum}`}
                   aria-label="Previous chapter"
                   className="p-2 rounded-full text-text-700 hover:text-primary-600 hover:bg-background-200 transition-colors"
                 >
@@ -127,9 +163,9 @@ export default async function Chapter({ params }: any) {
               
               <span className="text-sm font-medium">Ch. {chapterNumber}</span>
               
-              {nextChapter && (
+              {nextChapterNum && nextChapterPublisher && (
                 <Link 
-                  href={`/series/${title}/chapter-${nextChapter}`}
+                  href={`/series/${title}/${nextChapterPublisher}/chapter-${nextChapterNum}`}
                   aria-label="Next chapter"
                   className="p-2 rounded-full text-text-700 hover:text-primary-600 hover:bg-background-200 transition-colors"
                 >
@@ -155,7 +191,6 @@ export default async function Chapter({ params }: any) {
               <li className="text-text-900 font-medium">{chapter}</li>
             </ol>
           </nav>
-          
           
           <h1 className="text-3xl sm:text-4xl font-bold text-text-950 ">
             {chapterData?.title} - {chapter?.toString().replace(/-/g, " ")}
@@ -196,6 +231,8 @@ export default async function Chapter({ params }: any) {
               currentChapter={chapterNumber}
               url={modifiedTitle}
               urlCode={chapterData?.url_code}
+              publisher={publisher}
+              chapterData={chapterData}
             />
           </Suspense>
         </div>
@@ -225,7 +262,7 @@ export default async function Chapter({ params }: any) {
           <div className="bg-background-800 p-6 rounded-lg shadow-sm border border-background-200">
             <h2 className="text-xl font-semibold text-text-100">Share this chapter</h2>
             <ShareMenu
-              url={`https://www.manhwacall.com/series/${title}/${chapter}`}
+              url={`https://www.manhwacall.com/series/${title}/${publisher}/${chapter}`}
               title={`${chapterData?.title} - ${chapter?.toString().replace(/-/g, " ")}`}
             />
           </div>
@@ -250,7 +287,7 @@ export default async function Chapter({ params }: any) {
             title={chapterData?.title}
             chapter={chapter}
             datePublished={date}
-            publisher={publisher}
+            publisher={currentPublisher}
           />
         </div>
 
@@ -267,9 +304,11 @@ export default async function Chapter({ params }: any) {
             <ChapterChat chapterId={chapterId} />
           </Suspense>
         </div>
-
-
       </main>
     </>
   );
+}
+
+function sort(arg0: (a: any, b: any) => number) {
+  throw new Error("Function not implemented.");
 }

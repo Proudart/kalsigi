@@ -70,7 +70,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
       series.chapters.forEach((chapter: any) => {
         urls.push({
-          url: `https://www.${process.env.site_name}.com/series/${series.url}-${series.url_code}/chapter-${chapter.chapter_number}`,
+          url: `https://www.${process.env.site_name}.com/series/${series.url}-${series.url_code}/${chapter.publisher.toLowerCase().replace(/\s+/g, '-')}/chapter-${chapter.chapter_number}`,
           lastModified: new Date(chapter.published_at),
         });
       });

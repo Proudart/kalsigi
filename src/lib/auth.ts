@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../util/db";
+import { myPlugin} from "../util/plugins";
 
 const baseURL =
   process.env.NODE_ENV === "development"
@@ -25,6 +26,10 @@ export const auth = betterAuth({
   baseURL: process.env.NODE_ENV === "production" 
     ? "https://www.manhwacall.com"
     : "http://localhost:3000",
+
+  plugins: [
+    myPlugin(),
+  ]
 });
 
 

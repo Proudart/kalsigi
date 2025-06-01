@@ -6,6 +6,8 @@ import { ThemeToggle } from "../ui/themeToggle"
 import Auth from "../auth/auth"
 import LiveSearch from "./liveSearch"
 import dynamic from "next/dynamic"
+import { GroupsNavigation } from "./GroupsNavigation";
+
 const NavbarClient = dynamic(() => import("./navbarClient"), { ssr: true })
 
 const navigation = [
@@ -54,6 +56,8 @@ export default function Navbar({ logo }: Props) {
             <ThemeToggle />
           </div>
           <Auth />
+      <GroupsNavigation />
+
       <NavbarClient />
 
         </div>

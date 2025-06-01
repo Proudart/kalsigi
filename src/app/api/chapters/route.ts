@@ -6,11 +6,13 @@ export async function GET() {
     columns: {
       url: true,
       url_code: true,
+      publisher: true,
     },
     with: {
       chapters: {
         columns: {
           chapter_number: true,
+          publisher: true,
         },
       },
     },

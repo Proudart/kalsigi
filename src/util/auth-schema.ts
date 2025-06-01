@@ -4,6 +4,7 @@ export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text('name').notNull(),
   email: text('email').notNull().unique(),
+  role: text('role').notNull().default('reader'), // Default role is 'user'
   emailVerified: boolean('emailVerified').notNull(),
   createdAt: timestamp('createdAt').notNull(),
   updatedAt: timestamp('updatedAt').notNull()

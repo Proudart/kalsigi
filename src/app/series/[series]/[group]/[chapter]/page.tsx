@@ -1,10 +1,10 @@
-// src/app/series/[series]/[chapter]/page.tsx
+// src/app/series/[series]/[publisher]/[chapter]/page.tsx
 import { Suspense } from "react";
 import { permanentRedirect } from "next/navigation";
 import { lazyHydrate } from 'next-lazy-hydration-on-scroll';
 import { Metadata } from "next";
 import Script from "next/script";
-import Loader from "../../../../components/load";
+import Loader from "../../../../../components/load";
 
 // Skeleton loader for chapter component
 function ChapterSkeleton() {
@@ -23,7 +23,7 @@ function ChapterSkeleton() {
 }
 
 // Enhanced components with better loading strategy
-const Chapter = lazyHydrate(() => import("../../../../components/chapter/chapter"), {
+const Chapter = lazyHydrate(() => import("../../../../../components/chapter/chapter"), {
   LoadingComponent: ChapterSkeleton,
   wrapperElement: 'div'
 });
@@ -83,11 +83,16 @@ async function fetchChapterData(url: string): Promise<SeriesData> {
   return response.json();
 }
 
-async function checkAndRedirectChapter(seriesParam: string, chapterParam: string) {
-  
+async function checkAndRedirectChapter(
+  seriesParam: string, 
+  publisherParam: string, 
+  chapterParam: string
+) {
   const regex = /-(\d{6})$/;
   const match = seriesParam.match(regex);
   
+  const publisher = publisherParam.toLowerCase().replace(/\s+/g, '-');
+
   // Extract base URL (with or without code)
   const baseUrl = match ? seriesParam.replace(regex, '') : seriesParam;
   
@@ -102,31 +107,44 @@ async function checkAndRedirectChapter(seriesParam: string, chapterParam: string
   // Redirects happen outside the try-catch
   const expectedCode = data.url_code || '000000';
   const providedCode = match?.[1];
+
   
   // Build the correct series URL
   const correctSeriesUrl = `${data.url}-${expectedCode}`;
   
   // Check if we need to redirect due to URL issues
   if (!match || providedCode !== expectedCode) {
-    permanentRedirect(`/series/${correctSeriesUrl}/${chapterParam}`);
+    permanentRedirect(`/series/${correctSeriesUrl}/${publisher}/${chapterParam}`);
   }
   
-  // Check if the chapter exists
+  // Check if the chapter exists for this specific publisher
   const chapterNumber = chapterParam.replace(/^chapter-/i, '');
   const chapterExists = data.chapters.some(
-    (ch: ChapterData) => ch.chapter_number.toString() === chapterNumber
+    (ch: ChapterData) => 
+      ch.chapter_number.toString() === chapterNumber && 
+      ch.publisher.toLowerCase().replace(/\s+/g, '-') === publisherParam.toLowerCase().replace(/\s+/g, '-')
   );
   
   if (!chapterExists) {
-    permanentRedirect(`/series/${correctSeriesUrl}`);
+    // Try to find the chapter with any publisher and redirect to the first available
+    const anyChapter = data.chapters.find(
+      (ch: ChapterData) => ch.chapter_number.toString() === chapterNumber
+    );
+    
+
+    if (anyChapter) {
+      permanentRedirect(`/series/${correctSeriesUrl}/${anyChapter.publisher.toLowerCase().replace(/\s+/g, '-')}/${chapterParam}`);
+    } else {
+      // Chapter doesn't exist at all, redirect to series page
+      permanentRedirect(`/series/${correctSeriesUrl}`);
+    }
   }
   
   return data;
 }
 
-
 export async function generateMetadata({ params }: any): Promise<Metadata> {
-  const { series, chapter } = await params;
+  const { series, publisher, chapter } = await params;
   const siteName = process.env.site_name;
   const baseUrl = `https://www.${siteName}.com`;
   const regex = /-\d{6}/;
@@ -135,19 +153,22 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
   try {
     const data = await fetchChapterData(modifiedUrl);
     const chapterData = data.chapters.find(
-      (ch: ChapterData) => `chapter-${ch.chapter_number}` === chapter
+      (ch: ChapterData) => 
+        `chapter-${ch.chapter_number}` === chapter && 
+        ch.publisher === publisher
     );
 
     const summary = chapterData?.summary || {};
     const chapterTitle = `Chapter ${chapterData?.chapter_number}`;
-    const fullTitle = `${data.title} ${chapterTitle} - Read Online | ${siteName}`;
-    const pageUrl = `${baseUrl}/series/${series}/${chapter}`;
+    const fullTitle = `${data.title} ${chapterTitle} (${publisher}) - Read Online | ${siteName}`;
+    const pageUrl = `${baseUrl}/series/${series}/${publisher}/${chapter}`;
 
     const keywords = [
       data.title,
       `${data.title} manga`,
       `${data.title} ${chapterTitle}`,
       `read ${data.title} online`,
+      `${publisher} translation`,
       data.genre?.join(', '),
       data.author,
       data.status,
@@ -155,7 +176,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
       'online manga reader'
     ].filter(Boolean).join(", ");
 
-    const description = `Read ${data.title} ${chapterTitle} online. ${summary.tldr || ''} ${data.description?.slice(0, 150)}... Continue reading at ${siteName}.`;
+    const description = `Read ${data.title} ${chapterTitle} by ${publisher} online. ${summary.tldr || ''} ${data.description?.slice(0, 150)}... Continue reading at ${siteName}.`;
     
     return {
       title: fullTitle,
@@ -219,8 +240,9 @@ export async function generateStaticParams() {
 
     return seriesData.flatMap(
       (series: { chapters: any[]; url: string; url_code: string }) =>
-        series.chapters.map((chapter: { chapter_number: string }) => ({
+        series.chapters.map((chapter: { chapter_number: string; publisher: string }) => ({
           series: series.url + "-" + (series.url_code ? series.url_code.toString() : '000000'),
+          publisher: chapter.publisher,
           chapter: "chapter-" + chapter.chapter_number.toString(),
         }))
     );
@@ -233,7 +255,12 @@ export default async function ChapterPage(props: any) {
   const params = await props.params;
   
   // Check and redirect if URL is incorrect
-  await checkAndRedirectChapter(params.series, params.chapter);
+  await checkAndRedirectChapter(params.series, params.group, params.chapter);
   
-  return <Chapter {...props} wrapperProps={{ className: 'chapter-container' }} />;
+  return (
+    <Chapter 
+      {...props} 
+      wrapperProps={{ className: 'chapter-container' }} 
+    />
+  );
 }

@@ -171,7 +171,7 @@ export default function EnhancedManga({ data, title }: { data: any; title: strin
                     >
                     <Link 
                       href={data.chapters && data.chapters.length > 0 
-                      ? `/series/${title}/chapter-${data.chapters[data.chapters.length - 1].chapter_number}`
+                      ? `/series/${title}/${data.chapters[data.chapters.length - 1].publisher.toLowerCase().replace(/\s+/g, '-')}/chapter-${data.chapters[data.chapters.length - 1].chapter_number}`
                       : '#'
                       }
                       prefetch={true}
@@ -189,7 +189,7 @@ export default function EnhancedManga({ data, title }: { data: any; title: strin
                     >
                     <Link 
                       href={data.chapters && data.chapters.length > 0 
-                      ? `/series/${title}/chapter-${data.chapters[0].chapter_number}`
+                      ? `/series/${title}/${data.chapters[0].publisher.toLowerCase().replace(/\s+/g, '-')}/chapter-${data.chapters[0].chapter_number}`
                       : '#'
                       }
                       prefetch={true}
@@ -210,7 +210,8 @@ export default function EnhancedManga({ data, title }: { data: any; title: strin
                       chapter={{
                         ...chapter,
                         chapter_number: String(chapter.chapter_number),
-                        published_at: chapter.published_at || new Date().toISOString()
+                        published_at: chapter.published_at || new Date().toISOString(),
+                        publisher: chapter.publisher || 'Unknown'
                       }} 
                       title={title}
                       index={index} 

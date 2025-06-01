@@ -3,8 +3,9 @@
         "baseUrl": ".",
         "paths": {
             "@/components/ui/*": ["./components/ui/*"],
+            "@/components/*": ["./components/*"],
+            "@/*": ["./*"]
         }
     },
     "include": ["next-env.d.ts", "**/*.js", "**/*.ts", "**/*.tsx"]
-  }
-  
+}

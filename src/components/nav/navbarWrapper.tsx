@@ -5,6 +5,7 @@ import dynamic from "next/dynamic"
 import Navbar from "./navbar"
 import { StaticImageData } from "next/image"  
 
+
 const Up = dynamic(() => import("./up"), { ssr: true })
 const Bug = dynamic(() => import("./bug"), { ssr: true })
 

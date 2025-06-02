@@ -238,7 +238,7 @@ export default function AddChapterPage({ groupId, groupName }: AddChapterPagePro
                 <h4 className="font-medium text-blue-800 mb-2">Need Help?</h4>
                 <p className="text-sm text-blue-700">
                   If you encounter issues during upload or have questions about chapter submission, 
-                  contact our support team or check the FAQ section. We're here to help make your 
+                  contact our support team or check the FAQ section. Were here to help make your 
                   translation work reach readers smoothly.
                 </p>
               </div>

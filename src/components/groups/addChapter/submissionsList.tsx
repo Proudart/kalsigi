@@ -170,7 +170,7 @@ export default function ChapterSubmissionsList({ groupId }: ChapterSubmissionsLi
                         
                         {submission.chapter_title && (
                           <p className="text-sm text-text-600 mb-2 font-medium">
-                            "{submission.chapter_title}"
+                            {submission.chapter_title}
                           </p>
                         )}
                         

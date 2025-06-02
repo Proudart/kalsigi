@@ -180,7 +180,7 @@ export default function AddChapterPage({ groupId, groupName }: AddChapterPagePro
                     </li>
                     <li className="flex items-start space-x-2">
                       <span className="text-green-600 font-bold">✓</span>
-                      <span>Build your group's translation portfolio</span>
+                      <span>Build your groups translation portfolio</span>
                     </li>
                     <li className="flex items-start space-x-2">
                       <span className="text-green-600 font-bold">✓</span>

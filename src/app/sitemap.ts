@@ -70,7 +70,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
       series.chapters.forEach((chapter: any) => {
         // Normalize publisher name for URL
-        const publisherSlug = chapter.publisher.toLowerCase().replace(/\s+/g, '-');
+        const publisherSlug = chapter.publisher?.toLowerCase().replace(/\s+/g, '-') || 'unknown';
 
         urls.push({
           url: `https://www.${process.env.site_name}.com/series/${series.url}-${series.url_code}/${publisherSlug}/chapter-${chapter.chapter_number}`,

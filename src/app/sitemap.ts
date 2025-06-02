@@ -69,8 +69,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       });
 
       series.chapters.forEach((chapter: any) => {
+        // Normalize publisher name for URL
+        const publisherSlug = chapter.publisher.toLowerCase().replace(/\s+/g, '-');
+
         urls.push({
-          url: `https://www.${process.env.site_name}.com/series/${series.url}-${series.url_code}/${chapter.publisher.toLowerCase().replace(/\s+/g, '-')}/chapter-${chapter.chapter_number}`,
+          url: `https://www.${process.env.site_name}.com/series/${series.url}-${series.url_code}/${publisherSlug}/chapter-${chapter.chapter_number}`,
           lastModified: new Date(chapter.published_at),
         });
       });

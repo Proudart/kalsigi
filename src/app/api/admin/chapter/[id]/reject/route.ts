@@ -3,10 +3,8 @@ import { db } from '../../../../../../util/db';
 import { chapterSubmissions } from '../../../../../../util/schema';
 import { eq } from "drizzle-orm";
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const submissionId = params.id;
     const body = await request.json();

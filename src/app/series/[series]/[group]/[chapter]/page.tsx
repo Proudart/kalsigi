@@ -259,6 +259,7 @@ export default async function ChapterPage(props: any) {
   
   return (
     <Chapter 
+      /* @next-codemod-error 'props' is used with spread syntax (...). Any asynchronous properties of 'props' must be awaited when accessed. */
       {...props} 
       wrapperProps={{ className: 'chapter-container' }} 
     />

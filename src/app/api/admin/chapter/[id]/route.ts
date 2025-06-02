@@ -3,10 +3,8 @@ import { db } from '../../../../../util/db';
 import { chapters, series, scanlationGroups, chapterSubmissions } from '../../../../../util/schema';
 import { eq, sql } from "drizzle-orm";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const chapterId = params.id;
 
@@ -54,10 +52,8 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const chapterId = params.id;
     const body = await request.json();
@@ -92,10 +88,8 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const chapterId = params.id;
 

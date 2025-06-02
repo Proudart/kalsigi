@@ -242,7 +242,7 @@ export async function generateStaticParams() {
       (series: { chapters: any[]; url: string; url_code: string }) =>
         series.chapters.map((chapter: { chapter_number: string; publisher: string }) => ({
           series: series.url + "-" + (series.url_code ? series.url_code.toString() : '000000'),
-          publisher: chapter.publisher.toLowerCase().replace(/\s+/g, '-'),
+          group: chapter.publisher.toLowerCase().replace(/\s+/g, '-'),
           chapter: "chapter-" + chapter.chapter_number.toString(),
         }))
     );

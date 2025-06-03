@@ -50,6 +50,7 @@ const SeriesImage = ({
     return result;
   }
 
+  
 const ContinueContent = ({ data }: { data: any[] }) => {
   return (
     <div>

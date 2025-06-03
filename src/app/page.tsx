@@ -47,7 +47,48 @@ const Feed = dynamic(() => import("../components/feed/main/feed"), {
 export default function Home() {
   return (
     <div className="space-y-12 grow container mx-auto px-4 py-8">
-     
+      <Suspense fallback={<DiscoverMangaSkeleton />}>
+        <DiscoverManga />
+      </Suspense>
+
+      <Suspense fallback={<UpdatedSkeleton />}>
+        <Updated />
+      </Suspense>
+
+      <Suspense fallback={<ContinueSkeleton />}>
+        <Continue />
+      </Suspense>
+
+      <Suspense fallback={<RecommendedSkeleton />}>
+        <Recommended />
+      </Suspense>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <Suspense fallback={<FeedNewSkeleton title="Latest Updates" />}>
+          <FeedNew title="Latest Updates" />
+        </Suspense>
+        
+        <Suspense fallback={<FeedNewSkeleton title="Trending" />}>
+          <FeedNew title="Trending" />
+        </Suspense>
+      </div>
+
+      <div className="space-y-12 mx-auto pb-8"> 
+        {/* Using a list of genres to map through and create Feed components */}
+        {[
+          "Fantasy", "Webtoons", "Action", "Adventure", "Shounen", 
+          "Drama", "Seinen", "Martial Arts", "Supernatural", "Romance", 
+          "Comedy", "Harem", "School Life", "Mature", "Historical", 
+          "Shoujo", "Slice of Life", "Psychological", "Josei", "Adult", 
+          "Sci-fi", "Shounen Ai", "Sports", "Tragedy", "Doujinshi", 
+          "Horror", "Mystery", "Shoujo Ai", "One Shot", "Yaoi", 
+          "Gender Bender", "Ecchi", "Mecha"
+        ].map((genre) => (
+          <Suspense key={genre} fallback={<FeedSkeleton title={genre} />}>
+            <Feed title={genre} />
+          </Suspense>
+        ))}
+      </div>
     </div>
   );
 }

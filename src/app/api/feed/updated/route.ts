@@ -22,6 +22,7 @@ export async function GET(request: Request) {
           columns: {
             chapter_number: true,
             updated_at: true,
+            publisher: true,
           },
         },
       },

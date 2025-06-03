@@ -15,6 +15,7 @@ export async function GET(request: Request) {
       cover_image_url: true,
       updated_at: true,
       url_code: true,
+      publisher: true,
     },
     limit: 25,
     offset: offset,

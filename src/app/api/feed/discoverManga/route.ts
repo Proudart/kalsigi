@@ -17,7 +17,8 @@ export async function GET(request: NextRequest) {
         title,
         url,
         cover_image_url,
-        url_code
+        url_code,
+        publisher
       FROM
         ${series}
       WHERE

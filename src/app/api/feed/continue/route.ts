@@ -20,7 +20,9 @@ export async function GET(request: Request) {
         chapters: {
           columns: {
             chapter_number: true,
-            updated_at: true,},
+            updated_at: true,
+            publisher: true,
+          },
         },
       },
     })

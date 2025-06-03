@@ -8,6 +8,7 @@ import { Link } from "../../../components/link";
 import FeedNewSkeleton from "./feedNewSkeleton";
 
 type Manga = {
+  publisher: any;
   title: string;
   url: string;
   cover_image_url: string;
@@ -101,7 +102,7 @@ export default async function FeedNew({ title }: Props) {
               </h3>
               {manga.chapters.map((chapter) => (
                 <Link 
-                  href={`/series/${manga.url}-${manga.url_code}/chapter-${manga.chapters[0].chapter_number}`} 
+                  href={`/series/${manga.url}-${manga.url_code}/${manga.publisher.toLowerCase().replace(/\s+/g, '-')}/chapter-${manga.chapters[0].chapter_number}`} 
                   key={chapter.chapter_number} 
                   className="text-sm text-muted-foreground block" 
                   prefetch={true}>

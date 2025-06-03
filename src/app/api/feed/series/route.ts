@@ -44,6 +44,7 @@ export async function GET(request: Request) {
         columns: {
           chapter_number: true,
           published_at: true,
+          publisher: true,
         },
       },
     },

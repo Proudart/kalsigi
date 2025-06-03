@@ -58,6 +58,7 @@ export async function GET(request: NextRequest) {
         url,
         cover_image_url,
         url_code,
+        publisher,
         (
           SELECT COUNT(*)
           FROM unnest(series.genres) AS series_genre

@@ -17,6 +17,7 @@ type Manga = {
   chapters: [{
     chapter_number: string;
     published_at: string;
+    publisher: string;
   }];
 };
 
@@ -93,7 +94,7 @@ async function GenreFeed({ title }: Props) {
                 </div>
                 <div className="space-y-2">
                   {serie.chapters && serie.chapters.length > 0 ? (
-                    <Link href={`/series/${serie.url}-${serie.url_code}/${serie.publisher.toLowerCase().replace(/\s+/g, '-')}/chapter-${serie.chapters[0].chapter_number}`} prefetch={true}>
+                    <Link href={`/series/${serie.url}-${serie.url_code}/${serie.chapters[0].publisher.toLowerCase().replace(/\s+/g, '-')}/chapter-${serie.chapters[0].chapter_number}`} prefetch={true}>
                       <h3 className="font-semibold text-sm text-text-900 line-clamp-2 space-y-2">
                         {serie.title}
                       </h3>

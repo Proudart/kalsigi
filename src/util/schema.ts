@@ -67,6 +67,7 @@ export const seriesSubmissions = pgTable("series_submissions", {
   rejection_reason: text("rejection_reason"),
   approved_by: text("approved_by"), // Admin/moderator who approved
   approved_series_id: uuid("approved_series_id").references(() => series.id), // Link to created series if approved
+  cover_image_path: text("cover_image_path"),
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 }, (table) => ({
@@ -101,7 +102,7 @@ export const chapterSubmissions = pgTable('chapter_submissions', {
   // Review information
   review_notes: text('review_notes'), // admin feedback/rejection reason
   approved_chapter_id: uuid('approved_chapter_id').references(() => chapters.id), // links to published chapter if approved
-  
+  pages_path: text('pages_path').notNull(), // Path in R2 where pages are stored (e.g., "pending/12345")
   // Timestamps
   created_at: timestamp('created_at').defaultNow().notNull(),
   updated_at: timestamp('updated_at').defaultNow().notNull(),

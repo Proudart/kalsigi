@@ -1,67 +1,66 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '../../../../../../util/db';
-import { scanlationGroups, groupMembers, groupInvitations, seriesSubmissions } from '../../../../../../util/schema';
-import {  hasPermission } from '../../../../../../util/scanlationUtils';
+import { seriesSubmissions } from '../../../../../../util/schema';
 import { auth } from '@/lib/auth';
 import { eq } from 'drizzle-orm';
-import { z } from 'zod';
-
-
+import { deleteFromR2 } from '@/lib/r2';
 
 export async function POST(request: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   try {
     const submissionId = params.id;
-    const { reason, adminId } = await request.json();
-
-    if (!reason || !adminId) {
-      return NextResponse.json(
-        { error: "Rejection reason and admin ID are required" },
-        { status: 400 }
-      );
+    const session = await auth.api.getSession({ headers: request.headers });
+    
+    if (!session || session.user.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
-    // Check if submission exists and is pending
+    const body = await request.json();
+    const { rejectionReason } = body;
+
+    // Get the submission
     const [submission] = await db
-      .select({ submission_status: seriesSubmissions.submission_status })
+      .select()
       .from(seriesSubmissions)
       .where(eq(seriesSubmissions.id, submissionId))
       .limit(1);
 
     if (!submission) {
-      return NextResponse.json(
-        { error: "Submission not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Submission not found" }, { status: 404 });
     }
 
     if (submission.submission_status !== 'pending') {
-      return NextResponse.json(
-        { error: "Submission has already been processed" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Submission has already been processed" }, { status: 400 });
     }
 
-    // Update submission to rejected
+    // Delete cover image from R2 if exists
+    if (submission.cover_image_path) {
+      try {
+        await deleteFromR2(submission.cover_image_path);
+      } catch (error) {
+        console.error('Error deleting cover image:', error);
+        // Continue with rejection even if file deletion fails
+      }
+    }
+
+    // Update submission status
     await db
       .update(seriesSubmissions)
       .set({
         submission_status: 'rejected',
-        rejection_reason: reason,
+        rejection_reason: rejectionReason,
+        approved_by: session.user.id,
         updated_at: new Date(),
       })
       .where(eq(seriesSubmissions.id, submissionId));
 
     return NextResponse.json({
       success: true,
-      message: "Submission rejected",
+      message: "Series rejected and files deleted",
     });
 
   } catch (error) {
-    console.error("Error rejecting submission:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    console.error("Error rejecting series:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

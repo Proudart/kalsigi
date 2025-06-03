@@ -137,10 +137,10 @@ export default function ChapterApprovalInterface() {
   // Handle submission review
   const handleReview = async () => {
     if (!selectedSubmission) return;
-
+    console.log('Reviewing submission:', selectedSubmission.id, reviewAction, reviewNotes);
     try {
       const response = await fetch(`/api/admin/chapter/${selectedSubmission.id}/approve`, {
-        method: 'POST ',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },

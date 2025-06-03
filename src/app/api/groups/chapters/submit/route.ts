@@ -1,16 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "../../../../../util/db";
-import {
-  scanlationGroups,
-  chapterSubmissions,
-  series,
-  chapters,
-} from "../../../../../util/schema";
+import { scanlationGroups, chapterSubmissions, series, chapters } from "../../../../../util/schema";
 import { eq, and } from "drizzle-orm";
 import { auth } from "@/lib/auth";
+import { generateR2Paths, convertToWebP, uploadToR2 } from '@/lib/r2';
 
-// Validation schema for chapter submission
 const chapterSubmissionSchema = z.object({
   series_id: z.string().uuid("Invalid series ID"),
   chapter_number: z.string().min(1, "Chapter number is required"),
@@ -28,13 +23,11 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
 
-    // Helper function to get form data with null handling
     const getFormValue = (key: string): string | null => {
       const value = formData.get(key);
       return value === null || value === "" ? null : (value as string);
     };
 
-    // Extract and validate form data
     const data = {
       series_id: getFormValue("series_id") || "",
       chapter_number: getFormValue("chapter_number") || "",
@@ -43,207 +36,142 @@ export async function POST(request: NextRequest) {
       group_id: getFormValue("group_id") || "",
     };
 
-    // Validate the data
     const validatedData = chapterSubmissionSchema.parse(data);
 
-    // Verify that the group exists and is active
-    const group = await db
-      .select()
-      .from(scanlationGroups)
-      .where(eq(scanlationGroups.slug, validatedData.group_id))
-      .limit(1);
+    // Verify group and series
+    const [group, targetSeries] = await Promise.all([
+      db.select().from(scanlationGroups).where(eq(scanlationGroups.slug, validatedData.group_id)).limit(1),
+      db.select().from(series).where(eq(series.id, validatedData.series_id)).limit(1)
+    ]);
 
     if (group.length === 0) {
-      return NextResponse.json(
-        { error: "Scanlation group not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Scanlation group not found" }, { status: 404 });
     }
 
     if (group[0].status !== "approved") {
-      return NextResponse.json(
-        { error: "Scanlation group is not approved for submissions" },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Scanlation group is not approved for submissions" }, { status: 403 });
     }
-
-    // Verify that the series exists
-    const targetSeries = await db
-      .select()
-      .from(series)
-      .where(eq(series.id, validatedData.series_id))
-      .limit(1);
 
     if (targetSeries.length === 0) {
       return NextResponse.json({ error: "Series not found" }, { status: 404 });
     }
 
-    // Handle start and end images upload
+    if (!targetSeries[0].url) {
+      return NextResponse.json({ error: "Series URL is missing" }, { status: 400 });
+    }
+
+    // Generate R2 paths for chapter
+    const paths = generateR2Paths('chapter', validatedData.group_id, targetSeries[0].url, validatedData.chapter_number);
+
+    // Handle start and end images
     const startImage = formData.get("start_image") as File | null;
     const endImage = formData.get("end_image") as File | null;
     let startImageUrl: string | null = null;
     let endImageUrl: string | null = null;
 
-    // Validate and upload start image
     if (startImage && startImage.size > 0) {
       if (startImage.size > 20 * 1024 * 1024) {
-        return NextResponse.json(
-          { error: "Start image must be less than 20MB" },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: "Start image must be less than 20MB" }, { status: 400 });
       }
 
-      const allowedTypes = [
-        "image/jpeg",
-        "image/png",
-        "image/gif",
-        "image/webp",
-      ];
+      const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
       if (!allowedTypes.includes(startImage.type)) {
-        return NextResponse.json(
-          { error: "Start image must be JPG, PNG, WebP, or GIF" },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: "Start image must be JPG, PNG, WebP, or GIF" }, { status: 400 });
       }
 
-      // Upload start image (placeholder for now)
-      startImageUrl = `https://placeholder.com/start-${validatedData.series_id}-${validatedData.chapter_number}`;
+      // Upload start image
+      const buffer = Buffer.from(await startImage.arrayBuffer());
+      const webpBuffer = await convertToWebP(buffer, 'extra');
+      const startKey = `${paths.pending}/start.webp`;
+      startImageUrl = await uploadToR2(startKey, webpBuffer);
     }
 
-    // Validate and upload end image
     if (endImage && endImage.size > 0) {
       if (endImage.size > 20 * 1024 * 1024) {
-        return NextResponse.json(
-          { error: "End image must be less than 20MB" },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: "End image must be less than 20MB" }, { status: 400 });
       }
 
-      const allowedTypes = [
-        "image/jpeg",
-        "image/png",
-        "image/gif",
-        "image/webp",
-      ];
+      const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
       if (!allowedTypes.includes(endImage.type)) {
-        return NextResponse.json(
-          { error: "End image must be JPG, PNG, WebP, or GIF" },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: "End image must be JPG, PNG, WebP, or GIF" }, { status: 400 });
       }
 
-      // Upload end image (placeholder for now)
-      endImageUrl = `https://placeholder.com/end-${validatedData.series_id}-${validatedData.chapter_number}`;
+      // Upload end image
+      const buffer = Buffer.from(await endImage.arrayBuffer());
+      const webpBuffer = await convertToWebP(buffer, 'extra');
+      const endKey = `${paths.pending}/end.webp`;
+      endImageUrl = await uploadToR2(endKey, webpBuffer);
     }
 
-    // Handle chapter pages upload
+    // Handle chapter pages
     const chapterPages: File[] = [];
-    const pageOrders: number[] = [];
-
-    // Get all files with 'chapter_pages' key
     const allFormEntries = Array.from(formData.entries());
     const pageFiles = allFormEntries.filter(([key]) => key === "chapter_pages");
 
     if (pageFiles.length === 0) {
-      return NextResponse.json(
-        { error: "At least one chapter page is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "At least one chapter page is required" }, { status: 400 });
     }
 
-    // Process each page file
+    // Validate page files
     pageFiles.forEach(([_, file], index) => {
       if (file instanceof File) {
-        // Validate file
         if (file.size > 20 * 1024 * 1024) {
-          // 20MB limit per file
           throw new Error(`Page ${index + 1} exceeds 20MB limit`);
         }
 
-        const allowedTypes = [
-          "image/jpeg",
-          "image/png",
-          "image/gif",
-          "image/webp",
-        ];
+        const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
         if (!allowedTypes.includes(file.type)) {
-          throw new Error(
-            `Page ${index + 1} must be an image file (JPG, PNG, GIF, WebP)`
-          );
+          throw new Error(`Page ${index + 1} must be an image file (JPG, PNG, GIF, WebP)`);
         }
 
         chapterPages.push(file);
-        pageOrders.push(index);
       }
     });
 
     if (chapterPages.length === 0) {
-      return NextResponse.json(
-        { error: "No valid image files found" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "No valid image files found" }, { status: 400 });
     }
 
-    // Check for duplicate chapter in both chapters and submissions tables
+    // Check for duplicates
     const [existingChapter, existingSubmission] = await Promise.all([
-      db
-        .select()
-        .from(chapters)
-        .where(
-          and(
-            eq(chapters.series_id, validatedData.series_id),
-            eq(chapters.chapter_number, validatedData.chapter_number),
-            eq(chapters.publisher, group[0].name)
-          )
-        )
-        .limit(1),
-      db
-        .select()
-        .from(chapterSubmissions)
-        .where(
-          and(
-            eq(chapterSubmissions.series_id, validatedData.series_id),
-            eq(chapterSubmissions.chapter_number, validatedData.chapter_number),
-            eq(chapterSubmissions.status, "pending")
-          )
-        )
-        .limit(1),
+      db.select().from(chapters).where(and(
+        eq(chapters.series_id, validatedData.series_id),
+        eq(chapters.chapter_number, validatedData.chapter_number),
+        eq(chapters.publisher, group[0].name)
+      )).limit(1),
+      db.select().from(chapterSubmissions).where(and(
+        eq(chapterSubmissions.series_id, validatedData.series_id),
+        eq(chapterSubmissions.chapter_number, validatedData.chapter_number),
+        eq(chapterSubmissions.status, "pending")
+      )).limit(1),
     ]);
 
     if (existingChapter.length > 0) {
-      return NextResponse.json(
-        {
-          error: `Chapter ${validatedData.chapter_number} already exists for this series`,
-        },
-        { status: 409 }
-      );
+      return NextResponse.json({
+        error: `Chapter ${validatedData.chapter_number} already exists for this series`,
+      }, { status: 409 });
     }
 
     if (existingSubmission.length > 0) {
-      return NextResponse.json(
-        {
-          error: `Chapter ${validatedData.chapter_number} is already pending review for this series`,
-        },
-        { status: 409 }
-      );
+      return NextResponse.json({
+        error: `Chapter ${validatedData.chapter_number} is already pending review for this series`,
+      }, { status: 409 });
     }
 
-    // Here you would implement your file upload logic for chapter pages
-    // For example, upload to cloud storage (AWS S3, Cloudinary, etc.)
+    // Upload chapter pages to R2
     const uploadedPageUrls: string[] = [];
-
     for (let i = 0; i < chapterPages.length; i++) {
       const file = chapterPages[i];
-      // const pageUrl = await uploadChapterPage(file, validatedData.series_id, validatedData.chapter_number, i);
-
-      // For now, we'll set placeholder URLs
-      const pageUrl = `https://placeholder.com/chapter-${
-        validatedData.series_id
-      }-${validatedData.chapter_number}-page-${i + 1}`;
+      const pageNumber = (i + 1).toString().padStart(3, '0');
+      const pageKey = `${paths.pending}/${pageNumber}.webp`;
+      
+      const buffer = Buffer.from(await file.arrayBuffer());
+      const webpBuffer = await convertToWebP(buffer, 'page');
+      const pageUrl = await uploadToR2(pageKey, webpBuffer);
       uploadedPageUrls.push(pageUrl);
     }
 
-    // Create the chapter submission record
+    // Create chapter submission
     const [submission] = await db
       .insert(chapterSubmissions)
       .values({
@@ -252,12 +180,13 @@ export async function POST(request: NextRequest) {
         chapter_title: validatedData.chapter_title || null,
         release_notes: validatedData.release_notes || null,
         page_count: chapterPages.length,
-        page_urls: JSON.stringify(uploadedPageUrls), // Store as JSON array
+        page_urls: JSON.stringify(uploadedPageUrls),
         start_image_url: startImageUrl,
         end_image_url: endImageUrl,
         group_id: group[0].id,
         submitted_by_user: session.user.id,
         status: "pending",
+        pages_path: paths.pending, // Store R2 path for approval process
       })
       .returning({
         id: chapterSubmissions.id,
@@ -265,9 +194,6 @@ export async function POST(request: NextRequest) {
         chapter_number: chapterSubmissions.chapter_number,
         created_at: chapterSubmissions.created_at,
       });
-
-    // Optionally send notification to admins
-    // await notifyAdminsOfNewChapterSubmission(submission);
 
     return NextResponse.json({
       success: true,
@@ -286,17 +212,11 @@ export async function POST(request: NextRequest) {
     console.error("Error processing chapter submission:", error);
 
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Validation failed", details: error.errors },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Validation failed", details: error.errors }, { status: 400 });
     }
 
-    return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : "Internal server error",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      error: error instanceof Error ? error.message : "Internal server error",
+    }, { status: 500 });
   }
 }

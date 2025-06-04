@@ -11,6 +11,7 @@ const navigation = [
   { name: "Home", href: "/", current: true },
   { name: "Series", href: "/series", current: false },
   { name: "Bookmarks", href: "/bookmarks", current: false },
+  { name: "Groups", href: "/groups", current: false },
 ];
 
 export default function NavbarClient() {

@@ -25,6 +25,13 @@ import {
   BarChart3,
   UserPlus,
   BookOpen,
+  Clock,
+  CheckCircle,
+  AlertTriangle,
+  TrendingUp,
+  Calendar,
+  Crown,
+  Shield,
 } from "lucide-react";
 import { GroupSettings } from "./GroupSettings";
 import { MemberManagement } from "./MemberManagement";
@@ -64,17 +71,35 @@ export default function GroupDashboard() {
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    const variants = {
-      pending: "bg-yellow-100 text-yellow-800",
-      approved: "bg-green-100 text-green-800",
-      suspended: "bg-red-100 text-red-800",
+  const getStatusConfig = (status: string) => {
+    const configs = {
+      pending: {
+        variant: "bg-amber-100 text-amber-800 border-amber-200",
+        icon: Clock,
+        label: "Pending Review",
+      },
+      approved: {
+        variant: "bg-emerald-100 text-emerald-800 border-emerald-200",
+        icon: CheckCircle,
+        label: "Approved",
+      },
+      suspended: {
+        variant: "bg-red-100 text-red-800 border-red-200",
+        icon: AlertTriangle,
+        label: "Suspended",
+      },
     };
-    return (
-      <Badge className={variants[status as keyof typeof variants] || ""}>
-        {status.charAt(0).toUpperCase() + status.slice(1)}
-      </Badge>
-    );
+    return configs[status as keyof typeof configs] || configs.pending;
+  };
+
+  const getRoleConfig = (role: string) => {
+    const configs = {
+      owner: { icon: Crown, color: "text-purple-600", bg: "bg-purple-100" },
+      "co-owner": { icon: Shield, color: "text-blue-600", bg: "bg-blue-100" },
+      moderator: { icon: Shield, color: "text-green-600", bg: "bg-green-100" },
+      default: { icon: Users, color: "text-gray-600", bg: "bg-gray-100" },
+    };
+    return configs[role as keyof typeof configs] || configs.default;
   };
 
   const canManageGroup = ["owner", "co-owner"].includes(group?.userRole || "");
@@ -86,131 +111,244 @@ export default function GroupDashboard() {
   );
 
   if (loading) {
-    return <div className="container mx-auto py-8">Loading...</div>;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background-50 via-primary-50/30 to-secondary-50/20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-text-600">Loading group dashboard...</p>
+        </div>
+      </div>
+    );
   }
 
   if (!group) {
-    return <div className="container mx-auto py-8">Group not found</div>;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background-50 via-primary-50/30 to-secondary-50/20 flex items-center justify-center">
+        <Card className="max-w-md mx-4">
+          <CardContent className="text-center py-12">
+            <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+            <h2 className="text-xl font-semibold text-text-900 mb-2">
+              Group Not Found
+            </h2>
+            <p className="text-text-600">
+              The group you're looking for doesn't exist or you don't have
+              access to it.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
+  const statusConfig = getStatusConfig(group.status);
+  const roleConfig = getRoleConfig(group.userRole);
+  const StatusIcon = statusConfig.icon;
+  const RoleIcon = roleConfig.icon;
+
   return (
-    <>
-      <div className="container mx-auto py-8 space-y-6">
-        {/* Group Header */}
-        <Card>
-          <CardHeader>
-            <div className="flex justify-between items-start">
-              <div>
-                <CardTitle className="text-2xl">{group.name}</CardTitle>
-                <CardDescription className="mt-2">
-                  {group.description || "No description provided"}
-                </CardDescription>
-              </div>
-              <div className="flex items-center gap-2">
-                {getStatusBadge(group.status)}
-                <Badge variant="outline">{group.userRole}</Badge>
-              </div>
-            </div>
-            <div className="flex gap-2 mt-4">
-              {canInvite && (
-                <Button onClick={() => setShowInviteModal(true)} size="sm">
-                  <UserPlus className="w-4 h-4 mr-2" />
-                  Invite Member
-                </Button>
-              )}
-              {canManageSeries && (
-                <Link href={`/groups/${group.slug}/series`}>
-                  <Button variant="outline" size="sm">
-                    <BookOpen className="w-4 h-4 mr-2" />
-                    Manage Series
-                  </Button>
-                </Link>
-              )}
-              {group.status === "approved" && group.userRole && (
-                <Link href={`/groups/${group.slug}/chapters`}>
-                  <Button variant="outline" size="sm">
-                    <Upload className="w-4 h-4 mr-2" />
-                    Upload Content
-                  </Button>
-                </Link>
-              )}
+    <div className="min-h-screen  py-4 sm:py-8">
+      <div className="container mx-auto px-4 max-w-7xl">
+        {/* Header Section */}
+        <div className="mb-6 sm:mb-8">
+          <Card className="overflow-hidden bg-gradient-to-r from-primary-200 to-secondary-300 text-white border-0 shadow-2xl">
+            <CardContent className="p-6 sm:p-8 lg:p-10">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                <div className="flex-1">
+                  <div className="flex flex-col sm:flex-row sm:items-start gap-4 mb-4">
+                    <div className="flex-1">
+                      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
+                        {group.name}
+                      </h1>
+                      <p className="text-primary-100 text-base sm:text-lg mb-4">
+                        {group.description || "No description provided"}
+                      </p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Badge
+                        className={`${statusConfig.variant} text-sm font-medium px-3 py-1 border`}
+                      >
+                        <StatusIcon className="w-4 h-4 mr-1" />
+                        {statusConfig.label}
+                      </Badge>
+                      <Badge
+                        className={`${roleConfig.bg} ${roleConfig.color} text-sm font-medium px-3 py-1`}
+                      >
+                        <RoleIcon className="w-4 h-4 mr-1" />
+                        {group.userRole.replace("-", " ")}
+                      </Badge>
+                    </div>
+                  </div>
 
-            </div>
-          </CardHeader>
-        </Card>
+                  <div className="flex flex-wrap gap-2 sm:gap-3">
+                    {canInvite && (
+                      <Button
+                        onClick={() => setShowInviteModal(true)}
+                        variant="secondary"
+                        size="sm"
+                        className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+                      >
+                        <UserPlus className="w-4 h-4 mr-2" />
+                        Invite Member
+                      </Button>
+                    )}
+                    {canManageSeries && (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        asChild
+                        className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+                      >
+                        <Link href={`/groups/${group.slug}/series`}>
+                          <BookOpen className="w-4 h-4 mr-2" />
+                          <span className="hidden sm:inline">Manage </span>
+                          Series
+                        </Link>
+                      </Button>
+                    )}
+                    {group.status === "approved" && group.userRole && (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        asChild
+                        className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+                      >
+                        <Link href={`/groups/${group.slug}/chapters`}>
+                          <Upload className="w-4 h-4 mr-2" />
+                          <span className="hidden sm:inline">Upload </span>
+                          Content
+                        </Link>
+                      </Button>
+                    )}
+                  </div>
+                </div>
 
-        {/* Group Status Warning */}
-        {group.status === "pending" && (
-          <Card className="border-yellow-200 bg-yellow-50">
-            <CardContent className="pt-6">
-              <p className="text-yellow-800">
-                <strong>Pending Approval:</strong> Your group is waiting for
-                admin approval. You can manage settings and invite members, but
-                content upload will be available after approval.
-              </p>
+                <div className="flex-shrink-0 hidden lg:block">
+                  <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center">
+                    <Users className="w-12 h-12 text-white" />
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
-        )}
 
-        {/* Main Content Tabs */}
-        <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="members">
-              <Users className="w-4 h-4 mr-2" />
-              Members
-            </TabsTrigger>
-            
-            
-            {canManageGroup && (
-              <TabsTrigger value="settings">
-                <Settings className="w-4 h-4 mr-2" />
-                Settings
-              </TabsTrigger>
-            )}
-            {canManageGroup && (
-              <TabsTrigger value="analytics">
-                <BarChart3 className="w-4 h-4 mr-2" />
-                Analytics
-              </TabsTrigger>
-            )}
-          </TabsList>
+          {/* Status Warning */}
+          {group.status === "pending" && (
+            <Card className="mt-4 border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Clock className="w-4 h-4 text-amber-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-amber-800 mb-1">
+                      Pending Approval
+                    </h3>
+                    <p className="text-amber-700 text-sm">
+                      Your group is waiting for admin approval. You can manage
+                      settings and invite members, but content upload will be
+                      available after approval.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
 
-          <TabsContent value="overview">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Group Stats</CardTitle>
+        {/* Main Content */}
+        <Tabs defaultValue="overview" className="space-y-6">
+          <div className="overflow-x-auto">
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 min-w-max sm:min-w-0 h-auto">
+              <TabsTrigger
+                value="overview"
+                className="flex items-center gap-2 text-xs sm:text-sm py-2 sm:py-3"
+              >
+                <TrendingUp className="w-4 h-4" />
+                <span className="hidden sm:inline">Overview</span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="members"
+                className="flex items-center gap-2 text-xs sm:text-sm py-2 sm:py-3"
+              >
+                <Users className="w-4 h-4" />
+                <span className="hidden sm:inline">Members</span>
+              </TabsTrigger>
+              {canManageGroup && (
+                <TabsTrigger
+                  value="settings"
+                  className="flex items-center gap-2 text-xs sm:text-sm py-2 sm:py-3"
+                >
+                  <Settings className="w-4 h-4" />
+                  <span className="hidden sm:inline">Settings</span>
+                </TabsTrigger>
+              )}
+              {canManageGroup && (
+                <TabsTrigger
+                  value="analytics"
+                  className="flex items-center gap-2 text-xs sm:text-sm py-2 sm:py-3"
+                >
+                  <BarChart3 className="w-4 h-4" />
+                  <span className="hidden sm:inline">Analytics</span>
+                </TabsTrigger>
+              )}
+            </TabsList>
+          </div>
+
+          <TabsContent value="overview" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+              {/* Group Stats */}
+              <Card className="bg-gradient-to-br from-primary-50 to-primary-100 border-primary-200">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2 text-primary-800">
+                    <BarChart3 className="w-5 h-5" />
+                    Group Stats
+                  </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span>Status:</span>
-                      {getStatusBadge(group.status)}
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Created:</span>
-                      <span>
-                        {new Date(group.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Your Role:</span>
-                      <Badge variant="outline">{group.userRole}</Badge>
-                    </div>
+                <CardContent className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-primary-700">
+                      Status:
+                    </span>
+                    <Badge className={`${statusConfig.variant} text-xs border`}>
+                      <StatusIcon className="w-3 h-3 mr-1" />
+                      {statusConfig.label}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-primary-700">
+                      Created:
+                    </span>
+                    <span className="text-sm text-primary-800">
+                      {new Date(group.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-primary-700">
+                      Your Role:
+                    </span>
+                    <Badge
+                      className={`${roleConfig.bg} ${roleConfig.color} text-xs`}
+                    >
+                      <RoleIcon className="w-3 h-3 mr-1" />
+                      {group.userRole.replace("-", " ")}
+                    </Badge>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Quick Actions</CardTitle>
+              {/* Quick Actions */}
+              <Card className="bg-gradient-to-br from-secondary-50 to-secondary-100 border-secondary-200">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2 text-secondary-800">
+                    <Settings className="w-5 h-5" />
+                    Quick Actions
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {canInvite && (
                     <Button
                       variant="outline"
-                      className="w-full justify-start"
+                      className="w-full justify-start h-10 text-sm border-secondary-300 hover:bg-secondary-100"
                       onClick={() => setShowInviteModal(true)}
                     >
                       <UserPlus className="w-4 h-4 mr-2" />
@@ -219,39 +357,48 @@ export default function GroupDashboard() {
                   )}
 
                   {canManageSeries && group.status === "approved" && (
-                    <Link href={`/groups/${group.slug}/series`}>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-start"
-                      >
-                        <BookOpen className="w-4 h-4 mr-2 " />
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start h-10 text-sm border-secondary-300 hover:bg-secondary-100"
+                      asChild
+                    >
+                      <Link href={`/groups/${group.slug}/series`}>
+                        <BookOpen className="w-4 h-4 mr-2" />
                         Manage Series
-                      </Button>
-                    </Link>
+                      </Link>
+                    </Button>
                   )}
 
                   {group.status === "approved" && group.userRole && (
-                    <Link href={`/groups/${group.slug}/chapters`}>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-start mt-1"
-                      >
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start h-10 text-sm border-secondary-300 hover:bg-secondary-100"
+                      asChild
+                    >
+                      <Link href={`/groups/${group.slug}/chapters`}>
                         <Upload className="w-4 h-4 mr-2" />
                         Upload Content
-                      </Button>
-                    </Link>
+                      </Link>
+                    </Button>
                   )}
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Recent Activity</CardTitle>
+              {/* Recent Activity */}
+              <Card className="bg-gradient-to-br from-accent-50 to-accent-100 border-accent-200 md:col-span-2 xl:col-span-1">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2 text-accent-800">
+                    <Calendar className="w-5 h-5" />
+                    Recent Activity
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground text-sm">
-                    No recent activity to display.
-                  </p>
+                  <div className="text-center py-8">
+                    <Calendar className="w-12 h-12 text-accent-400 mx-auto mb-3" />
+                    <p className="text-accent-600 text-sm">
+                      No recent activity to display.
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -264,45 +411,6 @@ export default function GroupDashboard() {
             />
           </TabsContent>
 
-          <TabsContent value="series">
-            <Card>
-              <CardHeader>
-                <CardTitle>Series Management</CardTitle>
-                <CardDescription>
-                  Create and manage your scanlation series
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex justify-between items-center mb-4">
-                  <p className="text-muted-foreground">
-                    Manage your groups series here.
-                  </p>
-                  <Link href={`/groups/${group.slug}/series`}>
-                    <Button>
-                      <BookOpen className="w-4 h-4 mr-2" />
-                      View All Series
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          <TabsContent value="content">
-            <Card>
-              <CardHeader>
-                <CardTitle>Content Management</CardTitle>
-                <CardDescription>
-                  Upload and manage your scanlation content
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Content upload feature coming soon...
-                </p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
           {canManageGroup && (
             <TabsContent value="settings">
               <GroupSettings group={group} onUpdate={fetchGroup} />
@@ -313,15 +421,25 @@ export default function GroupDashboard() {
             <TabsContent value="analytics">
               <Card>
                 <CardHeader>
-                  <CardTitle>Analytics</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <BarChart3 className="w-5 h-5" />
+                    Analytics Dashboard
+                  </CardTitle>
                   <CardDescription>
-                    View your groups performance metrics
+                    View your groups performance metrics and insights
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground">
-                    Analytics feature coming soon...
-                  </p>
+                  <div className="text-center py-12">
+                    <BarChart3 className="w-16 h-16 text-text-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-text-700 mb-2">
+                      Analytics Coming Soon
+                    </h3>
+                    <p className="text-text-600 max-w-md mx-auto">
+                      We're working on comprehensive analytics to help you track
+                      your groups performance.
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -329,12 +447,14 @@ export default function GroupDashboard() {
         </Tabs>
 
         {/* Invite Modal */}
-        <InviteModal
-          isOpen={showInviteModal}
-          onClose={() => setShowInviteModal(false)}
-          groupSlug={group.slug}
-        />
+        {showInviteModal && (
+          <InviteModal
+            groupSlug={group.slug}
+            onClose={() => setShowInviteModal(false)}
+            isOpen={showInviteModal}
+          />
+        )}
       </div>
-    </>
+    </div>
   );
 }

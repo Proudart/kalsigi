@@ -257,7 +257,7 @@ export default function GroupCreationForm() {
                           </li>
                           <li className="flex items-start gap-2">
                             <CheckCircle2 className="w-4 h-4 mt-0.5 text-primary-600 flex-shrink-0" />
-                            <span>You'll become the group owner</span>
+                            <span>Youll become the group owner</span>
                           </li>
                           <li className="flex items-start gap-2">
                             <CheckCircle2 className="w-4 h-4 mt-0.5 text-primary-600 flex-shrink-0" />

@@ -131,7 +131,7 @@ export default function GroupDashboard() {
               Group Not Found
             </h2>
             <p className="text-text-600">
-              The group you're looking for doesn't exist or you don't have
+              The group youre looking for doesnt exist or you dont have
               access to it.
             </p>
           </CardContent>
@@ -436,7 +436,7 @@ export default function GroupDashboard() {
                       Analytics Coming Soon
                     </h3>
                     <p className="text-text-600 max-w-md mx-auto">
-                      We're working on comprehensive analytics to help you track
+                      Were working on comprehensive analytics to help you track
                       your groups performance.
                     </p>
                   </div>

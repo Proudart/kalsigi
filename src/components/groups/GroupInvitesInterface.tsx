@@ -345,7 +345,7 @@ export default function GroupInvitesInterface() {
               </div>
               <h3 className="text-xl sm:text-2xl font-bold text-text-700 mb-2">No pending invitations</h3>
               <p className="text-text-600 mb-6 max-w-md mx-auto">
-                You don't have any pending group invitations at the moment. 
+                You dont have any pending group invitations at the moment. 
                 Explore groups and connect with the scanlation community!
               </p>
               <Button asChild className="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700">

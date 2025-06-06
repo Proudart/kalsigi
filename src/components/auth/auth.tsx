@@ -10,7 +10,7 @@ import {
   IconUserPlus,
   IconLoader2,
 } from "@tabler/icons-react";
-import { Users, Plus, ChevronDown } from 'lucide-react';
+import { Users, Plus, ChevronDown, Crown, Shield } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +19,8 @@ import {
   DropdownMenuTrigger,
 } from "../ui/drop-down-menu";
 import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 import SignOut from "../auth/logout";
 import { useState, useEffect } from "react";
@@ -114,124 +116,211 @@ export default function Auth() {
     getUser();
   }, [getUser]);
 
-  const MemoizedIconLoader2 = useMemo(() => <IconLoader2 className="animate-spin" />, []);
+  const getRoleIcon = (role: string) => {
+    const icons = {
+      owner: Crown,
+      'co-owner': Shield,
+      moderator: Shield,
+    };
+    return icons[role as keyof typeof icons] || Users;
+  };
+
+  const getRoleColor = (role: string) => {
+    const colors = {
+      owner: 'text-purple-600',
+      'co-owner': 'text-blue-600',
+      moderator: 'text-emerald-600',
+    };
+    return colors[role as keyof typeof colors] || 'text-text-600';
+  };
+
+  const MemoizedIconLoader2 = useMemo(() => (
+    <IconLoader2 className="w-4 h-4 animate-spin" />
+  ), []);
   
-  const MemoizedIconUser = useMemo(() => <IconUser />, []);
+  const UserAvatar = useMemo(() => (
+    <Avatar className="w-8 h-8 border-2 border-primary-200">
+      <AvatarImage src={session?.user?.image || ''} alt={user as unknown as string} />
+      <AvatarFallback className="bg-primary-100 text-primary-700 text-sm font-medium ">
+        {((user as unknown as string) || 'U').charAt(0).toUpperCase()}
+      </AvatarFallback>
+    </Avatar>
+  ), [user, session?.user?.image]);
 
   const UserMenu = useMemo(() => (
-    <DropdownMenuContent className="w-56 bg-accent-200">
-      <DropdownMenuItem>
-        <Link
-          prefetch={true}
-          href="/profile"
-          className="flex items-center space-x-2 bg-accent-400 text-accent-900 px-2 py-1 rounded-full"
-        >
-          <IconUser className="w-4 h-4" />
-          <span>{user as any}</span>
-        </Link>
-      </DropdownMenuItem>
-      <DropdownMenuItem>
-        <Link
-          href="/messages"
-          className="flex items-center space-x-2"
-          prefetch={true}
-        >
-          <IconMail className="w-4 h-4" />
-          <span>Messages</span>
-        </Link>
-      </DropdownMenuItem>
-      <DropdownMenuItem>
-        <Link
-          href="/settings"
-          className="flex items-center space-x-2"
-          prefetch={true}
-        >
-          <IconSettings className="w-4 h-4" />
-          <span>Settings</span>
-        </Link>
-      </DropdownMenuItem>
+    <DropdownMenuContent className="w-64 bg-background-100 border-background-200 shadow-lg" align="end">
+      {/* User Info Header */}
+      <div className="px-3 py-2 border-b border-background-200">
+        <div className="flex items-center space-x-3">
+          {UserAvatar}
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-text-900 truncate">{user as unknown as string}</p>
+            <p className="text-xs text-text-600">Logged in</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Profile & Settings */}
+      <div className="py-1">
+        <DropdownMenuItem asChild>
+          <Link
+            prefetch={true}
+            href="/profile"
+            className="flex items-center space-x-2 px-3 py-2 text-sm hover:bg-background-200 cursor-pointer"
+          >
+            <IconUser className="w-4 h-4 text-text-600" />
+            <span>Profile</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link
+            href="/messages"
+            className="flex items-center space-x-2 px-3 py-2 text-sm hover:bg-background-200 cursor-pointer"
+            prefetch={true}
+          >
+            <IconMail className="w-4 h-4 text-text-600" />
+            <span>Messages</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link
+            href="/settings"
+            className="flex items-center space-x-2 px-3 py-2 text-sm hover:bg-background-200 cursor-pointer"
+            prefetch={true}
+          >
+            <IconSettings className="w-4 h-4 text-text-600" />
+            <span>Settings</span>
+          </Link>
+        </DropdownMenuItem>
+      </div>
       
-      <DropdownMenuSeparator />
+      <DropdownMenuSeparator className="bg-background-200" />
       
       {/* Groups Section */}
-      <div className="px-2 py-1.5 text-sm font-semibold">Your Groups</div>
-      
-      {groupsLoading ? (
-        <DropdownMenuItem disabled>Loading groups...</DropdownMenuItem>
-      ) : userGroups.length > 0 ? (
-        userGroups.map(({ group, role }) => (
-          <DropdownMenuItem key={group.id} asChild>
-            <Link href={`/groups/${group.slug}`} className="flex items-center justify-between w-full">
-              <div className="flex flex-col">
-                <span className="font-medium">{group.name}</span>
-                <span className="text-xs text-muted-foreground capitalize">{role}</span>
-              </div>
-              <Badge
-                variant={group.status === 'approved' ? 'default' : 'secondary'}
-                className="ml-2"
-              >
-                {group.status}
+      <div className="py-1">
+        <div className="px-3 py-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-text-700 uppercase tracking-wide">
+              Your Groups
+            </span>
+            {userGroups.length > 0 && (
+              <Badge variant="secondary" className="text-xs px-2 py-0.5">
+                {userGroups.length}
               </Badge>
-            </Link>
-          </DropdownMenuItem>
-        ))
-      ) : (
-        <DropdownMenuItem disabled>No groups yet</DropdownMenuItem>
-      )}
-      
-      <DropdownMenuSeparator />
-      
-      <DropdownMenuItem asChild>
-        <Link href="/groups/create" className="flex items-center space-x-2">
-          <Plus className="w-4 h-4" />
-          <span>Create Group</span>
-        </Link>
-      </DropdownMenuItem>
-      
-      <DropdownMenuItem asChild>
-        <Link href="/groups" className="flex items-center space-x-2">
-          <Users className="w-4 h-4" />
-          <span>Browse Groups</span>
-        </Link>
-      </DropdownMenuItem>
-      
-      <DropdownMenuItem asChild>
-        <Link href="/groups/invites" className="flex items-center space-x-2">
-          <Plus className="w-4 h-4" />
-          <span>Group Invites</span>
-        </Link>
-      </DropdownMenuItem>
-      
-      <DropdownMenuSeparator />
-      
-      <DropdownMenuItem>
-        <div className="flex items-center space-x-2">
-          <IconLogout className="w-4 h-4" />
-          <SignOut />
+            )}
+          </div>
         </div>
-      </DropdownMenuItem>
+        
+        {groupsLoading ? (
+          <DropdownMenuItem disabled className="px-3 py-2 text-sm">
+            <IconLoader2 className="w-4 h-4 animate-spin mr-2" />
+            Loading groups...
+          </DropdownMenuItem>
+        ) : userGroups.length > 0 ? (
+          <div className="max-h-32 overflow-y-auto">
+            {userGroups.map(({ group, role }) => {
+              const RoleIcon = getRoleIcon(role);
+              const roleColor = getRoleColor(role);
+              
+              return (
+                <DropdownMenuItem key={group.id} asChild>
+                  <Link 
+                    href={`/groups/${group.slug}`} 
+                    className="flex items-center justify-between px-3 py-2 text-sm hover:bg-background-200 cursor-pointer"
+                  >
+                    <div className="flex items-center space-x-2 flex-1 min-w-0">
+                      <RoleIcon className={`w-4 h-4 ${roleColor} flex-shrink-0`} />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-text-900 truncate">{group.name}</p>
+                        <p className="text-xs text-text-600 capitalize">{role.replace('-', ' ')}</p>
+                      </div>
+                    </div>
+                    <Badge
+                      variant={group.status === 'approved' ? 'default' : 'secondary'}
+                      className="text-xs ml-2 flex-shrink-0"
+                    >
+                      {group.status === 'approved' ? 'Active' : 'Pending'}
+                    </Badge>
+                  </Link>
+                </DropdownMenuItem>
+              );
+            })}
+          </div>
+        ) : (
+          <DropdownMenuItem disabled className="px-3 py-2 text-sm text-text-500">
+            No groups yet
+          </DropdownMenuItem>
+        )}
+      </div>
+      
+      <DropdownMenuSeparator className="bg-background-200" />
+      
+      {/* Group Actions */}
+      <div className="py-1">
+        <DropdownMenuItem asChild>
+          <Link 
+            href="/groups/create" 
+            className="flex items-center space-x-2 px-3 py-2 text-sm hover:bg-background-200 cursor-pointer"
+          >
+            <Plus className="w-4 h-4 text-text-600" />
+            <span>Create Group</span>
+          </Link>
+        </DropdownMenuItem>
+        
+        <DropdownMenuItem asChild>
+          <Link 
+            href="/groups" 
+            className="flex items-center space-x-2 px-3 py-2 text-sm hover:bg-background-200 cursor-pointer"
+          >
+            <Users className="w-4 h-4 text-text-600" />
+            <span>Browse Groups</span>
+          </Link>
+        </DropdownMenuItem>
+        
+        <DropdownMenuItem asChild>
+          <Link 
+            href="/groups/invites" 
+            className="flex items-center space-x-2 px-3 py-2 text-sm hover:bg-background-200 cursor-pointer"
+          >
+            <IconMail className="w-4 h-4 text-text-600" />
+            <span>Group Invites</span>
+          </Link>
+        </DropdownMenuItem>
+      </div>
+      
+      <DropdownMenuSeparator className="bg-background-200" />
+      
+      {/* Logout */}
+      <div className="py-1">
+        <DropdownMenuItem className="px-3 py-2 text-sm hover:bg-background-200 cursor-pointer">
+          <div className="flex items-center space-x-2 text-red-600">
+            <IconLogout className="w-4 h-4" />
+            <SignOut />
+          </div>
+        </DropdownMenuItem>
+      </div>
     </DropdownMenuContent>
-  ), [user, userGroups, groupsLoading]);
+  ), [user, userGroups, groupsLoading, UserAvatar]);
 
   const AuthMenu = useMemo(() => (
-    <DropdownMenuContent className="w-56 bg-accent-200" align="end">
-      <DropdownMenuItem>
+    <DropdownMenuContent className="w-48 bg-background-100 border-background-200 shadow-lg" align="end">
+      <DropdownMenuItem asChild>
         <Link
           href="/signup"
-          className="flex items-center space-x-2"
+          className="flex items-center space-x-2 px-3 py-2 text-sm hover:bg-background-200 cursor-pointer"
           prefetch={true}
         >
-          <IconUserPlus className="w-4 h-4" />
+          <IconUserPlus className="w-4 h-4 text-text-600" />
           <span>Sign Up</span>
         </Link>
       </DropdownMenuItem>
-      <DropdownMenuItem>
+      <DropdownMenuItem asChild>
         <Link
           href="/signin"
-          className="flex items-center space-x-2"
+          className="flex items-center space-x-2 px-3 py-2 text-sm hover:bg-background-200 cursor-pointer"
           prefetch={true}
         >
-          <IconLogin className="w-4 h-4" />
+          <IconLogin className="w-4 h-4 text-text-600" />
           <span>Sign In</span>
         </Link>
       </DropdownMenuItem>
@@ -239,31 +328,36 @@ export default function Auth() {
   ), []);
 
   return (
-    <div className="relative">
-      <DropdownMenu>
-        <DropdownMenuTrigger
-          className="flex items-center space-x-1 px-2 py-2 bg-blue-500 text-white rounded-lg ml-2 relative"
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="relative h-8 w-8 rounded-full hover:bg-background-200 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
           onClick={getUser}
           disabled={disabled}
         >
           {isPending || isLoading ? (
             MemoizedIconLoader2
+          ) : user ? (
+            UserAvatar
           ) : (
-            MemoizedIconUser
+            <IconUser className="w-4 h-4 text-text-600" />
           )}
-        </DropdownMenuTrigger>
-        {isPending || isLoading ? (
-          <DropdownMenuContent className="w-56 bg-accent-200">
-            <DropdownMenuItem className="flex justify-center">
-              {MemoizedIconLoader2}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        ) : user ? (
-          UserMenu
-        ) : (
-          AuthMenu
-        )}
-      </DropdownMenu>
-    </div>
+        </Button>
+      </DropdownMenuTrigger>
+      
+      {isPending || isLoading ? (
+        <DropdownMenuContent className="w-48 bg-background-100 border-background-200" align="end">
+          <DropdownMenuItem disabled className="flex justify-center py-4">
+            {MemoizedIconLoader2}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      ) : user ? (
+        UserMenu
+      ) : (
+        AuthMenu
+      )}
+    </DropdownMenu>
   );
 }

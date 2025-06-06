@@ -25,15 +25,15 @@ interface SeriesSubmission {
   description: string;
   status: "pending" | "approved" | "rejected";
   type: string;
-  genres: string[]; // API returns array
+  genres: string[];
   author?: string;
   artist?: string;
   releaseYear?: string;
   coverImageUrl?: string;
   sourceUrl?: string;
-  submittedAt: string; // API returns camelCase
-  reviewedAt?: string; // API returns camelCase
-  reviewNotes?: string; // API returns camelCase (rejection reason)
+  submittedAt: string;
+  reviewedAt?: string;
+  reviewNotes?: string;
   groupName?: string;
   approvedSeriesId?: string;
 }
@@ -58,7 +58,6 @@ export default function SubmissionsList({ groupId }: SubmissionsListProps) {
       if (!response.ok) throw new Error("Failed to fetch submissions");
       
       const data = await response.json();
-      // API returns array directly, not wrapped in { submissions: [] }
       setSubmissions(data || []);
     } catch (error) {
       console.error("Error fetching submissions:", error);
@@ -100,9 +99,9 @@ export default function SubmissionsList({ groupId }: SubmissionsListProps) {
 
   if (isLoading) {
     return (
-      <Card>
+      <Card className="bg-background-100">
         <CardHeader>
-          <CardTitle>Your Submissions</CardTitle>
+          <CardTitle>Your Series Submissions</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
@@ -116,7 +115,7 @@ export default function SubmissionsList({ groupId }: SubmissionsListProps) {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="bg-background-100">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <span>Your Series Submissions</span>
@@ -132,25 +131,34 @@ export default function SubmissionsList({ groupId }: SubmissionsListProps) {
               </p>
             </div>
           ) : (
-            <ScrollArea className="h-96">
-              <div className="space-y-4">
-                {submissions.map((submission) => (
-                  <div
-                    key={submission.id}
-                    className="border rounded-lg p-4 hover:bg-background-50 transition-colors"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
+            <div className="space-y-4 max-h-96 overflow-y-auto">
+              {submissions.map((submission) => (
+                <div
+                  key={submission.id}
+                  className="border border-background-200 rounded-lg p-4 hover:bg-background-200 transition-colors"
+                >
+                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                    <div className="flex items-start gap-4 flex-1 min-w-0">
+                      {/* Cover Image */}
+                      {submission.coverImageUrl && (
+                        <img
+                          src={submission.coverImageUrl}
+                          alt={submission.title}
+                          className="w-12 h-16 object-cover rounded flex-shrink-0"
+                        />
+                      )}
+                      
+                      <div className="flex-1 min-w-0">
                         <div className="flex items-center space-x-2 mb-2">
                           {getStatusIcon(submission.status)}
-                          <h3 className="font-semibold text-lg">{submission.title}</h3>
+                          <h3 className="font-semibold text-lg truncate">{submission.title}</h3>
                           <Badge className={getStatusColor(submission.status)}>
                             {submission.status}
                           </Badge>
                         </div>
                         
                         {submission.alternativeTitles && (
-                          <p className="text-sm text-text-500 mb-1">
+                          <p className="text-sm text-text-500 mb-1 truncate">
                             Alt: {submission.alternativeTitles}
                           </p>
                         )}
@@ -159,7 +167,7 @@ export default function SubmissionsList({ groupId }: SubmissionsListProps) {
                           {submission.description}
                         </p>
                         
-                        <div className="flex flex-wrap gap-4 text-xs text-text-500">
+                        <div className="flex flex-wrap gap-3 text-xs text-text-500 mb-2">
                           <div className="flex items-center space-x-1">
                             <Calendar className="w-3 h-3" />
                             <span>
@@ -180,7 +188,7 @@ export default function SubmissionsList({ groupId }: SubmissionsListProps) {
                           )}
                         </div>
                         
-                        <div className="flex flex-wrap gap-1 mt-2">
+                        <div className="flex flex-wrap gap-1">
                           {submission.genres.slice(0, 3).map((genre, index) => (
                             <Badge key={`${genre}-${index}`} variant="outline" className="text-xs">
                               {genre.trim()}
@@ -193,73 +201,67 @@ export default function SubmissionsList({ groupId }: SubmissionsListProps) {
                           )}
                         </div>
                       </div>
+                    </div>
+                    
+                    <div className="flex flex-col sm:flex-row gap-2 lg:flex-col lg:w-auto">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setSelectedSubmission(submission)}
+                        className="w-full sm:w-auto"
+                      >
+                        <Eye className="w-3 h-3 mr-1" />
+                        View
+                      </Button>
                       
-                      <div className="flex flex-col space-y-2 ml-4">
-                        {submission.coverImageUrl && (
-                          <img
-                            src={submission.coverImageUrl}
-                            alt={submission.title}
-                            className="w-16 h-20 object-cover rounded"
-                          />
-                        )}
-                        
+                      {submission.sourceUrl && (
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => setSelectedSubmission(submission)}
+                          asChild
+                          className="w-full sm:w-auto"
                         >
-                          <Eye className="w-3 h-3 mr-1" />
-                          View
-                        </Button>
-                        
-                        {submission.sourceUrl && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            asChild
+                          <a 
+                            href={submission.sourceUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
                           >
-                            <a 
-                              href={submission.sourceUrl} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                            >
-                              <ExternalLink className="w-3 h-3 mr-1" />
-                              Source
-                            </a>
-                          </Button>
-                        )}
-                      </div>
+                            <ExternalLink className="w-3 h-3 mr-1" />
+                            Source
+                          </a>
+                        </Button>
+                      )}
                     </div>
-                    
-                    {submission.reviewNotes && (
-                      <div className="mt-3 p-3 bg-red-50 rounded border-l-4 border-red-500">
-                        <p className="text-sm">
-                          <span className="font-medium text-red-800">Review Notes:</span> {submission.reviewNotes}
-                        </p>
-                        {submission.reviewedAt && (
-                          <p className="text-xs text-red-600 mt-1">
-                            Reviewed {formatDistanceToNow(new Date(submission.reviewedAt), { addSuffix: true })}
-                          </p>
-                        )}
-                      </div>
-                    )}
                   </div>
-                ))}
-              </div>
-            </ScrollArea>
+                  
+                  {submission.reviewNotes && (
+                    <div className="mt-3 p-3 bg-red-50 rounded border-l-4 border-red-500">
+                      <p className="text-sm">
+                        <span className="font-medium text-red-800">Review Notes:</span> {submission.reviewNotes}
+                      </p>
+                      {submission.reviewedAt && (
+                        <p className="text-xs text-red-600 mt-1">
+                          Reviewed {formatDistanceToNow(new Date(submission.reviewedAt), { addSuffix: true })}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           )}
         </CardContent>
       </Card>
 
       {/* Detailed View Modal */}
       {selectedSubmission && (
-        <Card className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm">
-          <div className="fixed inset-4 md:inset-8 bg-background border rounded-lg shadow-lg overflow-hidden">
-            <CardHeader className="border-b">
+        <div className="fixed inset-0 z-50 bg-background-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <Card className="w-full max-w-4xl max-h-[90vh] overflow-hidden bg-background-100">
+            <CardHeader className="border-b border-background-200">
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center space-x-2">
                   {getStatusIcon(selectedSubmission.status)}
-                  <span>{selectedSubmission.title}</span>
+                  <span className="truncate">{selectedSubmission.title}</span>
                   <Badge className={getStatusColor(selectedSubmission.status)}>
                     {selectedSubmission.status}
                   </Badge>
@@ -274,7 +276,7 @@ export default function SubmissionsList({ groupId }: SubmissionsListProps) {
               </div>
             </CardHeader>
             
-            <CardContent className="p-6 overflow-y-auto max-h-[calc(100vh-200px)]">
+            <CardContent className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="md:col-span-2 space-y-4">
                   {selectedSubmission.alternativeTitles && (
@@ -365,11 +367,6 @@ export default function SubmissionsList({ groupId }: SubmissionsListProps) {
                         <span className="font-medium">Group:</span> {selectedSubmission.groupName}
                       </div>
                     )}
-                    {selectedSubmission.approvedSeriesId && (
-                      <div>
-                        <span className="font-medium">Series ID:</span> {selectedSubmission.approvedSeriesId}
-                      </div>
-                    )}
                   </div>
                   
                   {selectedSubmission.sourceUrl && (
@@ -392,8 +389,8 @@ export default function SubmissionsList({ groupId }: SubmissionsListProps) {
                 </div>
               </div>
             </CardContent>
-          </div>
-        </Card>
+          </Card>
+        </div>
       )}
     </div>
   );

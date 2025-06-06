@@ -69,7 +69,6 @@ export default function AddSeriesForm({ groupId, onSuccess }: AddSeriesFormProps
     handleSubmit,
     formState: { errors },
     setValue,
-    watch,
     reset
   } = useForm<SeriesFormData>({
     resolver: zodResolver(seriesSchema),
@@ -77,8 +76,6 @@ export default function AddSeriesForm({ groupId, onSuccess }: AddSeriesFormProps
       genres: ""
     }
   });
-
-  const watchedCoverImage = watch("cover_image");
 
   const handleGenreToggle = (genre: string) => {
     const newGenres = selectedGenres.includes(genre)
@@ -107,7 +104,6 @@ export default function AddSeriesForm({ groupId, onSuccess }: AddSeriesFormProps
     try {
       const formData = new FormData();
       
-      // Add all form fields to FormData with correct field names
       formData.append("title", data.title);
       if (data.alternative_titles) {
         formData.append("alternative_titles", data.alternative_titles);
@@ -134,7 +130,6 @@ export default function AddSeriesForm({ groupId, onSuccess }: AddSeriesFormProps
       
       formData.append("group_id", groupId);
 
-
       const response = await fetch("/api/groups/series/submit", {
         method: "POST",
         body: formData,
@@ -145,14 +140,11 @@ export default function AddSeriesForm({ groupId, onSuccess }: AddSeriesFormProps
         throw new Error(errorData.error || "Failed to submit series");
       }
 
-      const result = await response.json();
-
       toast({
-        title: "Series Submitted Successfully",
+        title: "Series Submitted",
         description: "Your series submission is now pending review by administrators.",
       });
 
-      // Reset form
       reset();
       setSelectedGenres([]);
       setCoverPreview(null);
@@ -171,9 +163,9 @@ export default function AddSeriesForm({ groupId, onSuccess }: AddSeriesFormProps
   };
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
+    <Card className="w-full max-w-4xl mx-auto bg-background-100">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
           <Plus className="w-5 h-5" />
           Submit New Series
         </CardTitle>
@@ -193,7 +185,7 @@ export default function AddSeriesForm({ groupId, onSuccess }: AddSeriesFormProps
                 <Input
                   {...register("title")}
                   placeholder="Enter series title"
-                  className={errors.title ? "border-red-500" : ""}
+                  className={`h-11 ${errors.title ? "border-red-500" : ""}`}
                 />
                 {errors.title && (
                   <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>
@@ -207,49 +199,52 @@ export default function AddSeriesForm({ groupId, onSuccess }: AddSeriesFormProps
                 <Input
                   {...register("alternative_titles")}
                   placeholder="Alternative titles (separated by commas)"
+                  className="h-11"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Status <span className="text-red-500">*</span>
-                </label>
-                <Select onValueChange={(value) => setValue("status", value as any)}>
-                  <SelectTrigger className={errors.status ? "border-red-500" : ""}>
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {STATUS_OPTIONS.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.status && (
-                  <p className="text-red-500 text-sm mt-1">{errors.status.message}</p>
-                )}
-              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Status <span className="text-red-500">*</span>
+                  </label>
+                  <Select onValueChange={(value) => setValue("status", value as any)}>
+                    <SelectTrigger className={`h-11 ${errors.status ? "border-red-500" : ""}`}>
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background-100">
+                      {STATUS_OPTIONS.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.status && (
+                    <p className="text-red-500 text-sm mt-1">{errors.status.message}</p>
+                  )}
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Type <span className="text-red-500">*</span>
-                </label>
-                <Select onValueChange={(value) => setValue("type", value as any)}>
-                  <SelectTrigger className={errors.type ? "border-red-500" : ""}>
-                    <SelectValue placeholder="Select type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {TYPE_OPTIONS.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.type && (
-                  <p className="text-red-500 text-sm mt-1">{errors.type.message}</p>
-                )}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Type <span className="text-red-500">*</span>
+                  </label>
+                  <Select onValueChange={(value) => setValue("type", value as any)}>
+                    <SelectTrigger className={`h-11 ${errors.type ? "border-red-500" : ""}`}>
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background-100">
+                      {TYPE_OPTIONS.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.type && (
+                    <p className="text-red-500 text-sm mt-1">{errors.type.message}</p>
+                  )}
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -258,6 +253,7 @@ export default function AddSeriesForm({ groupId, onSuccess }: AddSeriesFormProps
                   <Input
                     {...register("author")}
                     placeholder="Author name"
+                    className="h-11"
                   />
                 </div>
                 <div>
@@ -265,31 +261,35 @@ export default function AddSeriesForm({ groupId, onSuccess }: AddSeriesFormProps
                   <Input
                     {...register("artist")}
                     placeholder="Artist name"
+                    className="h-11"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">Release Year</label>
-                <Input
-                  {...register("release_year")}
-                  placeholder="e.g., 2023"
-                  type="number"
-                  min="1900"
-                  max={new Date().getFullYear()}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Source URL</label>
-                <Input
-                  {...register("source_url")}
-                  placeholder="https://example.com (optional)"
-                  type="url"
-                />
-                {errors.source_url && (
-                  <p className="text-red-500 text-sm mt-1">{errors.source_url.message}</p>
-                )}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Release Year</label>
+                  <Input
+                    {...register("release_year")}
+                    placeholder="e.g., 2023"
+                    type="number"
+                    min="1900"
+                    max={new Date().getFullYear()}
+                    className="h-11"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Source URL</label>
+                  <Input
+                    {...register("source_url")}
+                    placeholder="https://example.com"
+                    type="url"
+                    className="h-11"
+                  />
+                  {errors.source_url && (
+                    <p className="text-red-500 text-sm mt-1">{errors.source_url.message}</p>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -299,13 +299,13 @@ export default function AddSeriesForm({ groupId, onSuccess }: AddSeriesFormProps
                 <label className="block text-sm font-medium mb-2">
                   Cover Image
                 </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                <div className="border-2 border-dashed border-background-300 rounded-lg p-4 text-center">
                   {coverPreview ? (
                     <div className="relative">
                       <img
                         src={coverPreview}
                         alt="Cover preview"
-                        className="mx-auto max-h-48 object-cover rounded"
+                        className="mx-auto max-h-32 object-cover rounded"
                       />
                       <Button
                         type="button"
@@ -322,7 +322,7 @@ export default function AddSeriesForm({ groupId, onSuccess }: AddSeriesFormProps
                     </div>
                   ) : (
                     <div>
-                      <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                      <Upload className="mx-auto h-8 w-8 text-gray-400" />
                       <div className="mt-2">
                         <input
                           type="file"
@@ -350,21 +350,23 @@ export default function AddSeriesForm({ groupId, onSuccess }: AddSeriesFormProps
                 <label className="block text-sm font-medium mb-2">
                   Genres <span className="text-red-500">*</span>
                 </label>
-                <div className="max-h-40 overflow-y-auto border rounded-lg p-3 space-y-2">
-                  {GENRES.map((genre) => (
-                    <div key={genre} className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id={`genre-${genre}`}
-                        checked={selectedGenres.includes(genre)}
-                        onChange={() => handleGenreToggle(genre)}
-                        className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-                      />
-                      <label htmlFor={`genre-${genre}`} className="text-sm">
-                        {genre}
-                      </label>
-                    </div>
-                  ))}
+                <div className="max-h-32 overflow-y-auto border border-background-300 rounded-lg p-3 space-y-2">
+                  <div className="grid grid-cols-2 gap-2">
+                    {GENRES.map((genre) => (
+                      <div key={genre} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id={`genre-${genre}`}
+                          checked={selectedGenres.includes(genre)}
+                          onChange={() => handleGenreToggle(genre)}
+                          className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                        />
+                        <label htmlFor={`genre-${genre}`} className="text-xs">
+                          {genre}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
                 {selectedGenres.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-1">
@@ -401,7 +403,7 @@ export default function AddSeriesForm({ groupId, onSuccess }: AddSeriesFormProps
               {...register("description")}
               placeholder="Enter series description..."
               rows={4}
-              className={errors.description ? "border-red-500" : ""}
+              className={`resize-none ${errors.description ? "border-red-500" : ""}`}
             />
             {errors.description && (
               <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>
@@ -414,17 +416,16 @@ export default function AddSeriesForm({ groupId, onSuccess }: AddSeriesFormProps
               <div className="text-sm text-blue-800">
                 <p className="font-medium mb-1">Submission Guidelines:</p>
                 <ul className="list-disc list-inside space-y-1 text-xs">
-                  <li>All submissions are reviewed by administrators before approval</li>
-                  <li>Your group will be credited as the original submitter</li>
-                  <li>Ensure all information is accurate and complete</li>
-                  <li>Cover images should be high quality and appropriate</li>
+                  <li>All submissions are reviewed by administrators</li>
+                  <li>Your group will be credited as the submitter</li>
+                  <li>Ensure all information is accurate</li>
                   <li>Duplicate submissions will be rejected</li>
                 </ul>
               </div>
             </div>
           </div>
 
-          <div className="flex justify-end space-x-4">
+          <div className="flex flex-col sm:flex-row justify-end gap-3">
             <Button
               type="button"
               variant="outline"
@@ -433,13 +434,14 @@ export default function AddSeriesForm({ groupId, onSuccess }: AddSeriesFormProps
                 setSelectedGenres([]);
                 setCoverPreview(null);
               }}
+              className="h-11"
             >
               Reset Form
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="px-6"
+              className="h-11 px-6"
             >
               {isSubmitting ? "Submitting..." : "Submit Series"}
             </Button>

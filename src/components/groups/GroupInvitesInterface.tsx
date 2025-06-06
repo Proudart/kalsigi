@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@//components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@//components/ui/card';
 import { Button } from '@//components/ui/button';
 import { Badge } from '@//components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@//components/ui/avatar';
@@ -132,27 +132,27 @@ export default function GroupInvitesInterface() {
   const getRoleConfig = (role: string) => {
     const configs = {
       owner: { 
-        color: 'bg-purple-100 text-purple-800 border-purple-200',
+        color: 'bg-purple-100 text-purple-800',
         icon: Crown 
       },
       'co-owner': { 
-        color: 'bg-blue-100 text-blue-800 border-blue-200',
+        color: 'bg-blue-100 text-blue-800',
         icon: Shield 
       },
       moderator: { 
-        color: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        color: 'bg-emerald-100 text-emerald-800',
         icon: Shield 
       },
       qa: { 
-        color: 'bg-orange-100 text-orange-800 border-orange-200',
-        icon: Users 
+        color: 'bg-orange-100 text-orange-800',
+        icon: Shield 
       },
       uploader: { 
-        color: 'bg-gray-100 text-gray-800 border-gray-200',
+        color: 'bg-gray-100 text-gray-800',
         icon: Users 
       },
       member: { 
-        color: 'bg-gray-100 text-gray-600 border-gray-200',
+        color: 'bg-gray-100 text-gray-600',
         icon: Users 
       },
     };
@@ -169,8 +169,8 @@ export default function GroupInvitesInterface() {
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     
-    if (days > 0) return { text: `${days} day${days > 1 ? 's' : ''} left`, isExpired: false };
-    if (hours > 0) return { text: `${hours} hour${hours > 1 ? 's' : ''} left`, isExpired: false };
+    if (days > 0) return { text: `${days}d left`, isExpired: false };
+    if (hours > 0) return { text: `${hours}h left`, isExpired: false };
     return { text: 'Expires soon', isExpired: false };
   };
 
@@ -184,11 +184,11 @@ export default function GroupInvitesInterface() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background-50 via-primary-50/30 to-secondary-50/20 py-4 sm:py-8">
-        <div className="container mx-auto px-4 max-w-4xl">
+      <div className="min-h-screen bg-background-50 py-6 px-4">
+        <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-center h-64">
             <div className="text-center">
-              <div className="w-16 h-16 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin mx-auto mb-4"></div>
+              <div className="w-12 h-12 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin mx-auto mb-4"></div>
               <p className="text-text-600">Loading invitations...</p>
             </div>
           </div>
@@ -198,28 +198,28 @@ export default function GroupInvitesInterface() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background-50 via-primary-50/30 to-secondary-50/20 py-4 sm:py-8">
-      <div className="container mx-auto px-4 max-w-4xl">
+    <div className="min-h-screen bg-background-50 py-6 px-4">
+      <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-primary-100 rounded-full mb-4 sm:mb-6">
-            <Mail className="w-8 h-8 sm:w-10 sm:h-10 text-primary-600" />
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Mail className="w-8 h-8 text-primary-600" />
           </div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-900 mb-2 sm:mb-4">
+          <h1 className="text-2xl md:text-3xl font-bold text-text-900 mb-2">
             Group Invitations
           </h1>
-          <p className="text-base sm:text-lg text-text-600 max-w-2xl mx-auto mb-4">
-            Manage your pending scanlation group invitations
+          <p className="text-text-600 text-sm md:text-base mb-4">
+            Manage your pending group invitations
           </p>
-          <Badge variant="secondary" className="inline-flex items-center space-x-2 px-4 py-2 text-sm font-medium">
-            <Mail className="w-4 h-4" />
-            <span>{invitations.length} pending invitation{invitations.length !== 1 ? 's' : ''}</span>
+          <Badge variant="secondary" className="px-3 py-1 text-sm">
+            <Mail className="w-4 h-4 mr-1" />
+            {invitations.length} pending
           </Badge>
         </div>
 
         {/* Invitations List */}
         {invitations.length > 0 ? (
-          <div className="space-y-4 sm:space-y-6">
+          <div className="space-y-4">
             {invitations.map((invitation) => {
               const roleConfig = getRoleConfig(invitation.role);
               const RoleIcon = roleConfig.icon;
@@ -229,64 +229,60 @@ export default function GroupInvitesInterface() {
               return (
                 <Card 
                   key={invitation.id} 
-                  className={`transition-all duration-200 hover:shadow-lg ${
-                    isExpiring ? 'border-amber-300 bg-gradient-to-r from-amber-50/50 to-orange-50/50' : 
-                    'bg-background-50/80 backdrop-blur-sm'
+                  className={`transition-all duration-200 hover:shadow-md ${
+                    isExpiring ? 'border-amber-300 bg-amber-50' : 'bg-background-100'
                   }`}
                 >
-                  <CardContent className="p-4 sm:p-6">
+                  <CardContent className="p-4 md:p-6">
                     {isExpiring && (
-                      <Alert className="mb-4 border-amber-200 bg-amber-50/80">
+                      <Alert className="mb-4 border-amber-200 bg-amber-50">
                         <AlertTriangle className="h-4 w-4 text-amber-600" />
-                        <AlertDescription className="text-amber-800 font-medium">
+                        <AlertDescription className="text-amber-800 text-sm">
                           This invitation expires soon! Accept it now to join the group.
                         </AlertDescription>
                       </Alert>
                     )}
 
-                    <div className="flex flex-col sm:flex-row gap-4">
+                    <div className="flex flex-col space-y-4">
                       {/* Group Info */}
-                      <div className="flex items-start gap-4 flex-1">
-                        <Avatar className="w-12 h-12 sm:w-16 sm:h-16 border-2 border-primary-200">
+                      <div className="flex items-start gap-4">
+                        <Avatar className="w-12 h-12 border-2 border-primary-200 flex-shrink-0">
                           <AvatarImage src={invitation.group.logoUrl} alt={invitation.group.name} />
-                          <AvatarFallback className="bg-primary-100 text-primary-700 font-semibold text-lg">
+                          <AvatarFallback className="bg-primary-100 text-primary-700 font-medium">
                             {invitation.group.name.charAt(0).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                         
                         <div className="flex-1 min-w-0">
                           <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
-                            <h3 className="text-lg sm:text-xl font-bold text-text-900 truncate">
+                            <h3 className="text-lg font-bold text-text-900 truncate">
                               {invitation.group.name}
                             </h3>
                             <div className="flex flex-wrap gap-2">
-                              <Badge className={`${roleConfig.color} text-xs font-medium border`}>
+                              <Badge className={`${roleConfig.color} text-xs font-medium`}>
                                 <RoleIcon className="w-3 h-3 mr-1" />
                                 {invitation.role.replace('-', ' ')}
                               </Badge>
-                              {invitation.group.status === 'approved' ? (
-                                <Badge className="bg-emerald-100 text-emerald-800 text-xs border-emerald-200">
-                                  Active Group
-                                </Badge>
-                              ) : (
-                                <Badge variant="secondary" className="text-xs">
-                                  Pending Approval
-                                </Badge>
-                              )}
+                              <Badge 
+                                variant={invitation.group.status === 'approved' ? 'default' : 'secondary'}
+                                className="text-xs"
+                              >
+                                {invitation.group.status === 'approved' ? 'Active' : 'Pending'}
+                              </Badge>
                             </div>
                           </div>
                           
-                          <p className="text-text-600 text-sm sm:text-base mb-3 line-clamp-2">
+                          <p className="text-text-600 text-sm mb-3 line-clamp-2">
                             {invitation.group.description || 'No description provided'}
                           </p>
                           
-                          <div className="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-text-500">
+                          <div className="flex flex-wrap items-center gap-3 text-xs text-text-500">
                             <div className="flex items-center gap-1">
-                              <Users className="w-4 h-4" />
+                              <Users className="w-3 h-3" />
                               <span>Role: {invitation.role.replace('-', ' ')}</span>
                             </div>
                             <div className="flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
+                              <Clock className="w-3 h-3" />
                               <span className={timeRemaining.isExpired ? 'text-red-600 font-medium' : ''}>
                                 {timeRemaining.text}
                               </span>
@@ -296,16 +292,16 @@ export default function GroupInvitesInterface() {
                       </div>
 
                       {/* Actions */}
-                      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 sm:items-start">
+                      <div className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:items-center pt-2 border-t border-background-200">
                         <Button 
                           variant="outline" 
                           size="sm" 
                           asChild
-                          className="flex items-center gap-2 min-w-0"
+                          className="sm:w-auto"
                         >
                           <Link href={`/groups/${invitation.group.slug}`}>
-                            <ExternalLink className="w-4 h-4" />
-                            <span>View Group</span>
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            View Group
                           </Link>
                         </Button>
                         
@@ -315,19 +311,19 @@ export default function GroupInvitesInterface() {
                             variant="outline"
                             onClick={() => handleDeclineInvite(invitation.token, invitation.group.name)}
                             disabled={processingInvites.has(invitation.token)}
-                            className="flex items-center gap-1 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                            className="flex-1 sm:flex-none text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
                           >
-                            <X className="w-4 h-4" />
-                            <span>Decline</span>
+                            <X className="w-4 h-4 mr-2" />
+                            Decline
                           </Button>
                           <Button
                             size="sm"
                             onClick={() => handleAcceptInvite(invitation.token, invitation.group.name)}
                             disabled={processingInvites.has(invitation.token)}
-                            className="flex items-center gap-1 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700"
+                            className="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-700"
                           >
-                            <Check className="w-4 h-4" />
-                            <span>Accept</span>
+                            <Check className="w-4 h-4 mr-2" />
+                            Accept
                           </Button>
                         </div>
                       </div>
@@ -338,17 +334,16 @@ export default function GroupInvitesInterface() {
             })}
           </div>
         ) : (
-          <Card className="bg-background-50/80 backdrop-blur-sm">
-            <CardContent className="text-center py-12 sm:py-16">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-                <Mail className="w-8 h-8 sm:w-10 sm:h-10 text-primary-400" />
+          <Card className="bg-background-100">
+            <CardContent className="text-center py-12">
+              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Mail className="w-8 h-8 text-primary-400" />
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-text-700 mb-2">No pending invitations</h3>
-              <p className="text-text-600 mb-6 max-w-md mx-auto">
-                You dont have any pending group invitations at the moment. 
-                Explore groups and connect with the scanlation community!
+              <h3 className="text-xl font-bold text-text-700 mb-2">No pending invitations</h3>
+              <p className="text-text-600 mb-6 text-sm">
+                You dont have any pending group invitations at the moment.
               </p>
-              <Button asChild className="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700">
+              <Button asChild>
                 <Link href="/groups">
                   <Users className="w-4 h-4 mr-2" />
                   Browse Groups

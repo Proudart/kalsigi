@@ -52,7 +52,6 @@ export default function ChapterSubmissionsList({ groupId }: ChapterSubmissionsLi
     fetchSubmissions();
   }, [groupId]);
 
-
   const fetchSubmissions = async () => {
     try {
       const response = await fetch(`/api/groups/chapters/submissions?groupId=${groupId}`);
@@ -100,7 +99,7 @@ export default function ChapterSubmissionsList({ groupId }: ChapterSubmissionsLi
 
   if (isLoading) {
     return (
-      <Card>
+      <Card className="bg-background-100">
         <CardHeader>
           <CardTitle>Your Chapter Submissions</CardTitle>
         </CardHeader>
@@ -116,7 +115,7 @@ export default function ChapterSubmissionsList({ groupId }: ChapterSubmissionsLi
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="bg-background-100">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <span>Your Chapter Submissions</span>
@@ -132,122 +131,116 @@ export default function ChapterSubmissionsList({ groupId }: ChapterSubmissionsLi
               </p>
             </div>
           ) : (
-            <ScrollArea className="h-96">
-              <div className="space-y-4">
-                {submissions.map((submission) => (
-                  <div
-                    key={submission.id}
-                    className="border rounded-lg p-4 hover:bg-background-50 transition-colors"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-2">
-                          {getStatusIcon(submission.status)}
-                          <h3 className="font-semibold text-lg">
-                            {submission.series_title}
-                          </h3>
-                          <Badge className={getStatusColor(submission.status)}>
-                            {submission.status}
-                          </Badge>
+            <div className="space-y-4 max-h-96 overflow-y-auto">
+              {submissions.map((submission) => (
+                <div
+                  key={submission.id}
+                  className="border border-background-200 rounded-lg p-4 hover:bg-background-200 transition-colors"
+                >
+                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center space-x-2 mb-2">
+                        {getStatusIcon(submission.status)}
+                        <h3 className="font-semibold text-lg truncate">
+                          {submission.series_title}
+                        </h3>
+                        <Badge className={getStatusColor(submission.status)}>
+                          {submission.status}
+                        </Badge>
+                      </div>
+                      
+                      <div className="flex flex-wrap items-center gap-3 mb-2 text-sm">
+                        <div className="flex items-center space-x-1 text-primary-600">
+                          <Hash className="w-3 h-3" />
+                          <span>Chapter {submission.chapter_number}</span>
                         </div>
-                        
-                        <div className="flex items-center space-x-4 mb-2">
-                          <div className="flex items-center space-x-1 text-sm text-primary-600">
-                            <Hash className="w-3 h-3" />
-                            <span>Chapter {submission.chapter_number}</span>
+                        {submission.volume_number && (
+                          <div className="flex items-center space-x-1 text-text-500">
+                            <Book className="w-3 h-3" />
+                            <span>Vol. {submission.volume_number}</span>
                           </div>
-                          {submission.volume_number && (
-                            <div className="flex items-center space-x-1 text-sm text-text-500">
-                              <Book className="w-3 h-3" />
-                              <span>Vol. {submission.volume_number}</span>
-                            </div>
-                          )}
-                          <div className="flex items-center space-x-1 text-sm text-text-500">
-                            <FileText className="w-3 h-3" />
-                            <span>{submission.page_count} pages</span>
-                          </div>
-                        </div>
-                        
-                        {submission.chapter_title && (
-                          <p className="text-sm text-text-600 mb-2 font-medium">
-                            {submission.chapter_title}
-                          </p>
                         )}
-                        
-                        {submission.release_notes && (
-                          <p className="text-sm text-text-600 mb-3 line-clamp-2">
-                            {submission.release_notes}
-                          </p>
-                        )}
-                        
-                        <div className="flex flex-wrap gap-4 text-xs text-text-500">
-                          <div className="flex items-center space-x-1">
-                            <Calendar className="w-3 h-3" />
-                            <span>
-                              {formatDistanceToNow(new Date(submission.submitted_at), { addSuffix: true })}
-                            </span>
-                          </div>
+                        <div className="flex items-center space-x-1 text-text-500">
+                          <FileText className="w-3 h-3" />
+                          <span>{submission.page_count} pages</span>
                         </div>
                       </div>
                       
-                      <div className="flex flex-col space-y-2 ml-4">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setSelectedSubmission(submission)}
-                        >
-                          <Eye className="w-3 h-3 mr-1" />
-                          View
-                        </Button>
-                        
-                        {submission.approved_chapter_id && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            asChild
-                          >
-                            <a
-                              href={`/series/${submission.series_url}-${submission.series_url_code}/chapter-${submission.chapter_number}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <ExternalLink className="w-3 h-3 mr-1" />
-                              Read
-                            </a>
-                          </Button>
-                        )}
+                      {submission.chapter_title && (
+                        <p className="text-sm text-text-600 mb-2 font-medium truncate">
+                          {submission.chapter_title}
+                        </p>
+                      )}
+                      
+                      <div className="flex flex-wrap gap-3 text-xs text-text-500">
+                        <div className="flex items-center space-x-1">
+                          <Calendar className="w-3 h-3" />
+                          <span>
+                            {formatDistanceToNow(new Date(submission.submitted_at), { addSuffix: true })}
+                          </span>
+                        </div>
                       </div>
                     </div>
                     
-                    {submission.review_notes && (
-                      <div className="mt-3 p-3 bg-red-50 rounded border-l-4 border-red-500">
-                        <p className="text-sm">
-                          <span className="font-medium text-red-800">Review Notes:</span> {submission.review_notes}
-                        </p>
-                        {submission.reviewed_at && (
-                          <p className="text-xs text-red-600 mt-1">
-                            Reviewed {formatDistanceToNow(new Date(submission.reviewed_at), { addSuffix: true })}
-                          </p>
-                        )}
-                      </div>
-                    )}
+                    <div className="flex flex-col sm:flex-row gap-2 lg:flex-col lg:w-auto">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setSelectedSubmission(submission)}
+                        className="w-full sm:w-auto"
+                      >
+                        <Eye className="w-3 h-3 mr-1" />
+                        View
+                      </Button>
+                      
+                      {submission.approved_chapter_id && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          asChild
+                          className="w-full sm:w-auto"
+                        >
+                          <a
+                            href={`/series/${submission.series_url}-${submission.series_url_code}/chapter-${submission.chapter_number}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <ExternalLink className="w-3 h-3 mr-1" />
+                            Read
+                          </a>
+                        </Button>
+                      )}
+                    </div>
                   </div>
-                ))}
-              </div>
-            </ScrollArea>
+                  
+                  {submission.review_notes && (
+                    <div className="mt-3 p-3 bg-red-50 rounded border-l-4 border-red-500">
+                      <p className="text-sm">
+                        <span className="font-medium text-red-800">Review Notes:</span> {submission.review_notes}
+                      </p>
+                      {submission.reviewed_at && (
+                        <p className="text-xs text-red-600 mt-1">
+                          Reviewed {formatDistanceToNow(new Date(submission.reviewed_at), { addSuffix: true })}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           )}
         </CardContent>
       </Card>
 
       {/* Detailed View Modal */}
       {selectedSubmission && (
-        <Card className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm">
-          <div className="fixed inset-4 md:inset-8 bg-background border rounded-lg shadow-lg overflow-hidden">
-            <CardHeader className="border-b">
+        <div className="fixed inset-0 z-50 bg-background-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <Card className="w-full max-w-4xl max-h-[90vh] overflow-hidden bg-background-100">
+            <CardHeader className="border-b border-background-200">
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center space-x-2">
                   {getStatusIcon(selectedSubmission.status)}
-                  <span>{selectedSubmission.series_title} - Ch. {selectedSubmission.chapter_number}</span>
+                  <span className="truncate">{selectedSubmission.series_title} - Ch. {selectedSubmission.chapter_number}</span>
                   <Badge className={getStatusColor(selectedSubmission.status)}>
                     {selectedSubmission.status}
                   </Badge>
@@ -262,7 +255,7 @@ export default function ChapterSubmissionsList({ groupId }: ChapterSubmissionsLi
               </div>
             </CardHeader>
             
-            <CardContent className="p-6 overflow-y-auto max-h-[calc(100vh-200px)]">
+            <CardContent className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="md:col-span-2 space-y-4">
                   <div>
@@ -331,11 +324,6 @@ export default function ChapterSubmissionsList({ groupId }: ChapterSubmissionsLi
                         <span className="font-medium">Group:</span> {selectedSubmission.group_name}
                       </div>
                     )}
-                    {selectedSubmission.approved_chapter_id && (
-                      <div>
-                        <span className="font-medium">Chapter ID:</span> {selectedSubmission.approved_chapter_id}
-                      </div>
-                    )}
                   </div>
                   
                   {selectedSubmission.approved_chapter_id && (
@@ -358,8 +346,8 @@ export default function ChapterSubmissionsList({ groupId }: ChapterSubmissionsLi
                 </div>
               </div>
             </CardContent>
-          </div>
-        </Card>
+          </Card>
+        </div>
       )}
     </div>
   );

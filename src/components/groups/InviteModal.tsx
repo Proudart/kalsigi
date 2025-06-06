@@ -78,7 +78,7 @@ export function InviteModal({ isOpen, onClose, groupSlug }: InviteModalProps) {
     {
       value: 'member',
       label: 'Member',
-      description: 'Can view group content and participate in discussions',
+      description: 'Can view group content and participate',
       icon: Users,
       color: 'text-gray-600'
     },
@@ -99,14 +99,14 @@ export function InviteModal({ isOpen, onClose, groupSlug }: InviteModalProps) {
     {
       value: 'moderator',
       label: 'Moderator',
-      description: 'Can manage content, invite members, and moderate group',
+      description: 'Can manage content, invite members, and moderate',
       icon: Shield,
       color: 'text-purple-600'
     },
     {
       value: 'co-owner',
       label: 'Co-Owner',
-      description: 'Has full management permissions except deleting the group',
+      description: 'Has full management permissions except deleting group',
       icon: Crown,
       color: 'text-orange-600'
     },
@@ -116,23 +116,23 @@ export function InviteModal({ isOpen, onClose, groupSlug }: InviteModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg bg-background-50/95 backdrop-blur-sm border-background-300">
+      <DialogContent className="sm:max-w-lg bg-background-100 border-background-300">
         <DialogHeader className="text-center pb-2">
-          <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <UserPlus className="w-8 h-8 text-primary-600" />
+          <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <UserPlus className="w-6 h-6 text-primary-600" />
           </div>
-          <DialogTitle className="text-2xl font-bold text-text-900">
+          <DialogTitle className="text-xl font-bold text-text-900">
             Invite New Member
           </DialogTitle>
-          <DialogDescription className="text-text-600">
-            Send an invitation to join your scanlation group and start collaborating together.
+          <DialogDescription className="text-text-600 text-sm">
+            Send an invitation to join your group and start collaborating.
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pt-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2">
           {/* Email Input */}
-          <div className="space-y-3">
-            <Label htmlFor="email" className="text-sm font-semibold text-text-700 flex items-center gap-2">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-sm font-medium text-text-700 flex items-center gap-2">
               <Mail className="w-4 h-4" />
               Email Address *
             </Label>
@@ -141,7 +141,7 @@ export function InviteModal({ isOpen, onClose, groupSlug }: InviteModalProps) {
               {...register('email')}
               placeholder="member@example.com"
               disabled={isLoading}
-              className="h-12 text-base border-background-300 focus:border-primary-500 focus:ring-primary-500/20"
+              className="h-11"
             />
             {errors.email && (
               <p className="text-sm text-red-600">{errors.email.message}</p>
@@ -149,27 +149,27 @@ export function InviteModal({ isOpen, onClose, groupSlug }: InviteModalProps) {
           </div>
 
           {/* Role Selection */}
-          <div className="space-y-3">
-            <Label htmlFor="role" className="text-sm font-semibold text-text-700 flex items-center gap-2">
+          <div className="space-y-2">
+            <Label htmlFor="role" className="text-sm font-medium text-text-700 flex items-center gap-2">
               <Shield className="w-4 h-4" />
               Role *
             </Label>
             <Select onValueChange={(value) => setValue('role', value as any)} disabled={isLoading}>
-              <SelectTrigger className="h-12 border-background-300 focus:border-primary-500 focus:ring-primary-500/20">
-                <SelectValue placeholder="Select a role for this member" />
+              <SelectTrigger className="h-11 border-background-300">
+                <SelectValue placeholder="Select a role" />
               </SelectTrigger>
-              <SelectContent className='bg-background-50 border border-background-300 rounded-lg shadow-lg'>
+              <SelectContent className='bg-background-100 border border-background-300'>
                 {roleOptions.map((role) => {
                   const IconComponent = role.icon;
                   return (
                     <SelectItem key={role.value} value={role.value} className="py-3">
                       <div className="flex items-center gap-3">
-                        <div className={`w-8 h-8 rounded-full bg-background-100 flex items-center justify-center ${role.color}`}>
-                          <IconComponent className="w-4 h-4" />
+                        <div className={`w-6 h-6 rounded-full bg-background-200 flex items-center justify-center ${role.color}`}>
+                          <IconComponent className="w-3 h-3" />
                         </div>
                         <div>
-                          <div className="font-medium">{role.label}</div>
-                          <div className="text-xs text-text-500 max-w-xs">{role.description}</div>
+                          <div className="font-medium text-sm">{role.label}</div>
+                          <div className="text-xs text-text-500">{role.description}</div>
                         </div>
                       </div>
                     </SelectItem>
@@ -184,13 +184,13 @@ export function InviteModal({ isOpen, onClose, groupSlug }: InviteModalProps) {
 
           {/* Selected Role Info */}
           {selectedRoleData && (
-            <div className="bg-gradient-to-r from-primary-50 to-secondary-50 border border-primary-200 rounded-lg p-4">
+            <div className="bg-primary-50 border border-primary-200 rounded-lg p-3">
               <div className="flex items-start gap-3">
-                <div className={`w-10 h-10 rounded-full bg-background-100 flex items-center justify-center ${selectedRoleData.color} flex-shrink-0`}>
-                  <selectedRoleData.icon className="w-5 h-5" />
+                <div className={`w-8 h-8 rounded-full bg-background-200 flex items-center justify-center ${selectedRoleData.color} flex-shrink-0`}>
+                  <selectedRoleData.icon className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-primary-800 mb-1">{selectedRoleData.label} Permissions</h4>
+                  <h4 className="font-medium text-primary-800 text-sm">{selectedRoleData.label} Permissions</h4>
                   <p className="text-sm text-primary-700">{selectedRoleData.description}</p>
                 </div>
               </div>
@@ -204,14 +204,14 @@ export function InviteModal({ isOpen, onClose, groupSlug }: InviteModalProps) {
               variant="outline" 
               onClick={onClose} 
               disabled={isLoading}
-              className="flex-1 h-12 border-background-300 hover:bg-background-100"
+              className="flex-1 h-11"
             >
               Cancel
             </Button>
             <Button 
               type="submit" 
               disabled={isLoading}
-              className="flex-1 h-12 bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700"
+              className="flex-1 h-11"
             >
               {isLoading ? (
                 <>

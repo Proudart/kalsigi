@@ -60,8 +60,6 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
     resolver: zodResolver(chapterSchema),
   });
 
-  const selectedSeriesId = watch("series_id");
-
   useEffect(() => {
     fetchAvailableSeries();
   }, [groupId]);
@@ -109,11 +107,11 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
       reader.readAsDataURL(file);
     }
   };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
 
-    // Validate files
     const validFiles = files.filter(file => {
       const isValidType = file.type.startsWith('image/');
       const isValidSize = file.size <= 20 * 1024 * 1024; // 20MB per file
@@ -148,7 +146,6 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
     try {
       const formData = new FormData();
       
-      // Add form fields
       formData.append("series_id", data.series_id);
       formData.append("chapter_number", data.chapter_number);
       if (data.chapter_title) {
@@ -159,13 +156,10 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
       }
       formData.append("group_id", groupId);
 
-      // Add chapter pages
       selectedFiles.forEach((file, index) => {
         formData.append(`chapter_pages`, file);
         formData.append(`page_order_${index}`, index.toString());
       });
-
-   
 
       const response = await fetch("/api/groups/chapters/submit", {
         method: "POST",
@@ -177,14 +171,11 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
         throw new Error(errorData.error || "Failed to submit chapter");
       }
 
-      const result = await response.json();
-
       toast({
-        title: "Chapter Submitted Successfully",
-        description: "Your chapter submission is now pending review by administrators.",
+        title: "Chapter Submitted",
+        description: "Your chapter is now pending review by administrators.",
       });
 
-      // Reset form
       reset();
       setSelectedFiles([]);
       onSuccess?.();
@@ -202,14 +193,14 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
   };
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
+    <Card className="w-full max-w-4xl mx-auto bg-background-100">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
           <Plus className="w-5 h-5" />
           Submit New Chapter
         </CardTitle>
         <p className="text-sm text-text-600">
-          Upload a new chapter for an existing series. Your group will be credited as the translator.
+          Upload a new chapter for an existing series.
         </p>
       </CardHeader>
       <CardContent>
@@ -228,14 +219,14 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
                       placeholder="Search for a series..."
                       value={seriesSearch}
                       onChange={(e) => setSeriesSearch(e.target.value)}
-                      className="pl-10"
+                      className="pl-10 h-11"
                     />
                   </div>
                   <Select onValueChange={(value) => setValue("series_id", value)}>
-                    <SelectTrigger className={errors.series_id ? "border-red-500" : ""}>
+                    <SelectTrigger className={`h-11 ${errors.series_id ? "border-red-500" : ""}`}>
                       <SelectValue placeholder="Select a series" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-background-100">
                       {isLoadingSeries ? (
                         <SelectItem value="loading" disabled>Loading series...</SelectItem>
                       ) : filteredSeries.length === 0 ? (
@@ -269,7 +260,7 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
                 <Input
                   {...register("chapter_number")}
                   placeholder="e.g., 1, 1.5, 001"
-                  className={errors.chapter_number ? "border-red-500" : ""}
+                  className={`h-11 ${errors.chapter_number ? "border-red-500" : ""}`}
                 />
                 {errors.chapter_number && (
                   <p className="text-red-500 text-sm mt-1">{errors.chapter_number.message}</p>
@@ -281,6 +272,7 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
                 <Input
                   {...register("chapter_title")}
                   placeholder="Optional chapter title"
+                  className="h-11"
                 />
               </div>
 
@@ -290,6 +282,7 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
                   {...register("release_notes")}
                   placeholder="Any notes for readers (optional)"
                   rows={3}
+                  className="resize-none"
                 />
               </div>
             </div>
@@ -300,13 +293,13 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
                 <label className="block text-sm font-medium mb-2">
                   Start Image (Optional)
                 </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                <div className="border-2 border-dashed border-background-300 rounded-lg p-4 text-center">
                   {startImagePreview ? (
                     <div className="relative">
                       <img
                         src={startImagePreview}
                         alt="Start image preview"
-                        className="mx-auto max-h-32 object-cover rounded"
+                        className="mx-auto max-h-24 object-cover rounded"
                       />
                       <Button
                         type="button"
@@ -323,7 +316,7 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
                     </div>
                   ) : (
                     <div>
-                      <Upload className="mx-auto h-8 w-8 text-gray-400" />
+                      <Upload className="mx-auto h-6 w-6 text-gray-400" />
                       <div className="mt-2">
                         <input
                           type="file"
@@ -336,12 +329,10 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
                           htmlFor="start-image-upload"
                           className="cursor-pointer text-sm text-primary-600 hover:text-primary-500"
                         >
-                          Upload start/intro image
+                          Upload intro image
                         </label>
                       </div>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Group branding, intro page
-                      </p>
+                      <p className="text-xs text-gray-500 mt-1">Group branding</p>
                     </div>
                   )}
                 </div>
@@ -351,13 +342,13 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
                 <label className="block text-sm font-medium mb-2">
                   End Image (Optional)
                 </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                <div className="border-2 border-dashed border-background-300 rounded-lg p-4 text-center">
                   {endImagePreview ? (
                     <div className="relative">
                       <img
                         src={endImagePreview}
                         alt="End image preview"
-                        className="mx-auto max-h-32 object-cover rounded"
+                        className="mx-auto max-h-24 object-cover rounded"
                       />
                       <Button
                         type="button"
@@ -374,7 +365,7 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
                     </div>
                   ) : (
                     <div>
-                      <Upload className="mx-auto h-8 w-8 text-gray-400" />
+                      <Upload className="mx-auto h-6 w-6 text-gray-400" />
                       <div className="mt-2">
                         <input
                           type="file"
@@ -387,105 +378,100 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
                           htmlFor="end-image-upload"
                           className="cursor-pointer text-sm text-primary-600 hover:text-primary-500"
                         >
-                          Upload end/credits image
+                          Upload credits image
                         </label>
                       </div>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Credits, announcements
-                      </p>
+                      <p className="text-xs text-gray-500 mt-1">Credits, announcements</p>
                     </div>
                   )}
                 </div>
               </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Chapter Pages <span className="text-red-500">*</span>
-                </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                  <div className="mt-2">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handleFileChange}
-                      className="sr-only"
-                      id="pages-upload"
-                    />
-                    <label
-                      htmlFor="pages-upload"
-                      className="cursor-pointer text-sm text-primary-600 hover:text-primary-500"
-                    >
-                      Click to upload chapter pages
-                    </label>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Select multiple images (PNG, JPG, GIF) up to 20MB each
-                  </p>
-                </div>
-                {errors.chapter_pages && (
-                  <p className="text-red-500 text-sm mt-1">{errors.chapter_pages.message as string}</p>
-                )}
-              </div>
-
-              {selectedFiles.length > 0 && (
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Selected Pages ({selectedFiles.length})
-                  </label>
-                  <div className="max-h-60 overflow-y-auto border rounded-lg p-3 space-y-2">
-                    {selectedFiles.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between bg-background-50 p-2 rounded">
-                        <div className="flex items-center space-x-2 flex-1">
-                          <FileText className="w-4 h-4 text-gray-500" />
-                          <span className="text-sm font-medium">Page {index + 1}</span>
-                          <span className="text-xs text-gray-500 truncate">
-                            {file.name}
-                          </span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-xs text-gray-500">
-                            {(file.size / 1024 / 1024).toFixed(1)}MB
-                          </span>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removeFile(index)}
-                            className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
-                          >
-                            <X className="w-3 h-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-xs text-gray-500 mt-2">
-                    Pages will be displayed in the order shown above
-                  </p>
-                </div>
-              )}
             </div>
           </div>
+
+          {/* Chapter Pages Upload */}
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Chapter Pages <span className="text-red-500">*</span>
+            </label>
+            <div className="border-2 border-dashed border-background-300 rounded-lg p-6 text-center">
+              <Upload className="mx-auto h-8 w-8 text-gray-400" />
+              <div className="mt-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleFileChange}
+                  className="sr-only"
+                  id="pages-upload"
+                />
+                <label
+                  htmlFor="pages-upload"
+                  className="cursor-pointer text-sm text-primary-600 hover:text-primary-500"
+                >
+                  Click to upload chapter pages
+                </label>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Select multiple images (PNG, JPG, GIF) up to 20MB each
+              </p>
+            </div>
+            {errors.chapter_pages && (
+              <p className="text-red-500 text-sm mt-1">{errors.chapter_pages.message as string}</p>
+            )}
+          </div>
+
+          {selectedFiles.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Selected Pages ({selectedFiles.length})
+              </label>
+              <div className="max-h-48 overflow-y-auto border border-background-300 rounded-lg p-3 space-y-2">
+                {selectedFiles.map((file, index) => (
+                  <div key={index} className="flex items-center justify-between bg-background-200 p-2 rounded">
+                    <div className="flex items-center space-x-2 flex-1">
+                      <FileText className="w-4 h-4 text-gray-500" />
+                      <span className="text-sm font-medium">Page {index + 1}</span>
+                      <span className="text-xs text-gray-500 truncate">
+                        {file.name}
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xs text-gray-500">
+                        {(file.size / 1024 / 1024).toFixed(1)}MB
+                      </span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeFile(index)}
+                        className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
+                      >
+                        <X className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <div className="flex items-start space-x-2">
               <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5" />
               <div className="text-sm text-blue-800">
-                <p className="font-medium mb-1">Chapter Submission Guidelines:</p>
+                <p className="font-medium mb-1">Submission Guidelines:</p>
                 <ul className="list-disc list-inside space-y-1 text-xs">
-                  <li>All chapter submissions are reviewed before publication</li>
-                  <li>Upload pages in the correct reading order</li>
+                  <li>All submissions are reviewed before publication</li>
+                  <li>Upload pages in correct reading order</li>
                   <li>Ensure high quality, readable images</li>
-                  <li>Maximum 20MB per page, unlimited pages per chapter</li>
-                  <li>Your group will be credited as the translator/scanlator</li>
+                  <li>Maximum 20MB per page</li>
                 </ul>
               </div>
             </div>
           </div>
 
-          <div className="flex justify-end space-x-4">
+          <div className="flex flex-col sm:flex-row justify-end gap-3">
             <Button
               type="button"
               variant="outline"
@@ -494,13 +480,14 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
                 setSelectedFiles([]);
                 setSeriesSearch("");
               }}
+              className="h-11"
             >
               Reset Form
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting || selectedFiles.length === 0}
-              className="px-6"
+              className="h-11 px-6"
             >
               {isSubmitting ? "Uploading..." : `Submit Chapter (${selectedFiles.length} pages)`}
             </Button>

@@ -51,7 +51,7 @@ export const DynamicGroupDashboard = dynamic(
 );
 
 export const DynamicMemberManagement = dynamic(
-  () => import('@//components/groups/MemberManagement'),
+  () => import('@//components/groups/MemberManagement').then(mod => mod.MemberManagement),
   {
     loading: LoadingSpinner,
     ssr: false
@@ -59,7 +59,7 @@ export const DynamicMemberManagement = dynamic(
 );
 
 export const DynamicInviteModal = dynamic(
-  () => import('@//components/groups/InviteModal'),
+  () => import('@//components/groups/InviteModal').then(mod => mod.InviteModal),
   {
     loading: LoadingSpinner,
     ssr: false
@@ -134,7 +134,7 @@ export const DynamicFramerMotion = dynamic(
 ) as ComponentType<any>;
 
 export const DynamicCarousel = dynamic(
-  () => import('@//components/ui/carousel'),
+  () => import('@//components/ui/carousel').then(mod => mod.Carousel),
   {
     loading: LoadingSpinner,
     ssr: true
@@ -168,7 +168,7 @@ export const DynamicSettingsForm = dynamic(
 );
 
 export const DynamicLogin = dynamic(
-  () => import('@//components/auth/login'),
+  () => import('@//components/auth/login').then(mod => mod.SignInForm),
   {
     loading: LoadingSpinner,
     ssr: false
@@ -176,7 +176,7 @@ export const DynamicLogin = dynamic(
 );
 
 export const DynamicRegister = dynamic(
-  () => import('@//components/auth/register'),
+  () => import('@//components/auth/register').then(mod => mod.SignUpForm),
   {
     loading: LoadingSpinner,
     ssr: false

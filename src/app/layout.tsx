@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import Loader from "../components/load";
 import type { Viewport, Metadata } from "next";
 import dynamic from "next/dynamic";
+import { getBaseUrl } from "../lib/utils";
 
 const inter = Poppins({ subsets: ["latin"], weight: "400", preload: true });
 
@@ -35,7 +36,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(`https://www.${process.env.site_name}.com`),
+  metadataBase: new URL(getBaseUrl()),
   title: `${process.env.site_name}: Your Go-To Place for Quality Manga, Manhwa and Manhua Translation`,
   manifest: "/manifest.json",
   keywords: [
@@ -70,7 +71,7 @@ export const metadata: Metadata = {
   },
   alternates: {
     types: {
-      "application/rss+xml": `https://www.${process.env.site_name}.com/rss.xml`,
+      "application/rss+xml": `${getBaseUrl()}/rss.xml`,
     },
   },
   applicationName: `${process.env.site_name}`,

@@ -49,3 +49,6 @@ sitemap-state.json
 /public/workbox-*
 # Million Lint
 .million
+
+CLAUDE.md
+*.md

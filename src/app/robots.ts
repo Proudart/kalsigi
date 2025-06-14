@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+import { getBaseUrl } from '../lib/utils'
  
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -7,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: ['/', '/series/[series]', '/series/[series]/[chapter]'],
       disallow: ['/about','/licensing','/privacy','/signout','/signin','/settings']
     },
-    sitemap: `https://www.${process.env.site_name}.com/sitemap.xml`,
+    sitemap: `${getBaseUrl()}/sitemap.xml`,
   }
 }

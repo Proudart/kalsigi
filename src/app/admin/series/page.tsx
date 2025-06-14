@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import SeriesApprovalInterface from '@//components/admin/SeriesApprovalInterface';
+import { DynamicSeriesApprovalInterface } from '@//components/dynamic/DynamicComponents';
 import { auth } from '@/lib/auth';
 import { headers } from "next/headers";
 
@@ -19,5 +19,5 @@ export default async function AdminSeriesPage() {
     redirect('/');
   }
 
-  return <SeriesApprovalInterface />;
+  return <DynamicSeriesApprovalInterface />;
 }

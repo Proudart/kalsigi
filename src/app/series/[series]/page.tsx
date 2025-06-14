@@ -4,6 +4,7 @@ import { redirect, permanentRedirect } from "next/navigation";
 import Manga from "../../../components/manga/manga";
 import Loader from "../../../components/load";
 import { Metadata } from "next";
+import { getBaseUrl } from "../../../lib/utils";
 
 function formatDate(dateString: any): any {
   const date = new Date(dateString);
@@ -74,7 +75,7 @@ type RouteParams = {
 
 async function fetchSeriesData(url: string): Promise<Series> {
   const siteName = process.env.site_name;
-  const response = await fetch(`https://www.${siteName}.com/api/title?url=${url}`, {
+  const response = await fetch(`${getBaseUrl()}/api/title?url=${url}`, {
     method: "GET",
     next: {
       revalidate: 60 * 60 * 24 // Revalidate every 24 hours
@@ -128,7 +129,7 @@ async function checkAndRedirectSeries(seriesParam: string) {
 export async function generateMetadata({ params }: any): Promise<Metadata> {
   const { series } = await params;
   const siteName = process.env.site_name as string;
-  const baseUrl = `https://www.${siteName}.com`;
+  const baseUrl = getBaseUrl();
   
   // Remove the URL code suffix (e.g., -123456)
   const regex = /-\d{6}/;
@@ -210,7 +211,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
 
 export async function generateStaticParams() {
   try {
-    const res = await fetch(`https://www.${process.env.site_name}.com/api/titles`);
+    const res = await fetch(`${getBaseUrl()}/api/titles`);
     const data = await res.json();
     return data.map((series: any) => ({
       series: series.url.toString() + '-' + (series.url_code ? series.url_code.toString() : '000000'),

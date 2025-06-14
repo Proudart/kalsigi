@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import UpdatedContent from "./recommendedContent";
 import UpdatedSkeleton from "./recommendedSkeleton";
 import pako from "pako";
+import { getBaseUrl } from "../../../lib/utils";
 
 function decompressData(input: string): any {
   try {
@@ -26,14 +27,10 @@ async function getRecommendedSeries(titles: any[]) {
       const modifiedTitle = title.title.replace(regex, '');
       return { ...title, title: modifiedTitle };
     });
-    const response = await fetch(`https://www.${process.env.site_name}.com/api/feed/recommended?titles=${titles
+    const response = await fetch(`${getBaseUrl()}/api/feed/recommended?titles=${titles
         .map((title: any) => `${title.title}`)
         .join(",")}`
     );
-    // const response = await fetch(`http://localhost:3000/api/feed/recommended?titles=${titles
-    //   .map((title: any) => `${title.title}`)
-    //   .join(",")}`
-    // );
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }

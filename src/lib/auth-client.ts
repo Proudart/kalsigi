@@ -1,15 +1,10 @@
 import { createAuthClient } from "better-auth/react";
+import { getAuthUrls } from "./utils";
 
-const baseURL = process.env.NODE_ENV === 'development' 
-    ? 'http://localhost:3000' 
-    : `https://www.manhwacall.com`;
+const { baseURL, trustedOrigins } = getAuthUrls();
 
 export const authClient = createAuthClient({
-    baseURL: baseURL,
-    trustedOrigins: [
-        'http://localhost:3000', 
-        'https://www.manhwacall.com', 
-        'https://manhwacall.com'
-    ],
+    baseURL,
+    trustedOrigins,
     emailAndPassword: { enabled: true },
 });

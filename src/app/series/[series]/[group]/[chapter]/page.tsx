@@ -5,6 +5,7 @@ import { lazyHydrate } from 'next-lazy-hydration-on-scroll';
 import { Metadata } from "next";
 import Script from "next/script";
 import Loader from "../../../../../components/load";
+import { getBaseUrl } from "../../../../../lib/utils";
 
 // Skeleton loader for chapter component
 function ChapterSkeleton() {
@@ -67,7 +68,7 @@ interface SeriesData {
 async function fetchChapterData(url: string): Promise<SeriesData> {
   const siteName = process.env.site_name;
   const response = await fetch(
-    `https://www.${siteName}.com/api/chapter?series=${url}`,
+    `${getBaseUrl()}/api/chapter?series=${url}`,
     {
       method: "GET",
       next: {
@@ -146,7 +147,7 @@ async function checkAndRedirectChapter(
 export async function generateMetadata({ params }: any): Promise<Metadata> {
   const { series, publisher, chapter } = await params;
   const siteName = process.env.site_name;
-  const baseUrl = `https://www.${siteName}.com`;
+  const baseUrl = getBaseUrl();
   const regex = /-\d{6}/;
   const modifiedUrl = series.replace(regex, "");
 
@@ -228,7 +229,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
 export async function generateStaticParams() {
   try {
     const response = await fetch(
-      `https://www.${process.env.site_name}.com/api/chapters`,
+      `${getBaseUrl()}/api/chapters`,
       {
         next: { 
           revalidate: 60 * 60 * 24 // Cache for a day

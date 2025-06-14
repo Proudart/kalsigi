@@ -3,6 +3,21 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { userAgent } from 'next/server';
 
+// Helper function to get auth URLs with environment variables
+function getAuthUrls() {
+  const siteName = process.env.site_name;
+  return {
+    baseURL: process.env.NODE_ENV === 'development' 
+      ? 'http://localhost:3000' 
+      : `https://www.${siteName}.com`,
+    allowedOrigins: [
+      'http://localhost:3000',
+      `https://www.${siteName}.com`,
+      `https://${siteName}.com`
+    ]
+  };
+}
+
 // Common bot patterns to detect crawlers
 const BOT_PATTERNS = [
   /bot/i, 
@@ -21,11 +36,7 @@ const BOT_PATTERNS = [
 ];
 
 // Allowed origins for CORS
-const ALLOWED_ORIGINS = [
-  'https://www.manhwacall.com',
-  'https://manhwacall.com',
-  'http://localhost:3000'
-];
+const { allowedOrigins: ALLOWED_ORIGINS } = getAuthUrls();
 
 // Cache for URL validation (simple in-memory cache)
 const urlCache = new Map<string, { url_code: string; timestamp: number }>();
@@ -40,7 +51,8 @@ async function validateSeriesUrl(baseUrl: string): Promise<string | null> {
   }
 
   try {
-    const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://www.manhwacall.com'}/api/title?url=${baseUrl}`);
+    const { baseURL } = getAuthUrls();
+    const response = await fetch(`${baseURL}/api/title?url=${baseUrl}`);
     if (response.ok) {
       const data = await response.json();
       const urlCode = data.url_code || '000000';
@@ -93,14 +105,26 @@ export async function middleware(request: NextRequest) {
     
     if (pathParts.length >= 3) {
       const seriesParam = pathParts[2];
-      const chapterParam = pathParts[3];
+      const possibleChapter = pathParts[3];
+      const possibleGroup = pathParts[4];
       
-      // Check if this is a series page or chapter page
-      const isChapterPage = pathParts.length === 4 && chapterParam?.startsWith('chapter-');
+      // Check if this is a direct chapter URL (missing group)
+      // Pattern: /series/[series]/chapter-[number] -> should redirect to /series/[series]/[group]/chapter-[number]
+      const isDirectChapterPage = pathParts.length === 4 && possibleChapter?.startsWith('chapter-');
+      
+      // Check if this is a complete chapter URL with group
+      // Pattern: /series/[series]/[group]/chapter-[number] 
+      const isCompleteChapterPage = pathParts.length === 5 && possibleGroup?.startsWith('chapter-');
       
       // Extract URL code pattern
       const urlCodeRegex = /-(\d{6})$/;
       const match = seriesParam.match(urlCodeRegex);
+      
+      if (isDirectChapterPage) {
+        // This is handled by the catch-all route we created
+        // Let it pass through to the route handler
+        return response;
+      }
       
       if (!match) {
         // No URL code found, need to redirect to correct URL
@@ -109,9 +133,13 @@ export async function middleware(request: NextRequest) {
         
         if (correctUrlCode) {
           const correctUrl = `${baseUrl}-${correctUrlCode}`;
-          const redirectPath = isChapterPage 
-            ? `/series/${correctUrl}/${chapterParam}`
-            : `/series/${correctUrl}`;
+          let redirectPath;
+          
+          if (isCompleteChapterPage) {
+            redirectPath = `/series/${correctUrl}/${possibleChapter}/${possibleGroup}`;
+          } else {
+            redirectPath = `/series/${correctUrl}`;
+          }
           
           return NextResponse.redirect(new URL(redirectPath, request.url), 301);
         }
@@ -124,9 +152,13 @@ export async function middleware(request: NextRequest) {
         if (correctUrlCode && providedCode !== correctUrlCode) {
           // Wrong URL code, redirect to correct one
           const correctUrl = `${baseUrl}-${correctUrlCode}`;
-          const redirectPath = isChapterPage 
-            ? `/series/${correctUrl}/${chapterParam}`
-            : `/series/${correctUrl}`;
+          let redirectPath;
+          
+          if (isCompleteChapterPage) {
+            redirectPath = `/series/${correctUrl}/${possibleChapter}/${possibleGroup}`;
+          } else {
+            redirectPath = `/series/${correctUrl}`;
+          }
           
           return NextResponse.redirect(new URL(redirectPath, request.url), 301);
         }

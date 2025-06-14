@@ -9,8 +9,12 @@ import {
   IconLogin,
   IconUserPlus,
   IconLoader2,
-} from "@tabler/icons-react";
-import { Users, Plus, ChevronDown, Crown, Shield } from 'lucide-react';
+  Users,
+  Plus,
+  Crown,
+  Shield,
+  Settings
+} from '@/lib/icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,6 +33,7 @@ import { setCookie, deleteCookie } from "cookies-next";
 interface User {
   username: null | undefined;
   name: string;
+  role?: string; // Add role property as optional
 }
 
 interface UserGroup {
@@ -43,10 +48,26 @@ interface UserGroup {
 
 import { createAuthClient } from "better-auth/react";
 import { useCallback, useMemo } from "react";
-const baseURL = process.env.NODE_ENV === 'production' 
-  ? 'https://www.manhwacall.com'
-  : 'http://localhost:3000';
-const { useSession } = createAuthClient({baseURL: baseURL});
+import { getAuthUrls } from "../../lib/utils";
+
+const { baseURL } = getAuthUrls();
+type SessionUser = {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  image?: string | null;
+  role?: string; // Add role as optional
+};
+
+interface Session {
+  user: SessionUser;
+  [key: string]: any;
+}
+
+const { useSession }: { useSession: () => { data: Session | null, isPending: boolean } } = createAuthClient({ baseURL });
 
 
 export default function Auth() {
@@ -254,6 +275,29 @@ export default function Auth() {
       </div>
       
       <DropdownMenuSeparator className="bg-background-200" />
+      
+      {/* Admin Section - Only show for admin users */}
+      {session?.user?.role === 'admin' && (
+        <>
+          <div className="py-1">
+            <div className="px-3 py-2">
+              <span className="text-xs font-medium text-text-700 uppercase tracking-wide">
+                Admin Panel
+              </span>
+            </div>
+            <DropdownMenuItem asChild>
+              <Link 
+                href="/admin" 
+                className="flex items-center space-x-2 px-3 py-2 text-sm hover:bg-background-200 cursor-pointer"
+              >
+                <Settings className="w-4 h-4 text-red-600" />
+                <span className="text-red-600 font-medium">Admin Dashboard</span>
+              </Link>
+            </DropdownMenuItem>
+          </div>
+          <DropdownMenuSeparator className="bg-background-200" />
+        </>
+      )}
       
       {/* Group Actions */}
       <div className="py-1">

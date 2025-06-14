@@ -72,6 +72,7 @@ export async function GET(request: Request) {
             publisher: true,
             published_at: true,
             striked: true,
+            views: true,
           },
           with: {
             summary: {

@@ -2,6 +2,7 @@
 /**
  * Utility functions for handling manga series and chapter URL validation and redirection
  */
+import { getBaseUrl } from './utils';
 
 export interface SeriesUrlInfo {
   baseUrl: string;
@@ -72,7 +73,7 @@ export async function validateSeriesUrl(seriesParam: string): Promise<{
   
   try {
     // Fetch series data using the base URL
-    const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : `https://www.${process.env.site_name}.com`}/api/title?url=${parsed.baseUrl}`);
+    const response = await fetch(`${getBaseUrl()}/api/title?url=${parsed.baseUrl}`);
     
     if (!response.ok) {
       return { isValid: false };
@@ -137,7 +138,7 @@ export async function validateChapterUrl(seriesParam: string, chapterParam: stri
   // Check if chapter exists by fetching chapter data
   try {
     const parsed = parseSeriesUrl(seriesParam);
-    const response = await fetch(`${process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : `https://www.${process.env.site_name}.com`}/api/chapter?series=${parsed.baseUrl}`);
+    const response = await fetch(`${getBaseUrl()}/api/chapter?series=${parsed.baseUrl}`);
     
     if (!response.ok) {
       return { isValid: false };

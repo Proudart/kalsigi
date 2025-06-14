@@ -1,0 +1,38 @@
+// Centralized icon exports to improve tree shaking
+export {
+  IconUser,
+  IconMail,
+  IconSettings,
+  IconLogout,
+  IconLogin,
+  IconUserPlus,
+  IconLoader2,
+  IconSearch,
+} from "@tabler/icons-react";
+
+export {
+  Users,
+  Plus,
+  Crown,
+  Shield,
+  Settings,
+  BookOpen,
+  FileText,
+  BarChart3,
+  Clock,
+  CheckCircle,
+  XCircle,
+  ChevronDown,
+  Upload,
+  Download,
+  Eye,
+  EyeOff,
+  X,
+  Check,
+  AlertCircle,
+  Info,
+  Home,
+  Bookmark,
+  Menu,
+  Search,
+} from 'lucide-react';

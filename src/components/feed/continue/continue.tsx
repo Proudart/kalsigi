@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import ContinueContent from "./continueContent";
 import ContinueSkeleton from "./continueSkeleton";
 import pako from "pako";
+import { getBaseUrl } from "../../../lib/utils";
 
 
 function decompressData(input: string): any {
@@ -28,16 +29,10 @@ async function fetchData(titles: string[]) {
     });
     
     const response = await fetch(
-      `https://${process.env.site_name}.com/api/feed/continue?titles=${titles
+      `${getBaseUrl()}/api/feed/continue?titles=${titles
         .map((title: any) => `${title.title}:${title.chapter}`)
         .join(",")}`
     );
-
-    // const response = await fetch(
-    //   `http://localhost:3000/api/feed/continue?titles=${titles
-    //     .map((title: any) => `${title.title}:${title.chapter}`)
-    //     .join(",")}`
-    //     );
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }

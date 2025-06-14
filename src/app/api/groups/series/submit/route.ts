@@ -5,6 +5,7 @@ import { scanlationGroups, seriesSubmissions, series } from '../../../../../util
 import { eq, and } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { generateR2Paths, convertToWebP, uploadToR2 } from '@/lib/r2';
+import { uploadRateLimiters, checkDualRateLimit, formatRateLimitHeaders } from '@/lib/rate-limit';
 
 const seriesSubmissionSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -25,6 +26,40 @@ export async function POST(request: NextRequest) {
     const session = await auth.api.getSession({ headers: request.headers });
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Rate limiting check
+    const rateLimitCheck = checkDualRateLimit(
+      request,
+      uploadRateLimiters.seriesSubmission,
+      uploadRateLimiters.seriesSubmissionByIp,
+      session.user.id
+    );
+
+    if (rateLimitCheck.isBlocked) {
+      const headers = formatRateLimitHeaders(
+        rateLimitCheck.userLimit.isLimited ? rateLimitCheck.userLimit : rateLimitCheck.ipLimit
+      );
+      
+      const message = rateLimitCheck.userLimit.isLimited 
+        ? `Too many series submissions. You can submit ${rateLimitCheck.userLimit.remaining} more series today.`
+        : 'Too many series submissions from this IP address. Please try again later.';
+      
+      return new NextResponse(
+        JSON.stringify({ 
+          error: message,
+          type: 'RATE_LIMIT_EXCEEDED',
+          userRemaining: rateLimitCheck.userLimit.remaining,
+          ipRemaining: rateLimitCheck.ipLimit.remaining
+        }),
+        {
+          status: 429,
+          headers: {
+            'Content-Type': 'application/json',
+            ...headers,
+          },
+        }
+      );
     }
 
     const formData = await request.formData();
@@ -149,6 +184,16 @@ export async function POST(request: NextRequest) {
         created_at: seriesSubmissions.created_at,
       });
 
+    // Increment rate limit counters on successful submission
+    rateLimitCheck.userLimit.increment();
+    rateLimitCheck.ipLimit.increment();
+
+    // Add rate limit headers to successful response
+    const rateLimitHeaders = {
+      ...formatRateLimitHeaders(rateLimitCheck.userLimit),
+      'X-RateLimit-Remaining-IP': rateLimitCheck.ipLimit.remaining.toString(),
+    };
+
     return NextResponse.json({
       success: true,
       message: "Series submitted successfully and is pending review",
@@ -158,6 +203,12 @@ export async function POST(request: NextRequest) {
         submittedAt: submission.created_at,
         coverUrl: coverImageUrl,
       },
+      rateLimit: {
+        userRemaining: rateLimitCheck.userLimit.remaining - 1,
+        ipRemaining: rateLimitCheck.ipLimit.remaining - 1,
+      },
+    }, {
+      headers: rateLimitHeaders,
     });
 
   } catch (error) {

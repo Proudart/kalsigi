@@ -5,9 +5,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "next lint",
-    "partytown": "partytown copylib public/~partytown"
+    "partytown": "partytown copylib public/~partytown",
+    "bundle-analyzer": "npx @next/bundle-analyzer .next",
+    "size-check": "npx bundlesize"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.821.0",

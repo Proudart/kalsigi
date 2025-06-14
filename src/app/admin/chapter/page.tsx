@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import ChapterApprovalInterface from '@//components/admin/ChapterApprovalInterface';
+import { DynamicChapterApprovalInterface } from '@//components/dynamic/DynamicComponents';
 import { auth } from '@/lib/auth';
 import { headers } from "next/headers";
 
@@ -19,5 +19,5 @@ export default async function AdminGroupsPage() {
     redirect('/');
   }
 
-  return <ChapterApprovalInterface />;
+  return <DynamicChapterApprovalInterface />;
 }

@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import GroupApprovalInterface from '@//components/admin/GroupApprovalInterface';
+import { DynamicGroupApprovalInterface } from '@//components/dynamic/DynamicComponents';
 import { auth } from '@/lib/auth';
 import { headers } from "next/headers";
 
@@ -19,5 +19,5 @@ export default async function AdminGroupsPage() {
     redirect('/');
   }
 
-  return <GroupApprovalInterface />;
+  return <DynamicGroupApprovalInterface />;
 }

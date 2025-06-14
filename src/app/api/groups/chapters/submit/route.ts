@@ -5,6 +5,7 @@ import { scanlationGroups, chapterSubmissions, series, chapters } from "../../..
 import { eq, and } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { generateR2Paths, convertToWebP, uploadToR2 } from '@/lib/r2';
+import { uploadRateLimiters, checkDualRateLimit, formatRateLimitHeaders, createRateLimitResponse } from '@/lib/rate-limit';
 
 const chapterSubmissionSchema = z.object({
   series_id: z.string().uuid("Invalid series ID"),
@@ -19,6 +20,40 @@ export async function POST(request: NextRequest) {
     const session = await auth.api.getSession({ headers: request.headers });
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Rate limiting check
+    const rateLimitCheck = checkDualRateLimit(
+      request,
+      uploadRateLimiters.chapterUpload,
+      uploadRateLimiters.chapterUploadByIp,
+      session.user.id
+    );
+
+    if (rateLimitCheck.isBlocked) {
+      const headers = formatRateLimitHeaders(
+        rateLimitCheck.userLimit.isLimited ? rateLimitCheck.userLimit : rateLimitCheck.ipLimit
+      );
+      
+      const message = rateLimitCheck.userLimit.isLimited 
+        ? `Too many chapter uploads. You can upload ${uploadRateLimiters.chapterUpload.check(request).remaining} more chapters in the next hour.`
+        : 'Too many chapter uploads from this IP address. Please try again later.';
+      
+      return new NextResponse(
+        JSON.stringify({ 
+          error: message,
+          type: 'RATE_LIMIT_EXCEEDED',
+          userRemaining: rateLimitCheck.userLimit.remaining,
+          ipRemaining: rateLimitCheck.ipLimit.remaining
+        }),
+        {
+          status: 429,
+          headers: {
+            'Content-Type': 'application/json',
+            ...headers,
+          },
+        }
+      );
     }
 
     const formData = await request.formData();
@@ -195,6 +230,16 @@ export async function POST(request: NextRequest) {
         created_at: chapterSubmissions.created_at,
       });
 
+    // Increment rate limit counters on successful submission
+    rateLimitCheck.userLimit.increment();
+    rateLimitCheck.ipLimit.increment();
+
+    // Add rate limit headers to successful response
+    const rateLimitHeaders = {
+      ...formatRateLimitHeaders(rateLimitCheck.userLimit),
+      'X-RateLimit-Remaining-IP': rateLimitCheck.ipLimit.remaining.toString(),
+    };
+
     return NextResponse.json({
       success: true,
       message: "Chapter submitted successfully and is pending review",
@@ -207,6 +252,12 @@ export async function POST(request: NextRequest) {
         has_end_image: endImageUrl !== null,
         submitted_at: submission.created_at,
       },
+      rateLimit: {
+        userRemaining: rateLimitCheck.userLimit.remaining - 1,
+        ipRemaining: rateLimitCheck.ipLimit.remaining - 1,
+      },
+    }, {
+      headers: rateLimitHeaders,
     });
   } catch (error) {
     console.error("Error processing chapter submission:", error);

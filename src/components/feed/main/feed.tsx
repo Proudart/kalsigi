@@ -7,6 +7,7 @@ import BookmarkButton from "../bookmarked";
 import { Badge } from "../../../components/ui/badge";
 import { Clock, BookOpen } from "lucide-react";
 import FeedSkeleton from "./feedSkeleton";
+import { getBaseUrl } from "../../../lib/utils";
 
 type Manga = {
   publisher: any;
@@ -33,8 +34,7 @@ const MangaImage = ({ src, alt }: { src: string; alt: string }) => (
 );
 
 async function fetchMangaData(genre: string, offset: number): Promise<Manga[]> {
-  const url = `https://www.${process.env.site_name}.com/api/feed/genre?offset=${offset}&genre=${genre}`;
-  // const url = `http://localhost:3000/api/feed/genre?offset=${offset}&genre=${genre}`;
+  const url = `${getBaseUrl()}/api/feed/genre?offset=${offset}&genre=${genre}`;
   const res = await fetch(url, {
     next: { revalidate: 100 },
   });

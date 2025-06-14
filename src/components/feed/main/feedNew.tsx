@@ -6,6 +6,7 @@ import { ScrollArea } from "../../../components/ui/scroll-area";
 import { ChevronRight } from "lucide-react";
 import { Link } from "../../../components/link";
 import FeedNewSkeleton from "./feedNewSkeleton";
+import { getBaseUrl } from "../../../lib/utils";
 
 type Manga = {
   publisher: any;
@@ -21,8 +22,7 @@ type Manga = {
 };
 
 async function fetchMangaData(sort: string, offset: number): Promise<Manga[]> {
-  const url = `https://www.${process.env.site_name}.com/api/feed/series?offset=${offset}&sort=${sort}`;
-  // const url = `http://localhost:3000/api/feed/series?offset=${offset}&sort=${sort}`;
+  const url = `${getBaseUrl()}/api/feed/series?offset=${offset}&sort=${sort}`;
 
   const res = await fetch(url, {
     next: { revalidate: 3600 }, // Revalidate every 1 hour (3600 seconds)

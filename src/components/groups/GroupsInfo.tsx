@@ -4,6 +4,7 @@ import { Link } from "@//components/link";
 import { Users, BookOpen, User, Calendar, TrendingUp, Star } from "lucide-react";
 import { Badge } from "@//components/ui/badge";
 import { Skeleton } from "@//components/ui/skeleton";
+import { getBaseUrl } from "@//lib/utils";
 
 interface Group {
   id: string;
@@ -18,12 +19,7 @@ interface Group {
 
 async function fetchGroups(): Promise<Group[]> {
   try {
-    const isProduction = process.env.NODE_ENV === "production";
-    const baseUrl = isProduction
-      ? `https://www.${process.env.site_name}.com`
-      : "http://localhost:3000";
-
-    const response = await fetch(`${baseUrl}/api/groups/all`, {
+    const response = await fetch(`${getBaseUrl()}/api/groups/all`, {
       next: { revalidate: 3600 },
     });
 

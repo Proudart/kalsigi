@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { getBaseUrl } from '../lib/utils';
 
 interface SitemapEntry {
   url: string;
@@ -55,7 +56,7 @@ function getAssignedUrlsForDate(
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
-    const fetchUrl = `https://www.${process.env.site_name}.com/api/chaptersxml`;
+    const fetchUrl = `${getBaseUrl()}/api/chaptersxml`;
     const response = await fetch(fetchUrl);
     const chapters = await response.json();
 
@@ -64,7 +65,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const urls = [];
       
       urls.push({
-        url: `https://www.${process.env.site_name}.com/series/${series.url}-${series.url_code}`,
+        url: `${getBaseUrl()}/series/${series.url}-${series.url_code}`,
         lastModified: new Date(series.updated_at),
       });
 
@@ -73,7 +74,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         const publisherSlug = chapter.publisher?.toLowerCase().replace(/\s+/g, '-') || 'unknown';
 
         urls.push({
-          url: `https://www.${process.env.site_name}.com/series/${series.url}-${series.url_code}/${publisherSlug}/chapter-${chapter.chapter_number}`,
+          url: `${getBaseUrl()}/series/${series.url}-${series.url_code}/${publisherSlug}/chapter-${chapter.chapter_number}`,
           lastModified: new Date(chapter.published_at),
         });
       });
@@ -101,7 +102,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Initialize sitemap URLs array with homepage
     let sitemapUrls: SitemapEntry[] = [
       {
-        url: `https://www.${process.env.site_name}.com`,
+        url: getBaseUrl(),
         lastModified: new Date(),
       }
     ];
@@ -148,7 +149,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Error generating sitemap:', error);
     return [
       {
-        url: `https://www.${process.env.site_name}.com`,
+        url: getBaseUrl(),
         lastModified: new Date(),
       }
     ];

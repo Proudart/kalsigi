@@ -13,7 +13,7 @@ export const DynamicChapterApprovalInterface = dynamic(
   () => import('@//components/admin/ChapterApprovalInterface'),
   {
     loading: LoadingSpinner,
-    ssr: false
+    ssr: true
   }
 );
 
@@ -21,7 +21,7 @@ export const DynamicSeriesApprovalInterface = dynamic(
   () => import('@//components/admin/SeriesApprovalInterface'),
   {
     loading: LoadingSpinner,
-    ssr: false
+    ssr: true
   }
 );
 
@@ -29,7 +29,7 @@ export const DynamicGroupApprovalInterface = dynamic(
   () => import('@//components/admin/GroupApprovalInterface'),
   {
     loading: LoadingSpinner,
-    ssr: false
+    ssr: true
   }
 );
 
@@ -38,7 +38,7 @@ export const DynamicGroupCreationForm = dynamic(
   () => import('@//components/groups/GroupCreationForm'),
   {
     loading: LoadingSpinner,
-    ssr: false
+    ssr: true
   }
 );
 
@@ -46,7 +46,7 @@ export const DynamicGroupDashboard = dynamic(
   () => import('@//components/groups/GroupDashboard'),
   {
     loading: LoadingSpinner,
-    ssr: false
+    ssr: true
   }
 );
 
@@ -54,7 +54,7 @@ export const DynamicMemberManagement = dynamic(
   () => import('@//components/groups/MemberManagement').then(mod => mod.MemberManagement),
   {
     loading: LoadingSpinner,
-    ssr: false
+    ssr: true
   }
 );
 
@@ -62,7 +62,7 @@ export const DynamicInviteModal = dynamic(
   () => import('@//components/groups/InviteModal').then(mod => mod.InviteModal),
   {
     loading: LoadingSpinner,
-    ssr: false
+    ssr: true
   }
 );
 
@@ -95,7 +95,7 @@ export const DynamicContinue = dynamic(
   () => import('@//components/feed/continue/continue'),
   {
     loading: LoadingSpinner,
-    ssr: false // User-specific, no SSR needed
+    ssr: true // User-specific, no SSR needed
   }
 );
 
@@ -120,7 +120,7 @@ export const DynamicChapterChat = dynamic(
   () => import('@//components/chapter/chapterChat'),
   {
     loading: LoadingSpinner,
-    ssr: false // Interactive component, no SSR needed
+    ssr: true // Interactive component, no SSR needed
   }
 );
 
@@ -129,7 +129,7 @@ export const DynamicFramerMotion = dynamic(
   () => import('framer-motion').then(mod => ({ default: mod.motion.div })),
   {
     loading: LoadingSpinner,
-    ssr: false
+    ssr: true
   }
 ) as ComponentType<any>;
 
@@ -146,7 +146,7 @@ export const DynamicAddChapterForm = dynamic(
   () => import('@//components/groups/addChapter/addChapterForm'),
   {
     loading: LoadingSpinner,
-    ssr: false
+    ssr: true
   }
 );
 
@@ -154,7 +154,7 @@ export const DynamicAddSeriesForm = dynamic(
   () => import('@//components/groups/addSeries/addSeriesForm'),
   {
     loading: LoadingSpinner,
-    ssr: false
+    ssr: true
   }
 );
 
@@ -163,7 +163,7 @@ export const DynamicSettingsForm = dynamic(
   () => import('@//components/auth/settings/settingsForm'),
   {
     loading: LoadingSpinner,
-    ssr: false
+    ssr: true
   }
 );
 
@@ -171,7 +171,7 @@ export const DynamicLogin = dynamic(
   () => import('@//components/auth/login').then(mod => mod.SignInForm),
   {
     loading: LoadingSpinner,
-    ssr: false
+    ssr: true
   }
 );
 
@@ -179,6 +179,6 @@ export const DynamicRegister = dynamic(
   () => import('@//components/auth/register').then(mod => mod.SignUpForm),
   {
     loading: LoadingSpinner,
-    ssr: false
+    ssr: true
   }
 );

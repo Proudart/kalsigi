@@ -124,15 +124,6 @@ export const DynamicChapterChat = dynamic(
   }
 );
 
-// Heavy Libraries - Load only when needed
-export const DynamicFramerMotion = dynamic(
-  () => import('framer-motion').then(mod => ({ default: mod.motion.div })),
-  {
-    loading: LoadingSpinner,
-    ssr: true
-  }
-) as ComponentType<any>;
-
 export const DynamicCarousel = dynamic(
   () => import('@//components/ui/carousel').then(mod => mod.Carousel),
   {

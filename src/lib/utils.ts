@@ -17,11 +17,11 @@ export function getAuthUrls() {
   return {
     baseURL: process.env.NODE_ENV === 'development' 
       ? 'http://localhost:3000' 
-      : `https://www.${siteName}.com`,
+      : `https://www.manhwacall.com`,
     trustedOrigins: [
       'http://localhost:3000',
-      `https://www.${siteName}.com`,
-      `https://${siteName}.com`
+      `https://www.manhwacall.com`,
+      `https://manhwacall.com`
     ]
   };
 }

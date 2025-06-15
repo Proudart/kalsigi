@@ -13,11 +13,8 @@ export function getBaseUrl(): string {
 }
 
 export function getAuthUrls() {
-  const siteName = process.env.site_name;
   return {
-    baseURL: process.env.NODE_ENV === 'development' 
-      ? 'http://localhost:3000' 
-      : `https://www.manhwacall.com`,
+    baseURL: `https://manhwacall.com`,
     trustedOrigins: [
       'http://localhost:3000',
       `https://www.manhwacall.com`,

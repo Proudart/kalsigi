@@ -78,23 +78,24 @@ const BookmarkButton = React.memo(function BookmarkButton({ seriesUrl }: { serie
       <button
         onClick={handleBookmark}
         className={`
-          relative inline-flex items-center
-          p-2 rounded-lg transition-all duration-300 ease-in-out
+          relative inline-flex items-center justify-center
+          w-8 h-8 rounded-full transition-all duration-200 ease-in-out
           ${isBookmarked 
-            ? 'bg-primary-100 hover:bg-primary-200' 
-            : 'bg-gray-800/80 hover:bg-gray-700/80'}
+            ? 'bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/20 dark:hover:bg-blue-900/30' 
+            : 'bg-gray-900/80 hover:bg-gray-900/90 dark:bg-gray-800/80 dark:hover:bg-gray-800/90'}
           shadow-sm hover:shadow-md
           ${isShaking ? 'animate-[wiggle_0.5s_ease-in-out]' : ''}
-          hover:scale-105 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50
+          hover:scale-105 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900
+          min-h-[44px] min-w-[44px]
         `}
         aria-label={isBookmarked ? "Remove from bookmarks" : "Add to bookmarks"}
         aria-pressed={isBookmarked}
         title={isBookmarked ? "Remove from bookmarks" : "Add to bookmarks"}
       >
         {isBookmarked ? (
-          <BookmarkCheck className="w-5 h-5 text-primary-600" />
+          <BookmarkCheck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
         ) : (
-          <Bookmark className="w-5 h-5 text-white/80 hover:text-white" />
+          <Bookmark className="w-4 h-4 text-white/90" />
         )}
       </button>
       <style jsx global>{`

@@ -5,8 +5,29 @@
       "Bash(npm install:*)",
       "Bash(npm run lint)",
       "Bash(rm:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npm cache clean:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(curl:*)",
+      "Bash(npm run dev:*)",
+      "Bash(./node_modules/.bin/mcp-server-puppeteer)"
     ],
-    "deny": []
+    "deny": [],
+    "defaultMode": "acceptEdits"
+  },
+  "mcpServers": {
+        "puppeteer": {
+          "command": "npx",
+          "args": ["-y", "@modelcontextprotocol/server-puppeteer"]
+        }
+      },
+      "puppeteer-mcp-claude": {
+      "command": "npx",
+      "args": ["puppeteer-mcp-claude", "serve"],
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
   }
-}
+      
+    

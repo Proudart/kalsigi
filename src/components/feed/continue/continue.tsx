@@ -76,15 +76,15 @@ const Continue = async () => {
   const hasBookmark = titles.length > 0;
   const data = hasBookmark ? await fetchData(titles) : [];
   return (
-    <div>
-      {hasBookmark && data ? (
-        <Suspense fallback={<ContinueSkeleton />}>
-          <ContinueContent data={data} />
-        </Suspense>
-      ) : (
-        <div></div>
-      )}
-    </div>
+    <>
+      {hasBookmark && data && data.length > 0 ? (
+        <div className="bg-background-800 rounded-xl shadow-lg border border-background-700 p-6">
+          <Suspense fallback={<ContinueSkeleton />}>
+            <ContinueContent data={data} />
+          </Suspense>
+        </div>
+      ) : null}
+    </>
   );
 };
 

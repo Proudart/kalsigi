@@ -94,20 +94,28 @@ const DiscoverManga: React.FC = () => {
   };
 
   return (
-    <section className="mt-8 bg-background-100 rounded-lg shadow-md ">
-      <h2 className="text-2xl font-bold mb-4 text-text-900">Discover Manga</h2>
-      <div className="flex flex-col sm:flex-row gap-4 mb-4">
-        <div className="flex grow">
+    <section className="space-y-6">
+      <div>
+        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white tracking-tight mb-2">
+          Discover Manga
+        </h2>
+        <p className="text-base text-gray-600 dark:text-gray-300 leading-relaxed">
+          Find your next favorite series from our extensive collection
+        </p>
+      </div>
+      
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex-1">
           <Input
             type="text"
             placeholder="Search manga..."
-            className="grow"
+            className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <select
-          className="border rounded-md py-1 px-3 bg-background-300 text-text-900"
+          className="w-full sm:w-auto px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 appearance-none text-gray-900 dark:text-white transition-colors duration-200"
           value={genre}
           onChange={(e) => setGenre(e.target.value)}
         >
@@ -147,47 +155,51 @@ const DiscoverManga: React.FC = () => {
           <option value="Yaoi">Yaoi</option>
         </select>
       </div>
-      <ScrollArea className="w-full whitespace-nowrap rounded-md border bg-background-300">
-        <div className="flex w-max space-x-4 p-4">
+      
+      <ScrollArea className="w-full whitespace-nowrap">
+        <div className="flex w-max space-x-4 pb-4">
           {isLoading ? (
             <MangaSkeleton />
           ) : results.length > 0 ? (
             results.map((manga, index) => (
-              <div key={manga.url + index} className="w-[150px] space-y-3">
-                <div className="relative">
+              <div key={manga.url + index} className="w-[160px] md:w-[180px] group">
+                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                  <div className="relative overflow-hidden rounded-lg mb-3">
+                    <Link
+                      href={`/series/${manga.url}-${manga.url_code}`}
+                      prefetch={true}
+                    >
+                      <div className="aspect-[3/4] bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                        <SeriesImage
+                          src={manga.cover_image_url}
+                          alt={manga.title}
+                          width={180}
+                          height={240}
+                        />
+                      </div>
+                    </Link>
+                    <BookmarkButton seriesUrl={manga.url} />
+                  </div>
                   <Link
                     href={`/series/${manga.url}-${manga.url_code}`}
                     prefetch={true}
                   >
-                    <SeriesImage
-                      src={manga.cover_image_url}
-                      alt={manga.title}
-                      width={150}
-                      height={200}
-                    />
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
+                      {manga.title}
+                    </h3>
                   </Link>
-                  <BookmarkButton seriesUrl={manga.url} />
                 </div>
-                <Link
-                  href={`/series/${manga.url}-${manga.url_code}`}
-                  prefetch={true}
-                >
-                  <h3 className="font-semibold text-sm text-text-900 line-clamp-2 space-y-2">
-                    {manga.title}
-                  </h3>
-                </Link>
               </div>
             ))
           ) : (
-            <div className="py-8 px-4 text-center w-full">
-              <p className="text-text-600">No manga found. Try another search.</p>
+            <div className="w-full py-16 text-center">
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-8">
+                <p className="text-sm text-gray-500 dark:text-gray-400">No manga found. Try another search.</p>
+              </div>
             </div>
           )}
         </div>
-        <ScrollBar
-          orientation="horizontal"
-          className="bg-primary-100 hover:bg-primary-200"
-        />
+        <ScrollBar orientation="horizontal" className="h-2" />
       </ScrollArea>
     </section>
   );

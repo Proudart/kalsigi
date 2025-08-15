@@ -1,4 +1,3 @@
-import MillionLint from '@million/lint';
 
 import withPWA from 'next-pwa';
 

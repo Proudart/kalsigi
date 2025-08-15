@@ -63,7 +63,7 @@ export async function POST(request: NextRequest, props: { params: Promise<{ slug
     return NextResponse.json({ message: 'Invitation sent', invitationId: invitation.id });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: 'Invalid input', details: error.errors }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid input', details: error.issues }, { status: 400 });
     }
     console.error('Error sending invitation:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

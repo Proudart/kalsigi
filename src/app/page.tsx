@@ -46,48 +46,72 @@ const Feed = dynamic(() => import("../components/feed/main/feed"), {
 
 export default function Home() {
   return (
-    <div className="space-y-12 grow container mx-auto px-4 py-8">
-      <Suspense fallback={<DiscoverMangaSkeleton />}>
-        <DiscoverManga />
-      </Suspense>
+    <div className="min-h-screen bg-background-100">
+      <div className="w-full px-4 py-8">
+        <div className="space-y-8">
+          {/* Hero Section - Discover Manga */}
+          <div className="bg-background-800 rounded-xl shadow-lg border border-background-700 p-6">
+            <Suspense fallback={<DiscoverMangaSkeleton />}>
+              <DiscoverManga />
+            </Suspense>
+          </div>
 
-      <Suspense fallback={<UpdatedSkeleton />}>
-        <Updated />
-      </Suspense>
-
-      <Suspense fallback={<ContinueSkeleton />}>
-        <Continue />
-      </Suspense>
-
-      <Suspense fallback={<RecommendedSkeleton />}>
-        <Recommended />
-      </Suspense>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <Suspense fallback={<FeedNewSkeleton title="Latest Updates" />}>
-          <FeedNew title="Latest Updates" />
-        </Suspense>
-        
-        <Suspense fallback={<FeedNewSkeleton title="Trending" />}>
-          <FeedNew title="Trending" />
-        </Suspense>
-      </div>
-
-      <div className="space-y-12 mx-auto pb-8"> 
-        {/* Using a list of genres to map through and create Feed components */}
-        {[
-          "Fantasy", "Webtoons", "Action", "Adventure", "Shounen", 
-          "Drama", "Seinen", "Martial Arts", "Supernatural", "Romance", 
-          "Comedy", "Harem", "School Life", "Mature", "Historical", 
-          "Shoujo", "Slice of Life", "Psychological", "Josei", "Adult", 
-          "Sci-fi", "Shounen Ai", "Sports", "Tragedy", "Doujinshi", 
-          "Horror", "Mystery", "Shoujo Ai", "One Shot", "Yaoi", 
-          "Gender Bender", "Ecchi", "Mecha"
-        ].map((genre) => (
-          <Suspense key={genre} fallback={<FeedSkeleton title={genre} />}>
-            <Feed title={genre} />
+          {/* Continue Reading Section */}
+          <Suspense fallback={<ContinueSkeleton />}>
+            <Continue />
           </Suspense>
-        ))}
+
+          {/* Featured Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Updated Series */}
+            <div className="bg-background-800 rounded-xl shadow-lg border border-background-700 p-6">
+              <Suspense fallback={<UpdatedSkeleton />}>
+                <Updated />
+              </Suspense>
+            </div>
+
+            {/* Recommended Series */}
+            <div className="bg-background-800 rounded-xl shadow-lg border border-background-700 p-6">
+              <Suspense fallback={<RecommendedSkeleton />}>
+                <Recommended />
+              </Suspense>
+            </div>
+          </div>
+
+          {/* Latest & Trending Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-background-800 rounded-xl shadow-lg border border-background-700 p-6">
+              <Suspense fallback={<FeedNewSkeleton title="Latest Updates" />}>
+                <FeedNew title="Latest Updates" />
+              </Suspense>
+            </div>
+            
+            <div className="bg-background-800 rounded-xl shadow-lg border border-background-700 p-6">
+              <Suspense fallback={<FeedNewSkeleton title="Trending" />}>
+                <FeedNew title="Trending" />
+              </Suspense>
+            </div>
+          </div>
+
+          {/* Genre Sections */}
+          <div className="space-y-8">
+            {[
+              "Fantasy", "Webtoons", "Action", "Adventure", "Shounen", 
+              "Drama", "Seinen", "Martial Arts", "Supernatural", "Romance", 
+              "Comedy", "Harem", "School Life", "Mature", "Historical", 
+              "Shoujo", "Slice of Life", "Psychological", "Josei", "Adult", 
+              "Sci-fi", "Shounen Ai", "Sports", "Tragedy", "Doujinshi", 
+              "Horror", "Mystery", "Shoujo Ai", "One Shot", "Yaoi", 
+              "Gender Bender", "Ecchi", "Mecha"
+            ].map((genre) => (
+              <div key={genre} className="bg-background-800 rounded-xl shadow-lg border border-background-700 p-6">
+                <Suspense fallback={<FeedSkeleton title={genre} />}>
+                  <Feed title={genre} />
+                </Suspense>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

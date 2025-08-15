@@ -30,46 +30,53 @@ const SeriesImage = ({
 
 const RecommendedContent = ({ data }: { data: any[] }) => {
   return (
-    <div>
-      <section>
-        <h2 className="text-2xl font-bold mb-4">Recommended</h2>
-        <ScrollArea className="w-full whitespace-nowrap rounded-md border bg-background-300">
-          <div className="flex w-max space-x-4 p-4">
-            {data.map((manga, index) => (
-              <div key={manga.url + index} className="w-[150px] space-y-3">
-                <div className="relative">
-                  {/* Image wrapped in Link */}
+    <section className="space-y-6" data-testid="recommended">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 dark:text-white tracking-tight">
+          Recommended for You
+        </h2>
+        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300" data-testid="recommended-badge">
+          {data.length} series
+        </span>
+      </div>
+      
+      <ScrollArea className="w-full whitespace-nowrap">
+        <div className="flex w-max space-x-4 pb-4">
+          {data.map((manga, index) => (
+            <div key={manga.url + index} className="w-[160px] md:w-[180px] group">
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                <div className="relative overflow-hidden rounded-lg mb-3">
                   <Link
                     href={`/series/${manga.url}-${manga.url_code}`}
                     prefetch={true}
                   >
-                    <SeriesImage
-                      src={manga.cover_image_url}
-                      alt={manga.title}
-                      width={150}
-                      height={200}
-                    />
+                    <div className="aspect-[3/4] bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                      <SeriesImage
+                        src={manga.cover_image_url}
+                        alt={manga.title}
+                        width={180}
+                        height={240}
+                      />
+                    </div>
                   </Link>
-                  {/* BookmarkButton outside of Link */}
                   <BookmarkButton seriesUrl={manga.url} />
                 </div>
                 
-                {/* Title in separate Link */}
                 <Link
                   href={`/series/${manga.url}-${manga.url_code}`}
                   prefetch={true}
                 >
-                  <h3 className="font-semibold text-sm text-text-900 line-clamp-2">
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
                     {manga.title}
                   </h3>
                 </Link>
               </div>
-            ))}
-          </div>
-          <ScrollBar orientation="horizontal" className="bg-primary-100 hover:bg-primary-200" />
-        </ScrollArea>
-      </section>
-    </div>
+            </div>
+          ))}
+        </div>
+        <ScrollBar orientation="horizontal" className="h-2" />
+      </ScrollArea>
+    </section>
   );
 };
 

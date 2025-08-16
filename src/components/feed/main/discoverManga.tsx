@@ -96,10 +96,10 @@ const DiscoverManga: React.FC = () => {
   return (
     <section className="space-y-6">
       <div>
-        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white tracking-tight mb-2">
+        <h2 className="text-4xl md:text-5xl font-bold text-text-900 tracking-tight mb-2">
           Discover Manga
         </h2>
-        <p className="text-base text-gray-600 dark:text-gray-300 leading-relaxed">
+        <p className="text-base text-text-600 leading-relaxed">
           Find your next favorite series from our extensive collection
         </p>
       </div>
@@ -109,13 +109,13 @@ const DiscoverManga: React.FC = () => {
           <Input
             type="text"
             placeholder="Search manga..."
-            className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
+            className="w-full px-4 py-3 bg-background-50 border border-background-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <select
-          className="w-full sm:w-auto px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 appearance-none text-gray-900 dark:text-white transition-colors duration-200"
+          className="w-full sm:w-auto px-4 py-3 bg-background-50 border border-background-300 rounded-lg focus:ring-2 focus:ring-primary-500 appearance-none text-text-900 transition-colors duration-200"
           value={genre}
           onChange={(e) => setGenre(e.target.value)}
         >
@@ -156,20 +156,20 @@ const DiscoverManga: React.FC = () => {
         </select>
       </div>
       
-      <ScrollArea className="w-full whitespace-nowrap">
-        <div className="flex w-max space-x-4 pb-4">
+      <ScrollArea className="w-full whitespace-nowrap bg-background-500 rounded-lg border p-4">
+        <div className="flex w-max space-x-4">
           {isLoading ? (
             <MangaSkeleton />
           ) : results.length > 0 ? (
             results.map((manga, index) => (
               <div key={manga.url + index} className="w-[160px] md:w-[180px] group">
-                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                <div className="bg-background-100 rounded-lg p-3 hover:bg-background-300 transition-colors duration-200 border">
                   <div className="relative overflow-hidden rounded-lg mb-3">
                     <Link
                       href={`/series/${manga.url}-${manga.url_code}`}
                       prefetch={true}
                     >
-                      <div className="aspect-[3/4] bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                      <div className="aspect-[3/4] bg-background-300 rounded-lg overflow-hidden">
                         <SeriesImage
                           src={manga.cover_image_url}
                           alt={manga.title}
@@ -184,7 +184,7 @@ const DiscoverManga: React.FC = () => {
                     href={`/series/${manga.url}-${manga.url_code}`}
                     prefetch={true}
                   >
-                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
+                    <h3 className="text-sm font-semibold text-text-900 line-clamp-2 group-hover:text-primary-600 transition-colors duration-200">
                       {manga.title}
                     </h3>
                   </Link>
@@ -193,8 +193,8 @@ const DiscoverManga: React.FC = () => {
             ))
           ) : (
             <div className="w-full py-16 text-center">
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-8">
-                <p className="text-sm text-gray-500 dark:text-gray-400">No manga found. Try another search.</p>
+              <div className="bg-background-100 rounded-lg p-8 border">
+                <p className="text-sm text-text-600">No manga found. Try another search.</p>
               </div>
             </div>
           )}

@@ -32,25 +32,25 @@ const RecommendedContent = ({ data }: { data: any[] }) => {
   return (
     <section className="space-y-6" data-testid="recommended">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 dark:text-white tracking-tight">
+        <h2 className="text-2xl md:text-3xl font-semibold text-text-900 tracking-tight">
           Recommended for You
         </h2>
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300" data-testid="recommended-badge">
+        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-200 text-text-900" data-testid="recommended-badge">
           {data.length} series
         </span>
       </div>
       
-      <ScrollArea className="w-full whitespace-nowrap">
-        <div className="flex w-max space-x-4 pb-4">
+      <ScrollArea className="w-full whitespace-nowrap bg-background-500 rounded-lg border p-4">
+        <div className="flex w-max space-x-4">
           {data.map((manga, index) => (
             <div key={manga.url + index} className="w-[160px] md:w-[180px] group">
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+              <div className="bg-background-100 rounded-lg p-3 hover:bg-background-300 transition-colors duration-200 border">
                 <div className="relative overflow-hidden rounded-lg mb-3">
                   <Link
                     href={`/series/${manga.url}-${manga.url_code}`}
                     prefetch={true}
                   >
-                    <div className="aspect-[3/4] bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                    <div className="aspect-[3/4] bg-background-300 rounded-lg overflow-hidden">
                       <SeriesImage
                         src={manga.cover_image_url}
                         alt={manga.title}
@@ -66,7 +66,7 @@ const RecommendedContent = ({ data }: { data: any[] }) => {
                   href={`/series/${manga.url}-${manga.url_code}`}
                   prefetch={true}
                 >
-                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
+                  <h3 className="text-sm font-semibold text-text-900 line-clamp-2 group-hover:text-primary-600 transition-colors duration-200">
                     {manga.title}
                   </h3>
                 </Link>

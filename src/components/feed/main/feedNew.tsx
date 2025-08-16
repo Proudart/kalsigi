@@ -71,7 +71,7 @@ export default async function FeedNew({ title }: Props) {
   if (error) {
     return (
       <section className="space-y-6">
-        <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 dark:text-white tracking-tight">{title}</h2>
+        <h2 className="text-2xl md:text-3xl font-semibold text-text-900 tracking-tight">{title}</h2>
         <div className="h-[400px] w-full bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center justify-center">
           <p className="text-sm text-red-700 dark:text-red-300">Unable to load data. Please try again later.</p>
         </div>
@@ -87,32 +87,32 @@ export default async function FeedNew({ title }: Props) {
   return (
     <section className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 dark:text-white tracking-tight">
+        <h2 className="text-2xl md:text-3xl font-semibold text-text-900 tracking-tight">
           {title}
         </h2>
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
+        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-200 text-text-900">
           {data.length} series
         </span>
       </div>
       
-      <div className="bg-gray-50 dark:bg-gray-800 rounded-lg">
+      <div className="bg-background-500 rounded-lg border p-4">
         <ScrollArea className="h-[400px] w-full">
-          <div className="p-2">
+          <div className="space-y-2">
             {data.map((manga, index) => (
-              <div key={manga.title} className="flex items-center space-x-4 p-4 bg-white dark:bg-gray-900 rounded-lg mb-2 last:mb-0 hover:shadow-sm transition-shadow duration-200 border border-gray-100 dark:border-gray-800">
+              <div key={manga.title} className="flex items-center space-x-4 p-4 bg-background-100 rounded-lg hover:shadow-sm transition-shadow duration-200 border border-background-300">
                 {title === "Trending" && (
-                  <div className="flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 font-bold text-sm rounded-full">
+                  <div className="flex items-center justify-center w-8 h-8 bg-primary-200 text-text-900 font-bold text-sm rounded-full">
                     {index + 1}
                   </div>
                 )}
 
-                <div className="w-[60px] h-[80px] bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden flex-shrink-0">
+                <div className="w-[60px] h-[80px] bg-background-300 rounded-lg overflow-hidden flex-shrink-0">
                   <MangaImage src={manga.cover_image_url} alt={manga.title} />
                 </div>
                 
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-                    <Link href={`/series/${manga.url}-${manga.url_code}`} prefetch={true} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
+                  <h3 className="font-semibold text-text-900 mb-2">
+                    <Link href={`/series/${manga.url}-${manga.url_code}`} prefetch={true} className="hover:text-primary-600 transition-colors duration-200">
                       {manga.title}
                     </Link>
                   </h3>
@@ -121,7 +121,7 @@ export default async function FeedNew({ title }: Props) {
                       <Link 
                         href={`/series/${manga.url}-${manga.url_code}/${manga.chapters[0].publisher.toLowerCase().replace(/\s+/g, '-')}/chapter-${manga.chapters[0].chapter_number}`} 
                         key={chapter.chapter_number} 
-                        className="text-sm text-gray-500 dark:text-gray-400 block hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200" 
+                        className="text-sm text-text-600 block hover:text-primary-600 transition-colors duration-200" 
                         prefetch={true}>
                         Chapter {chapter.chapter_number} • {chapter.published_at}
                       </Link>
@@ -129,7 +129,7 @@ export default async function FeedNew({ title }: Props) {
                   </div>
                 </div>
                 
-                <ChevronRight className="w-5 h-5 text-gray-400 dark:text-gray-500 flex-shrink-0" />
+                <ChevronRight className="w-5 h-5 text-text-500 flex-shrink-0" />
               </div>
             ))}
           </div>

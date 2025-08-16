@@ -2,15 +2,18 @@
 
 import { useTheme } from 'next-themes'
 import { IconSun, IconMoon } from "@tabler/icons-react";
+import { Button } from "./button";
 
 export const ThemeToggle = () => {
   const { theme, setTheme } = useTheme()
   return (
-    <button
+    <Button
+      variant="outline"
+      size="icon"
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-      className="px-2 py-2 rounded-md text-text-950 bg-secondary-200"
+      className="transition-interactive"
     >
-      {theme === 'light' ? <IconMoon /> : <IconSun />}
-    </button>
+      {theme === 'light' ? <IconMoon className="h-4 w-4" /> : <IconSun className="h-4 w-4" />}
+    </Button>
   );
 };

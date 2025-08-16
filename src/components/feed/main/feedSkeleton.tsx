@@ -15,7 +15,7 @@ export default function FeedSkeleton({ title }: Props) {
         ) : (
           <Skeleton className="h-8 w-40 mb-4" />
         )}
-        <ScrollArea className="w-full whitespace-nowrap rounded-md border bg-background-300">
+        <ScrollArea className="w-full whitespace-nowrap rounded-md border bg-background-50">
           <div className="flex w-max space-x-4 p-4">
             {Array(10).fill(0).map((_, index) => (
               <div key={index} className="w-[150px] space-y-3">
@@ -34,7 +34,7 @@ export default function FeedSkeleton({ title }: Props) {
               </div>
             ))}
           </div>
-          <ScrollBar orientation="horizontal" className="bg-primary-100 hover:bg-primary-200" />
+          <ScrollBar orientation="horizontal" className="bg-background-200 hover:bg-background-300" />
         </ScrollArea>
       </div>
     </section>

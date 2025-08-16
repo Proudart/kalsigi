@@ -78,7 +78,7 @@ const Continue = async () => {
   return (
     <>
       {hasBookmark && data && data.length > 0 ? (
-        <div className="bg-background-800 rounded-xl shadow-lg border border-background-700 p-6">
+        <div className=" rounded-xl shadow-lg border border-background-700 p-6">
           <Suspense fallback={<ContinueSkeleton />}>
             <ContinueContent data={data} />
           </Suspense>

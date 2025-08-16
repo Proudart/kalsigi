@@ -50,7 +50,7 @@ export default function Home() {
       <div className="w-full px-4 py-8">
         <div className="space-y-8">
           {/* Hero Section - Discover Manga */}
-          <div className="bg-background-800 rounded-xl shadow-lg border border-background-700 p-6">
+          <div className="bg-primary-100 rounded-lg shadow-md border p-6">
             <Suspense fallback={<DiscoverMangaSkeleton />}>
               <DiscoverManga />
             </Suspense>
@@ -64,14 +64,14 @@ export default function Home() {
           {/* Featured Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Updated Series */}
-            <div className="bg-background-800 rounded-xl shadow-lg border border-background-700 p-6">
+            <div className="bg-primary-100 rounded-lg shadow-md border p-6">
               <Suspense fallback={<UpdatedSkeleton />}>
                 <Updated />
               </Suspense>
             </div>
 
             {/* Recommended Series */}
-            <div className="bg-background-800 rounded-xl shadow-lg border border-background-700 p-6">
+            <div className="bg-primary-100 rounded-lg shadow-md border p-6">
               <Suspense fallback={<RecommendedSkeleton />}>
                 <Recommended />
               </Suspense>
@@ -80,13 +80,13 @@ export default function Home() {
 
           {/* Latest & Trending Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-background-800 rounded-xl shadow-lg border border-background-700 p-6">
+            <div className="bg-primary-100 rounded-lg shadow-md border p-6">
               <Suspense fallback={<FeedNewSkeleton title="Latest Updates" />}>
                 <FeedNew title="Latest Updates" />
               </Suspense>
             </div>
             
-            <div className="bg-background-800 rounded-xl shadow-lg border border-background-700 p-6">
+            <div className="bg-primary-100 rounded-lg shadow-md border p-6">
               <Suspense fallback={<FeedNewSkeleton title="Trending" />}>
                 <FeedNew title="Trending" />
               </Suspense>
@@ -98,7 +98,7 @@ export default function Home() {
             {[
               "Fantasy", "Action", "Romance", "Drama", "Comedy"
             ].map((genre) => (
-              <div key={genre} className="bg-background-800 rounded-xl shadow-lg border border-background-700 p-6">
+              <div key={genre} className="bg-primary-100 rounded-lg shadow-md p-6">
                 <Suspense fallback={<FeedSkeleton title={genre} />}>
                   <Feed title={genre} />
                 </Suspense>

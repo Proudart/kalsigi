@@ -78,25 +78,25 @@ function ContinueContent({ data }: { data: Manga[] }) {
   return (
     <section className="space-y-6" data-testid="just-updated">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 dark:text-white tracking-tight">
+        <h2 className="text-2xl md:text-3xl font-semibold text-text-900 tracking-tight">
           Just Updated
         </h2>
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300" data-testid="updated-badge">
+        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-200 text-text-900" data-testid="updated-badge">
           {data.length} series
         </span>
       </div>
       
-      <ScrollArea className="w-full whitespace-nowrap">
-        <div className="flex w-max space-x-4 pb-4">
+      <ScrollArea className="w-full whitespace-nowrap bg-background-500 rounded-lg border p-4">
+        <div className="flex w-max space-x-4">
           {data.map((serie, index) => (
             <div key={serie.url + index} className="w-[160px] md:w-[180px] group">
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+              <div className="bg-background-100 rounded-lg p-3 hover:bg-background-300 transition-colors duration-200 border">
                 <div className="relative overflow-hidden rounded-lg mb-3">
                   <Link
                     href={`/series/${serie.url}-${serie.url_code}`}
                     prefetch={true}
                   >
-                    <div className="aspect-[3/4] bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                    <div className="aspect-[3/4] bg-background-300 rounded-lg overflow-hidden">
                       <SeriesImage
                         src={serie.cover_image_url}
                         alt={serie.title}
@@ -107,7 +107,7 @@ function ContinueContent({ data }: { data: Manga[] }) {
                     {new Date().getTime() -
                       new Date(serie.updated_at).getTime() <
                       24 * 60 * 60 * 1000 && (
-                      <div className="absolute top-2 right-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">
+                      <div className="absolute top-2 right-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-200 text-text-900">
                         Updated
                       </div>
                     )}
@@ -120,10 +120,10 @@ function ContinueContent({ data }: { data: Manga[] }) {
                     href={`/series/${serie.url}-${serie.url_code}/${serie.chapters[0].publisher.toLowerCase().replace(/\s+/g, '-')}/chapter-${serie.chapters[0].chapter_number}`}
                     prefetch={true}
                   >
-                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
+                    <h3 className="text-sm font-semibold text-text-900 line-clamp-2 group-hover:text-primary-600 transition-colors duration-200">
                       {serie.title}
                     </h3>
-                    <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
+                    <div className="flex items-center justify-between text-xs text-text-600 mt-2">
                       <div className="flex items-center space-x-1">
                         <BookOpen className="w-3 h-3" />
                         <span className="truncate">

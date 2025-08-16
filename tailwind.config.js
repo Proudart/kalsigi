@@ -55,6 +55,7 @@ module.exports = {
             800: 'var(--background-800)',
             900: 'var(--background-900)',
             950: 'var(--background-950)',
+            DEFAULT: 'var(--background-100)',
           },
           primary: {
             50: 'var(--primary-50)',
@@ -68,6 +69,8 @@ module.exports = {
             800: 'var(--primary-800)',
             900: 'var(--primary-900)',
             950: 'var(--primary-950)',
+            DEFAULT: 'var(--primary-600)',
+            foreground: 'var(--text-50)',
           },
           secondary: {
             50: 'var(--secondary-50)',
@@ -81,6 +84,8 @@ module.exports = {
             800: 'var(--secondary-800)',
             900: 'var(--secondary-900)',
             950: 'var(--secondary-950)',
+            DEFAULT: 'var(--secondary-600)',
+            foreground: 'var(--text-50)',
           },
           accent: {
             50: 'var(--accent-50)',
@@ -94,11 +99,46 @@ module.exports = {
             800: 'var(--accent-800)',
             900: 'var(--accent-900)',
             950: 'var(--accent-950)',
+            DEFAULT: 'var(--accent-600)',
+            foreground: 'var(--text-50)',
           },
-         
-  
-       
-      },
+          // Standard shadcn/ui tokens
+          border: 'var(--background-300)',
+          input: 'var(--background-300)',
+          ring: 'var(--primary-600)',
+          foreground: 'var(--text-800)',
+          card: {
+            DEFAULT: 'var(--background-800)',
+            foreground: 'var(--text-100)',
+          },
+          destructive: {
+            DEFAULT: '#ef4444',
+            foreground: '#fef2f2',
+          },
+          muted: {
+            DEFAULT: 'var(--background-200)',
+            foreground: 'var(--text-600)',
+          },
+        },
+        boxShadow: {
+          'xs': '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+          'sm': '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+          'DEFAULT': '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
+          'md': '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+          'lg': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+          'xl': '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
+          'none': 'none',
+        },
+        borderRadius: {
+          'none': '0',
+          'sm': '0.125rem',
+          'DEFAULT': '0.375rem',
+          'md': '0.375rem',
+          'lg': '0.5rem',
+          'xl': '0.75rem',
+          '2xl': '1rem',
+          'full': '9999px',
+        },
      
       keyframes: {
         "accordion-down": {

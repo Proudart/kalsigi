@@ -175,7 +175,7 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <main className="bg-background-100">
+              <main className="bg-background">
                 <Navbar logo={logo}  />
                 <div className="min-h-dvh">{children}</div>
                 <Cookie wrapperProps={{ className: 'cookie-consent' }} />

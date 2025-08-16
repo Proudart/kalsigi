@@ -52,7 +52,18 @@ async function validateSeriesUrl(baseUrl: string): Promise<string | null> {
 
   try {
     const { baseURL } = getAuthUrls();
-    const response = await fetch(`${baseURL}/api/title?url=${baseUrl}`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+    
+    const response = await fetch(`${baseURL}/api/title?url=${baseUrl}`, {
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    
+    clearTimeout(timeoutId);
+    
     if (response.ok) {
       const data = await response.json();
       const urlCode = data.url_code || '000000';
@@ -63,7 +74,14 @@ async function validateSeriesUrl(baseUrl: string): Promise<string | null> {
       return urlCode;
     }
   } catch (error) {
-    console.error('Error validating series URL:', error);
+    if (typeof error === 'object' && error !== null && 'name' in error && (error as { name: string }).name === 'AbortError') {
+      console.warn('Series URL validation timed out:', baseUrl);
+    } else {
+      console.error('Error validating series URL:', error);
+    }
+    
+    // Cache a failed result to avoid repeated requests
+    urlCache.set(baseUrl, { url_code: '000000', timestamp: Date.now() });
   }
   
   return null;

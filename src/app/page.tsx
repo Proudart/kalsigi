@@ -93,16 +93,10 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Genre Sections */}
+          {/* Popular Genre Sections - Limited to avoid performance issues */}
           <div className="space-y-8">
             {[
-              "Fantasy", "Webtoons", "Action", "Adventure", "Shounen", 
-              "Drama", "Seinen", "Martial Arts", "Supernatural", "Romance", 
-              "Comedy", "Harem", "School Life", "Mature", "Historical", 
-              "Shoujo", "Slice of Life", "Psychological", "Josei", "Adult", 
-              "Sci-fi", "Shounen Ai", "Sports", "Tragedy", "Doujinshi", 
-              "Horror", "Mystery", "Shoujo Ai", "One Shot", "Yaoi", 
-              "Gender Bender", "Ecchi", "Mecha"
+              "Fantasy", "Action", "Romance", "Drama", "Comedy"
             ].map((genre) => (
               <div key={genre} className="bg-background-800 rounded-xl shadow-lg border border-background-700 p-6">
                 <Suspense fallback={<FeedSkeleton title={genre} />}>

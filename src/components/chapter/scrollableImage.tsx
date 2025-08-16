@@ -65,6 +65,7 @@ const ScrollableImage: React.FC<ScrollableImageProps> = (props) => {
       <div className="relative">
         <Image
           {...imageProps}
+          alt={imageProps.alt || `Chapter page ${currentIndex + 1}`}
           unoptimized
           onClick={handleImageClick}
           className={`cursor-pointer shadow-md ${imageProps.className || ""}`}

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import Image from "next/image";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { Textarea } from "../../ui/textarea";
@@ -296,9 +297,11 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
                 <div className="border-2 border-dashed border-background-300 rounded-lg p-4 text-center">
                   {startImagePreview ? (
                     <div className="relative">
-                      <img
+                      <Image
                         src={startImagePreview}
                         alt="Start image preview"
+                        width={96}
+                        height={96}
                         className="mx-auto max-h-24 object-cover rounded"
                       />
                       <Button
@@ -345,9 +348,11 @@ export default function AddChapterForm({ groupId, onSuccess }: AddChapterFormPro
                 <div className="border-2 border-dashed border-background-300 rounded-lg p-4 text-center">
                   {endImagePreview ? (
                     <div className="relative">
-                      <img
+                      <Image
                         src={endImagePreview}
                         alt="End image preview"
+                        width={96}
+                        height={96}
                         className="mx-auto max-h-24 object-cover rounded"
                       />
                       <Button

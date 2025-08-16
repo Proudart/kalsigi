@@ -1,5 +1,4 @@
 // src/components/feed/main/feed.tsx
-import { useState } from "react";
 import { ScrollArea, ScrollBar } from "../../../components/ui/scroll-area";
 import { Link } from "../../../components/link";
 import Image from "next/image";

@@ -10,24 +10,27 @@
       "Bash(npm uninstall:*)",
       "Bash(curl:*)",
       "Bash(npm run dev:*)",
-      "Bash(./node_modules/.bin/mcp-server-puppeteer)"
+      "Bash(./node_modules/.bin/mcp-server-puppeteer)",
+      "Bash(npx next dev:*)",
+      "WebFetch(domain:localhost)",
+      "WebFetch(domain:10.255.255.254)",
+      "Bash(sudo apt-get:*)",
+      "Bash(sudo apt-get install:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
   },
   "mcpServers": {
-        "puppeteer": {
-          "command": "npx",
-          "args": ["-y", "@modelcontextprotocol/server-puppeteer"]
-        }
-      },
-      "puppeteer-mcp-claude": {
+    "puppeteer": {
       "command": "npx",
-      "args": ["puppeteer-mcp-claude", "serve"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-puppeteer"
+      ],
       "env": {
-        "NODE_ENV": "production"
+        "PUPPETEER_LAUNCH_OPTIONS": "{ \"headless\": false, \"args\": [\"--disable-web-security\"] }",
+        "ALLOW_DANGEROUS": "true"
       }
     }
   }
-      
-    
+}

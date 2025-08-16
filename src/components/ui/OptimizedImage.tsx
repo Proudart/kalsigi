@@ -87,6 +87,7 @@ export default function OptimizedImage({
   return (
     <Image
       {...optimizedProps}
+      alt={alt}
       width={width}
       height={height}
       quality={quality}

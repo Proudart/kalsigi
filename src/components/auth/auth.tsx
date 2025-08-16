@@ -344,7 +344,7 @@ export default function Auth() {
         </DropdownMenuItem>
       </div>
     </DropdownMenuContent>
-  ), [user, userGroups, groupsLoading, UserAvatar]);
+  ), [user, userGroups, groupsLoading, UserAvatar, session?.user?.role]);
 
   const AuthMenu = useMemo(() => (
     <DropdownMenuContent className="w-48 bg-background-100 border-background-200 shadow-lg" align="end">

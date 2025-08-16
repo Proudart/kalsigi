@@ -1,55 +1,51 @@
-
 import withPWA from 'next-pwa';
 
+import type { NextConfig } from 'next'
 
-/** @type {import('next').NextConfig} */
 const nextConfig = withPWA({
   dest: 'public',
   register: true,
   skipWaiting: true,
-
-
   disable: process.env.NODE_ENV === 'development',
 })({
   async headers() {
     return [
-        {
-            source: '/:all*(svg|jpg|jpeg|png|webp)',
-            locale: false,
-            headers: [
-              {
-                key: 'Cache-Control',
-                value: 'public, max-age=31536000',
-            }
-            ],
-        },
-        {
-          source: '/api/:path*',
-          headers: [
-            {
-              key: 'Access-Control-Allow-Credentials',
-              value: 'true',
-            },
-            {
-              key: 'Access-Control-Allow-Origin',
-              value: process.env.NODE_ENV === 'production' 
-                ? '*' // This will be replaced with more specific logic below
-                : 'http://localhost:3000',
-            },
-            {
-              key: 'Access-Control-Allow-Methods',
-              value: 'GET,DELETE,PATCH,POST,PUT',
-            },
-            {
-              key: 'Access-Control-Allow-Headers',
-              value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
-            },
-          ],
-        },
+      {
+        source: '/:all*(svg|jpg|jpeg|png|webp)',
+        locale: false,
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000',
+          }
+        ],
+      },
+      {
+        source: '/api/:path*',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Credentials',
+            value: 'true',
+          },
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: process.env.NODE_ENV === 'production'
+              ? '*'
+              : 'http://localhost:3000',
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET,DELETE,PATCH,POST,PUT',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
+          },
+        ],
+      },
     ];
-},
+  },
   reactStrictMode: true,
-  
   images: {
     minimumCacheTTL: 31536000,
     formats: ['image/avif', 'image/webp'],
@@ -75,7 +71,7 @@ const nextConfig = withPWA({
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   async rewrites() {
-    return [{ 
+    return [{
       source: '/sitemap.xml',
       destination: '/sitemap',
     },
@@ -83,10 +79,12 @@ const nextConfig = withPWA({
       source: '/komic/:path*',
       destination: 'https://cnn.manhwacall.com/komic/:path*'
     }
-  ];
+    ];
   },
   bundlePagesRouterDependencies: true,
   experimental: {
+    // Enable Turbopack for development
+   
     optimizePackageImports: [
       '@tabler/icons-react',
       'lucide-react',
@@ -97,11 +95,16 @@ const nextConfig = withPWA({
     ],
     optimizeCss: true,
   },
+   turbopack: {
+      // Optional: Configure Turbopack-specific options
+      rules: {
+        // You can add custom loader rules here if needed
+      },
+    },
   compress: true,
-  
-  // Webpack optimizations
   webpack: (config, { dev, isServer }) => {
-    // Enable tree shaking for production builds
+    // Note: This webpack config will be ignored when using Turbopack
+    // Keep it for production builds or when Turbopack is disabled
     if (!dev) {
       config.optimization = {
         ...config.optimization,
@@ -114,8 +117,6 @@ const nextConfig = withPWA({
             ...config.optimization.splitChunks?.cacheGroups,
             default: false,
             vendors: false,
-            
-            // Vendor chunk for core dependencies
             vendor: {
               name: 'vendor',
               chunks: 'all',
@@ -123,8 +124,6 @@ const nextConfig = withPWA({
               priority: 40,
               enforce: true,
             },
-            
-            // UI library chunk
             ui: {
               name: 'ui',
               chunks: 'all',
@@ -132,8 +131,6 @@ const nextConfig = withPWA({
               priority: 30,
               enforce: true,
             },
-            
-            // Icons chunk
             icons: {
               name: 'icons',
               chunks: 'all',
@@ -141,8 +138,6 @@ const nextConfig = withPWA({
               priority: 25,
               enforce: true,
             },
-            
-            // Database and auth chunk
             data: {
               name: 'data',
               chunks: 'all',
@@ -150,8 +145,6 @@ const nextConfig = withPWA({
               priority: 20,
               enforce: true,
             },
-            
-            // Utils chunk
             utils: {
               name: 'utils',
               chunks: 'all',
@@ -159,8 +152,6 @@ const nextConfig = withPWA({
               priority: 15,
               enforce: true,
             },
-            
-            // Common chunk for shared modules
             common: {
               name: 'common',
               minChunks: 2,
@@ -172,20 +163,13 @@ const nextConfig = withPWA({
           },
         },
       };
-
-      // Minimize bundle analyzer output in production
       config.plugins = config.plugins || [];
-      
-      // Add module concatenation for better tree shaking
       if (!isServer) {
         config.optimization.concatenateModules = true;
       }
     }
-
     return config;
   }
 });
 
-
-
-export default(nextConfig);
+export default (nextConfig);

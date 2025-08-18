@@ -95,11 +95,11 @@ export default async function FeedNew({ title }: Props) {
         </span>
       </div>
       
-      <div className="bg-background-500 rounded-lg border p-4">
+      <div className="bg-background-500 rounded-lg border p-3 sm:p-4">
         <ScrollArea className="h-[400px] w-full">
           <div className="space-y-2">
             {data.map((manga, index) => (
-              <div key={manga.title} className="flex items-center space-x-4 p-4 bg-background-100 rounded-lg hover:shadow-sm transition-shadow duration-200 border border-background-300">
+              <div key={manga.title} className="flex items-center space-x-3 sm:space-x-4 p-3 sm:p-4 bg-background-100 rounded-lg hover:shadow-sm transition-shadow duration-200 border border-background-300">
                 {title === "Trending" && (
                   <div className="flex items-center justify-center w-8 h-8 bg-primary-200 text-text-900 font-bold text-sm rounded-full">
                     {index + 1}

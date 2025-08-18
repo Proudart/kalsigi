@@ -83,11 +83,11 @@ async function GenreFeed({ title }: Props) {
         </Link>
       </div>
       
-      <ScrollArea className="w-full whitespace-nowrap bg-background-500 rounded-lg border p-4">
-        <div className="flex w-max space-x-4">
+      <ScrollArea className="w-full whitespace-nowrap bg-background-500 rounded-lg border p-3 sm:p-4">
+        <div className="flex w-max space-x-3 sm:space-x-4">
           {manga.map((serie, index) => (
-            <div key={serie.url + index} className="w-[160px] md:w-[180px] group">
-              <div className="bg-background-100 rounded-lg p-3 hover:bg-background-300 transition-colors duration-200 border">
+            <div key={serie.url + index} className="w-[140px] sm:w-[160px] md:w-[180px] group">
+              <div className="bg-background-100 rounded-lg p-2 sm:p-3 hover:bg-background-300 transition-colors duration-200 border">
                 <div className="relative overflow-hidden rounded-lg mb-3">
                   <Link href={`/series/${serie.url}-${serie.url_code}`} prefetch={true}>
                     <div className="aspect-[3/4] bg-background-300 rounded-lg overflow-hidden">

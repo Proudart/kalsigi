@@ -47,10 +47,10 @@ const Feed = dynamic(() => import("../components/feed/main/feed"), {
 export default function Home() {
   return (
     <div className="min-h-screen bg-background-100">
-      <div className="w-full px-4 py-8">
-        <div className="space-y-8">
+      <div className="w-full px-3 sm:px-4 py-6 sm:py-8">
+        <div className="space-y-6 sm:space-y-8">
           {/* Hero Section - Discover Manga */}
-          <div className="bg-primary-100 rounded-lg shadow-md border p-6">
+          <div className="bg-primary-100 rounded-lg shadow-md border p-4 sm:p-6">
             <Suspense fallback={<DiscoverMangaSkeleton />}>
               <DiscoverManga />
             </Suspense>
@@ -62,16 +62,16 @@ export default function Home() {
           </Suspense>
 
           {/* Featured Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             {/* Updated Series */}
-            <div className="bg-primary-100 rounded-lg shadow-md border p-6">
+            <div className="bg-primary-100 rounded-lg shadow-md border p-4 sm:p-6">
               <Suspense fallback={<UpdatedSkeleton />}>
                 <Updated />
               </Suspense>
             </div>
 
             {/* Recommended Series */}
-            <div className="bg-primary-100 rounded-lg shadow-md border p-6">
+            <div className="bg-primary-100 rounded-lg shadow-md border p-4 sm:p-6">
               <Suspense fallback={<RecommendedSkeleton />}>
                 <Recommended />
               </Suspense>
@@ -79,14 +79,14 @@ export default function Home() {
           </div>
 
           {/* Latest & Trending Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-primary-100 rounded-lg shadow-md border p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+            <div className="bg-primary-100 rounded-lg shadow-md border p-4 sm:p-6">
               <Suspense fallback={<FeedNewSkeleton title="Latest Updates" />}>
                 <FeedNew title="Latest Updates" />
               </Suspense>
             </div>
             
-            <div className="bg-primary-100 rounded-lg shadow-md border p-6">
+            <div className="bg-primary-100 rounded-lg shadow-md border p-4 sm:p-6">
               <Suspense fallback={<FeedNewSkeleton title="Trending" />}>
                 <FeedNew title="Trending" />
               </Suspense>
@@ -94,11 +94,11 @@ export default function Home() {
           </div>
 
           {/* Popular Genre Sections - Limited to avoid performance issues */}
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             {[
               "Fantasy", "Action", "Romance", "Drama", "Comedy"
             ].map((genre) => (
-              <div key={genre} className="bg-primary-100 rounded-lg shadow-md p-6">
+              <div key={genre} className="bg-primary-100 rounded-lg shadow-md p-4 sm:p-6">
                 <Suspense fallback={<FeedSkeleton title={genre} />}>
                   <Feed title={genre} />
                 </Suspense>

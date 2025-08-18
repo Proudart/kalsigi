@@ -44,9 +44,9 @@ interface MangaResult {
 const MangaSkeleton = () => (
   <>
     {Array(6).fill(0).map((_, index) => (
-      <div key={index} className="w-[150px] space-y-3">
+      <div key={index} className="w-[140px] sm:w-[160px] md:w-[180px] space-y-3">
         <div className="relative">
-          <Skeleton className="w-[150px] h-[200px] rounded-md" />
+          <Skeleton className="w-full h-[180px] sm:h-[200px] rounded-md" />
           <Skeleton className="absolute top-2 left-2 w-8 h-8 rounded-full" />
         </div>
         <Skeleton className="h-4 w-full" />
@@ -96,26 +96,26 @@ const DiscoverManga: React.FC = () => {
   return (
     <section className="space-y-6">
       <div>
-        <h2 className="text-4xl md:text-5xl font-bold text-text-900 tracking-tight mb-2">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-text-900 tracking-tight mb-2">
           Discover Manga
         </h2>
-        <p className="text-base text-text-600 leading-relaxed">
+        <p className="text-sm sm:text-base text-text-600 leading-relaxed">
           Find your next favorite series from our extensive collection
         </p>
       </div>
       
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
         <div className="flex-1">
           <Input
             type="text"
             placeholder="Search manga..."
-            className="w-full px-4 py-3 bg-background-50 border border-background-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
+            className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-background-50 border border-background-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <select
-          className="w-full sm:w-auto px-4 py-3 bg-background-50 border border-background-300 rounded-lg focus:ring-2 focus:ring-primary-500 appearance-none text-text-900 transition-colors duration-200"
+          className="w-full sm:w-auto px-3 sm:px-4 py-2 sm:py-3 bg-background-50 border border-background-300 rounded-lg focus:ring-2 focus:ring-primary-500 appearance-none text-text-900 transition-colors duration-200"
           value={genre}
           onChange={(e) => setGenre(e.target.value)}
         >
@@ -156,14 +156,14 @@ const DiscoverManga: React.FC = () => {
         </select>
       </div>
       
-      <ScrollArea className="w-full whitespace-nowrap bg-background-500 rounded-lg border p-4">
-        <div className="flex w-max space-x-4">
+      <ScrollArea className="w-full whitespace-nowrap bg-background-500 rounded-lg border p-3 sm:p-4">
+        <div className="flex w-max space-x-3 sm:space-x-4">
           {isLoading ? (
             <MangaSkeleton />
           ) : results.length > 0 ? (
             results.map((manga, index) => (
-              <div key={manga.url + index} className="w-[160px] md:w-[180px] group">
-                <div className="bg-background-100 rounded-lg p-3 hover:bg-background-300 transition-colors duration-200 border">
+              <div key={manga.url + index} className="w-[140px] sm:w-[160px] md:w-[180px] group">
+                <div className="bg-background-100 rounded-lg p-2 sm:p-3 hover:bg-background-300 transition-colors duration-200 border">
                   <div className="relative overflow-hidden rounded-lg mb-3">
                     <Link
                       href={`/series/${manga.url}-${manga.url_code}`}

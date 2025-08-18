@@ -39,7 +39,7 @@ const SeriesImage = ({
     alt={alt}
     width={width}
     height={height}
-    className="w-full h-[200px] object-cover rounded-md aspect-2/3"
+    className="w-full h-[180px] sm:h-[200px] object-cover rounded-md aspect-2/3"
     loading="lazy"
     blurDataURL={`${src}&w=16&q=1`}
   />
@@ -86,11 +86,11 @@ function ContinueContent({ data }: { data: Manga[] }) {
         </span>
       </div>
       
-      <ScrollArea className="w-full whitespace-nowrap bg-background-500 rounded-lg border p-4">
-        <div className="flex w-max space-x-4">
+      <ScrollArea className="w-full whitespace-nowrap bg-background-500 rounded-lg border p-3 sm:p-4">
+        <div className="flex w-max space-x-3 sm:space-x-4">
           {data.map((serie, index) => (
-            <div key={serie.url + index} className="w-[160px] md:w-[180px] group">
-              <div className="bg-background-100 rounded-lg p-3 hover:bg-background-300 transition-colors duration-200 border">
+            <div key={serie.url + index} className="w-[140px] sm:w-[160px] md:w-[180px] group">
+              <div className="bg-background-100 rounded-lg p-2 sm:p-3 hover:bg-background-300 transition-colors duration-200 border">
                 <div className="relative overflow-hidden rounded-lg mb-3">
                   <Link
                     href={`/series/${serie.url}-${serie.url_code}`}

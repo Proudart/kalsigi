@@ -13,6 +13,7 @@ import {
 import { Suspense } from "react";
 import { lazyHydrate } from 'next-lazy-hydration-on-scroll';
 import dynamic from "next/dynamic";
+import { fetchChapterData, SeriesData } from "@/lib/api/chapter";
 
 // Lazy-loaded components for better performance
 const ChapterNavigation = dynamic(() => import("../../components/chapter/chapterNav"), { 
@@ -49,23 +50,13 @@ const formatPublisherForUrl = (publisher: string) => {
   return publisher.toLowerCase().replace(/\s+/g, '-');
 };
 
-async function fetchChapterData(modifiedTitle: any) {
-  try {
-    const res = await fetch(
-      `https://www.manhwacall.com/api/chapter?series=${modifiedTitle}`,
-      { next: { revalidate: 3600 } } // Cache for 1 hour
-    );
-    
-    if (!res.ok) throw new Error("Failed to fetch chapter data");
-
-    return res.json();
-  } catch (error) {
-    console.error("Error fetching chapter data:", error);
-    throw error;
-  }
+interface ChapterProps {
+  params: Promise<{ series: string; chapter: string; group: string }>;
+  initialChapterData?: SeriesData | null;
+  [key: string]: any;
 }
 
-export default async function Chapter({ params }: any) {
+export default async function Chapter({ params, initialChapterData }: ChapterProps) {
   const resolvedParams = await params;
   const title = resolvedParams.series;
   const chapter = resolvedParams.chapter;
@@ -75,7 +66,7 @@ export default async function Chapter({ params }: any) {
   const modifiedTitle = title.replace(regex, "");
 
   // Fetch chapter data server-side
-  const chapterData = await fetchChapterData(modifiedTitle);
+  const chapterData = initialChapterData ?? await fetchChapterData(modifiedTitle);
 
   // Find chapter from the specified publisher first, then fallback to any publisher
   let currentChapterData = chapterData?.chapters?.find(

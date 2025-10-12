@@ -7,8 +7,8 @@ import { Calendar, BookOpen, Tag, Info } from 'lucide-react';
 interface GenerateTagsProps {
     title: string;
     chapter: string;
-    datePublished: string;
-    publisher: string;
+    datePublished?: string;
+    publisher: string | null;
     summary?: {
         tldr?: string;
         synopsis?: string;
@@ -24,11 +24,13 @@ export default function GenerateTags({
     publisher,
 }: GenerateTagsProps) {
     // Format the date for display
-    const formattedDate = new Date(datePublished).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
+    const formattedDate = datePublished
+        ? new Date(datePublished).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })
+        : 'Unknown';
     
     // Extract chapter number
     const chapterNumber = chapter.replace(/^chapter-/i, "");

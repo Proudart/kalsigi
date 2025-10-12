@@ -287,16 +287,21 @@ export default async function Chapter({ params, initialChapterData }: ChapterPro
         {/* Recommendations */}
         <div className="container mx-auto px-4 mb-12">
           <Suspense fallback={<div className="h-64 bg-background-200 rounded-md animate-pulse"></div>}>
-            <Recommended genres={chapterData?.genre} seriesId={chapterData?.id} />
+            <Recommended
+              genres={Array.isArray(chapterData?.genre) ? chapterData.genre : (chapterData?.genre ? [chapterData.genre] : [])}
+              seriesId={chapterData?.id}
+            />
           </Suspense>
         </div>
 
         {/* Comments section */}
-        <div id="chapter-comments" className="container mx-auto px-4 mb-12">
-          <Suspense fallback={<div className="h-64 bg-background-200 rounded-md animate-pulse"></div>}>
-            <ChapterChat chapterId={chapterId} />
-          </Suspense>
-        </div>
+        {chapterId && (
+          <div id="chapter-comments" className="container mx-auto px-4 mb-12">
+            <Suspense fallback={<div className="h-64 bg-background-200 rounded-md animate-pulse"></div>}>
+              <ChapterChat chapterId={chapterId} />
+            </Suspense>
+          </div>
+        )}
       </main>
     </>
   );

@@ -6,6 +6,7 @@ import { Metadata } from "next";
 import Script from "next/script";
 import Loader from "../../../../../components/load";
 import { getBaseUrl } from "../../../../../lib/utils";
+import { fetchChapterData, SeriesData, ChapterData } from "../../../../../lib/api/chapter";
 
 // Skeleton loader for chapter component
 function ChapterSkeleton() {
@@ -29,64 +30,9 @@ const Chapter = lazyHydrate(() => import("../../../../../components/chapter/chap
   wrapperElement: 'div'
 });
 
-// Types based on your database schema
-interface ChapterData {
-  id: string;
-  series_id: string;
-  chapter_number: number;
-  title: string | null;
-  content: object;
-  views: number;
-  publisher: string;
-  published_at: string;
-  updated_at: string;
-  update_time: string;
-  summary?: {
-    keywords?: string | string[];
-    tldr?: string;
-    synopsis?: string;
-  };
-}
-
-interface SeriesData {
-  genre: any;
-  id: string;
-  title: string;
-  url: string;
-  description: string | null;
-  cover_image_url: string | null;
-  type: string[] | null;
-  total_chapters: number | null;
-  author: string | null;
-  artist: string | null;
-  status: string | null;
-  publisher: string;
-  url_code: string;
-  chapters: ChapterData[];
-}
-
-async function fetchChapterData(url: string): Promise<SeriesData> {
-  const siteName = process.env.site_name;
-  const response = await fetch(
-    `${getBaseUrl()}/api/chapter?series=${url}`,
-    {
-      method: "GET",
-      next: {
-        revalidate: 60 * 60 * 6, // Revalidate every 6 hours for better performance
-      },
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch chapter data: ${response.statusText}`);
-  }
-
-  return response.json();
-}
-
 async function checkAndRedirectChapter(
-  seriesParam: string, 
-  publisherParam: string, 
+  seriesParam: string,
+  publisherParam: string,
   chapterParam: string
 ) {
   const regex = /-(\d{6})$/;
@@ -254,15 +200,16 @@ export async function generateStaticParams() {
 
 export default async function ChapterPage(props: any) {
   const params = await props.params;
-  
+
   // Check and redirect if URL is incorrect
-  await checkAndRedirectChapter(params.series, params.group, params.chapter);
-  
+  const chapterData = await checkAndRedirectChapter(params.series, params.group, params.chapter);
+
   return (
-    <Chapter 
+    <Chapter
       /* @next-codemod-error 'props' is used with spread syntax (...). Any asynchronous properties of 'props' must be awaited when accessed. */
-      {...props} 
-      wrapperProps={{ className: 'chapter-container' }} 
+      {...props}
+      initialChapterData={chapterData}
+      wrapperProps={{ className: 'chapter-container' }}
     />
   );
 }

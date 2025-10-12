@@ -12,7 +12,7 @@ interface GenerateTagsProps {
     summary?: {
         tldr?: string;
         synopsis?: string;
-        keywords?: string[] | string;
+        keywords?: string[] | string | null;
     };
 }
 

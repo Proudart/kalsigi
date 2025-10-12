@@ -3,14 +3,15 @@ import { db } from '../../../../../util/db';
 import { scanlationGroups, groupMembers, groupInvitations, seriesSubmissions, series } from '../../../../../util/schema';
 import { eq, count } from 'drizzle-orm';
 import { auth } from '@/lib/auth';
+import type { Session } from '@/types';
 
 
 export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   try {
 
-    const session = await auth.api.getSession({ headers: request.headers });
-        
+    const session = await auth.api.getSession({ headers: request.headers }) as Session | null;
+
         if (!session || session.user.role !== 'admin') {
           return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
         }
@@ -67,8 +68,8 @@ export async function PATCH(request: NextRequest, props: { params: Promise<{ id:
   const params = await props.params;
   try {
 
-    const session = await auth.api.getSession({ headers: request.headers });
-    
+    const session = await auth.api.getSession({ headers: request.headers }) as Session | null;
+
     if (!session || session.user.role !== 'admin') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
@@ -117,8 +118,8 @@ export async function DELETE(request: NextRequest, props: { params: Promise<{ id
   const params = await props.params;
   try {
 
-    const session = await auth.api.getSession({ headers: request.headers });
-    
+    const session = await auth.api.getSession({ headers: request.headers }) as Session | null;
+
     if (!session || session.user.role !== 'admin') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }

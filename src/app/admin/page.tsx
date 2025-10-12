@@ -5,17 +5,18 @@ import { headers } from "next/headers";
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@//components/ui/card';
 import { Badge } from '@//components/ui/badge';
-import { 
-  BookOpen, 
-  Users, 
-  FileText, 
-  Settings, 
-  BarChart3, 
+import {
+  BookOpen,
+  Users,
+  FileText,
+  Settings,
+  BarChart3,
   Shield,
   Clock,
   CheckCircle,
   XCircle
 } from '@/lib/icons';
+import type { Session } from '@/types';
 
 export const metadata: Metadata = {
   title: 'Admin Dashboard',
@@ -94,8 +95,8 @@ const quickStats = [
 export default async function AdminDashboard() {
   const session = await auth.api.getSession({
     headers: await headers()
-  });
-  
+  }) as Session | null;
+
   if (!session || session.user.role !== 'admin') {
     redirect('/');
   }

@@ -4,12 +4,13 @@ import { scanlationGroups, groupMembers, groupInvitations } from '../../../../..
 import {  hasPermission } from '../../../../../../util/scanlationUtils';
 import { auth } from '@/lib/auth';
 import { eq } from 'drizzle-orm';
+import type { Session } from '@/types';
 
 export async function PUT(request: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   try {
-    const session = await auth.api.getSession({ headers: request.headers });
-    
+    const session = await auth.api.getSession({ headers: request.headers }) as Session | null;
+
     if (!session || session.user.role !== 'admin') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }

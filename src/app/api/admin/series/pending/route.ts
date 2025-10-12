@@ -4,13 +4,14 @@ import { scanlationGroups, groupMembers, groupInvitations, user, seriesSubmissio
 import {  hasPermission } from '../../../../../util/scanlationUtils';
 import { auth } from '@/lib/auth';
 import { and, count, desc, eq, like } from 'drizzle-orm';
+import type { Session } from '@/types';
 
 
 export async function GET(request: NextRequest) {
   try {
 
-    const session = await auth.api.getSession({ headers: request.headers });
-    
+    const session = await auth.api.getSession({ headers: request.headers }) as Session | null;
+
     if (!session || session.user.role !== 'admin') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }

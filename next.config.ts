@@ -1,6 +1,7 @@
 import withPWA from 'next-pwa';
-
-import type { NextConfig } from 'next'
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: false
+});
 
 const nextConfig = withPWA({
   dest: 'public',
@@ -172,4 +173,4 @@ const nextConfig = withPWA({
   }
 });
 
-export default (nextConfig);
+export default withBundleAnalyzer(nextConfig);

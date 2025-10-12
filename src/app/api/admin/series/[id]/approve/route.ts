@@ -4,13 +4,14 @@ import { scanlationGroups, seriesSubmissions, series } from '../../../../../../u
 import { auth } from '@/lib/auth';
 import { eq } from 'drizzle-orm';
 import { generateR2Paths, moveFileInR2 } from '@/lib/r2';
+import type { Session } from '@/types';
 
 export async function POST(request: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   try {
     const submissionId = params.id;
-    const session = await auth.api.getSession({ headers: request.headers });
-    
+    const session = await auth.api.getSession({ headers: request.headers }) as Session | null;
+
     if (!session || session.user.role !== 'admin') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }

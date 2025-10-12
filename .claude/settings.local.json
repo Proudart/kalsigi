@@ -16,7 +16,8 @@
       "WebFetch(domain:10.255.255.254)",
       "Bash(sudo apt-get:*)",
       "Bash(sudo apt-get install:*)",
-      "Bash(apt list:*)"
+      "Bash(apt list:*)",
+      "Bash(ANALYZE=true npm run build)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

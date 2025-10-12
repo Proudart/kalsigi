@@ -1,7 +1,6 @@
 // src/app/series/[series]/[publisher]/[chapter]/page.tsx
 import { Suspense } from "react";
 import { permanentRedirect } from "next/navigation";
-import { lazyHydrate } from 'next-lazy-hydration-on-scroll';
 import { Metadata } from "next";
 import Script from "next/script";
 import Loader from "../../../../../components/load";
@@ -24,11 +23,8 @@ function ChapterSkeleton() {
   );
 }
 
-// Enhanced components with better loading strategy
-const Chapter = lazyHydrate(() => import("../../../../../components/chapter/chapter"), {
-  LoadingComponent: ChapterSkeleton,
-  wrapperElement: 'div'
-});
+// Import the Chapter component directly - it's a server component
+import Chapter from "../../../../../components/chapter/chapter";
 
 async function checkAndRedirectChapter(
   seriesParam: string,
@@ -209,7 +205,6 @@ export default async function ChapterPage(props: any) {
       /* @next-codemod-error 'props' is used with spread syntax (...). Any asynchronous properties of 'props' must be awaited when accessed. */
       {...props}
       initialChapterData={chapterData}
-      wrapperProps={{ className: 'chapter-container' }}
     />
   );
 }

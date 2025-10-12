@@ -101,6 +101,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
         ch.publisher === publisher
     );
 
+    
     const summary = chapterData?.summary || {};
     const chapterTitle = `Chapter ${chapterData?.chapter_number}`;
     const fullTitle = `${data.title} ${chapterTitle} (${publisher}) - Read Online | ${siteName}`;

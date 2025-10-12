@@ -87,7 +87,7 @@ export default async function Chapter({ params, initialChapterData }: ChapterPro
   const chapterId = currentChapterData?.id || null;
   const currentPublisher = currentChapterData?.publisher || null;
   const date = currentChapterData?.published_at || undefined;
-  const summary = currentChapterData?.summary || null;
+  const summary = currentChapterData?.summary || undefined;
   const views = currentChapterData?.views || 0;
 
   // Helper function to find best publisher for a chapter
@@ -188,10 +188,12 @@ export default async function Chapter({ params, initialChapterData }: ChapterPro
           </h1>
           
           <div className="flex flex-wrap gap-4 items-center text-sm text-text-600 ">
-            <div className="flex items-center">
-              <span className="mr-2">Published:</span> 
-              <time dateTime={date}>{new Date(date).toLocaleDateString()}</time>
-            </div>
+            {date && (
+              <div className="flex items-center">
+                <span className="mr-2">Published:</span>
+                <time dateTime={date}>{new Date(date).toLocaleDateString()}</time>
+              </div>
+            )}
             <div className="flex items-center">
               <Eye className="w-4 h-4 mr-1" />
               <span>{views.toLocaleString()} views</span>

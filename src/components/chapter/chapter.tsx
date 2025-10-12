@@ -86,7 +86,7 @@ export default async function Chapter({ params, initialChapterData }: ChapterPro
   const striked = currentChapterData?.striked || false;
   const chapterId = currentChapterData?.id || null;
   const currentPublisher = currentChapterData?.publisher || null;
-  const date = currentChapterData?.published_at || null;
+  const date = currentChapterData?.published_at || undefined;
   const summary = currentChapterData?.summary || null;
   const views = currentChapterData?.views || 0;
 

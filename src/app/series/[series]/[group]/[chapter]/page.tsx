@@ -112,7 +112,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
       `${data.title} ${chapterTitle}`,
       `read ${data.title} online`,
       `${publisher} translation`,
-      data.genre?.join(', '),
+      Array.isArray(data.genre) ? data.genre.join(', ') : data.genre,
       data.author,
       data.status,
       Array.isArray(summary.keywords) ? summary.keywords.join(', ') : summary.keywords,

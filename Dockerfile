@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --force
+RUN npm i --force
 
 # Copy the entire project to the working directory
 COPY . .

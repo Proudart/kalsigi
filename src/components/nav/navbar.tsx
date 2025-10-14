@@ -21,44 +21,53 @@ type Props = {
 }
 export default function Navbar({ logo }: Props) {
   return (
-    <header className="border-b">
-      <div className="container mx-auto px-4 py-2 flex items-center justify-between">
-        <div className="flex items-center sm:flex-1">
-          <Link href="/" className="flex items-center">
-            <Image
-              src={logo || "/placeholder.svg"}
-              alt={'manhwacall logo'}
-              width={40}
-              height={40}
-              className="mr-2"
-            />
-            <h1 className="text-xl font-bold hidden sm:block">{process.env.site_name as string}</h1>
-          </Link>
-        </div>
+    <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto px-4 py-3">
+        {/* Main navbar row */}
+        <div className="flex items-center gap-2 sm:gap-4">
+          {/* Logo section */}
+          <div className="flex items-center flex-shrink-0">
+            <Link href="/" className="flex items-center gap-2">
+              <Image
+                src={logo || "/placeholder.svg"}
+                alt={'manhwacall logo'}
+                width={40}
+                height={40}
+                className="flex-shrink-0"
+              />
+              <h1 className="text-xl font-bold hidden lg:block whitespace-nowrap">{process.env.site_name as string}</h1>
+            </Link>
+          </div>
 
-        <nav className="hidden md:flex items-center justify-center flex-1">
-          <ul className="flex space-x-6">
-            {navigation.map((item) => (
-              <li key={item.name}>
-                <Link href={item.href} className="hover:underline text-sm">
-                  {item.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+          {/* Desktop navigation - centered */}
+          <nav className="hidden md:flex items-center justify-center">
+            <ul className="flex space-x-6">
+              {navigation.map((item) => (
+                <li key={item.name}>
+                  <Link href={item.href} className="hover:underline text-sm whitespace-nowrap">
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
-        <div className="flex items-center space-x-2 flex-1 justify-end">
-          <div className="flex-1 max-w-xs">
+          {/* Search bar - fills remaining space on mobile, fixed width on desktop */}
+          <div className="flex-1 min-w-0 sm:flex-initial sm:w-64 lg:w-80">
             <LiveSearch />
           </div>
-          <div className="flex items-center">
+
+          {/* Right section with actions */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Theme toggle */}
             <ThemeToggle />
+
+            {/* Auth */}
+            <Auth />
+
+            {/* Mobile menu button */}
+            <NavbarClient />
           </div>
-          <Auth />
-
-      <NavbarClient />
-
         </div>
       </div>
     </header>

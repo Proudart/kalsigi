@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
-import LiveSearch from "./liveSearch";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -27,9 +26,6 @@ export default function NavbarClient() {
       </SheetTrigger>
       <SheetContent side="right" className="w-[300px] sm:w-[400px] bg-background-100">
         <nav className="flex flex-col space-y-4 mt-6">
-          <div className="mb-4">
-            <LiveSearch />
-          </div>
           {navigation.map((item) => (
             <Link
               key={item.name}

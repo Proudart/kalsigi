@@ -103,7 +103,7 @@ function SearchBox() {
       
       {/* Smooth transition wrapper */}
       <div
-        className={`fixed sm:absolute left-4 right-4 sm:left-0 sm:right-auto sm:w-full top-[60px] sm:top-full mt-1 bg-background-500 border border-gray-300 rounded-md shadow-lg z-500 transition-all duration-200 ${
+        className={`absolute left-0 right-0 w-full top-full mt-1 bg-background-500 border border-gray-300 rounded-md shadow-lg z-[100] transition-all duration-200 ${
           isExpanded && memoizedResults.length > 0
             ? "opacity-100 transform translate-y-0"
             : "opacity-0 transform -translate-y-2 pointer-events-none"

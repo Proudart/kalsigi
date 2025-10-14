@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import { Link } from '../link';
 import { Clock, ArrowUpRight } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 interface ChapterProps {
   chapter: {
@@ -18,21 +17,21 @@ interface ChapterProps {
 function formatTimeAgo(timestamp: string): string {
   // Existing formatTimeAgo implementation...
   // (keeping the implementation as is)
-  if (timestamp.includes('ago') || timestamp.includes('yr') || timestamp.includes('mo') || 
+  if (timestamp.includes('ago') || timestamp.includes('yr') || timestamp.includes('mo') ||
       timestamp.includes('d') || timestamp.includes('h') || timestamp.includes('m')) {
     return timestamp;
   }
-  
+
   const date = new Date(timestamp);
   const now = new Date();
   const diff = now.getTime() - date.getTime();
-  
+
   const minutes = Math.floor(diff / 60000);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
   const months = Math.floor(days / 30);
   const years = Math.floor(months / 12);
-  
+
   if (years > 0) return `${years}${years === 1 ? 'yr' : 'yrs'}`;
   if (months > 0) return `${months}${months === 1 ? 'mo' : 'mos'}`;
   if (days > 0) return `${days}d`;
@@ -50,17 +49,18 @@ function isNew(timestamp: string): boolean {
 }
 
 const ChapterSearchCard: React.FC<ChapterProps> = ({ chapter, title, index }) => {
-  const timeAgo = formatTimeAgo(chapter.update_time || chapter.published_at);
-  const isNewChapter = isNew(chapter.published_at);
-  
+  // Memoize expensive calculations
+  const timeAgo = useMemo(() => formatTimeAgo(chapter.update_time || chapter.published_at), [chapter.update_time, chapter.published_at]);
+  const isNewChapter = useMemo(() => isNew(chapter.published_at), [chapter.published_at]);
+  const chapterUrl = useMemo(() =>
+    `/series/${title}/${chapter.publisher.toLowerCase().replace(/\s+/g, '-')}/chapter-${chapter.chapter_number}`,
+    [title, chapter.publisher, chapter.chapter_number]
+  );
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2, delay: Math.min(index * 0.05, 0.5) }}
-    >
+    <div className="animate-in fade-in duration-200">
       <Link
-        href={`/series/${title}/${chapter.publisher.toLowerCase().replace(/\s+/g, '-')}/chapter-${chapter.chapter_number}`}
+        href={chapterUrl}
         prefetch={true}
         className="block"
         aria-label={`Read chapter ${chapter.chapter_number}`}
@@ -120,8 +120,16 @@ const ChapterSearchCard: React.FC<ChapterProps> = ({ chapter, title, index }) =>
           )}
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 };
 
-export default ChapterSearchCard;
+// Memoize component to prevent unnecessary re-renders
+export default memo(ChapterSearchCard, (prevProps, nextProps) => {
+  return (
+    prevProps.chapter.chapter_number === nextProps.chapter.chapter_number &&
+    prevProps.chapter.published_at === nextProps.chapter.published_at &&
+    prevProps.chapter.striked === nextProps.chapter.striked &&
+    prevProps.title === nextProps.title
+  );
+});

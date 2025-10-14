@@ -1,6 +1,7 @@
 import { Link } from "../link";
 import Loader from "../load";
 import dynamic from "next/dynamic";
+import { getBaseUrl } from "../../lib/utils";
 
 // Lazy load components for better performance
 const EnhancedManga = dynamic(() => import("./enhancedManga"), {
@@ -10,21 +11,32 @@ const EnhancedManga = dynamic(() => import("./enhancedManga"), {
 
 export default async function Manga({
   params,
+  initialData,
 }: {
   params: { series: string };
+  initialData?: any;
 }) {
   const title = params.series;
   const regex = /-\d{6}/;
   const modifiedTitle = title.replace(regex, "");
-  
-  
+
+  // Use initialData if provided (from page.tsx) to avoid duplicate fetching
+  if (initialData) {
+    return (
+      <EnhancedManga
+        data={initialData}
+        title={title}
+      />
+    );
+  }
+
   try {
     // Fetch data with a 15-second timeout to prevent long loading times
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 15000);
 
     const res = await fetch(
-      `https://www.manhwacall.com/api/title?url=${modifiedTitle}`,
+      `${getBaseUrl()}/api/title?url=${modifiedTitle}`,
       {
       signal: controller.signal,
       cache: 'force-cache',
@@ -34,16 +46,16 @@ export default async function Manga({
 
     clearTimeout(timeoutId);
 
-    
+
     if (!res.ok) {
       throw new Error(`Failed to fetch data: ${res.status}`);
     }
-    
+
     const data = await res.json();
     return (
-      <EnhancedManga 
-        data={data} 
-        title={title} 
+      <EnhancedManga
+        data={data}
+        title={title}
       />
     );
   } catch (error) {

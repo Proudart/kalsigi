@@ -1,6 +1,6 @@
 "use client";
 
-import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState } from "react";
+import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState, useMemo, memo, useCallback, Suspense } from "react";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
@@ -11,33 +11,56 @@ import ShareButton from "../share";
 import { Button } from "../ui/button";
 import { Link } from "../link";
 import ChapterSearchCard from "./chapterSearchCard";
-import Recommendations from "../recommendations";
-import SeriesChat from "./seriesChat";
 import dynamic from "next/dynamic";
+import { Skeleton } from "../ui/skeleton";
 
-// Lazy loaded components
-const SeriesStats = dynamic(() => import("./seriesStats"), { ssr: true });
+// Lazy loaded components with optimized loading
+const SeriesStats = dynamic(() => import("./seriesStats"), {
+  ssr: true,
+  loading: () => <div className="grid grid-cols-2 gap-3">
+    {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-16 w-full" />)}
+  </div>
+});
 
-export default function EnhancedManga({ data, title }: { data: any; title: string }) {
+const Recommendations = dynamic(() => import("../recommendations"), {
+  ssr: false,
+  loading: () => <div className="bg-primary-800 p-6 rounded-lg shadow-lg">
+    <Skeleton className="h-8 w-64 mb-6" />
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-96 w-full" />)}
+    </div>
+  </div>
+});
+
+const SeriesChat = dynamic(() => import("./seriesChat"), {
+  ssr: false,
+  loading: () => <Skeleton className="h-96 w-full" />
+});
+
+function EnhancedManga({ data, title }: { data: any; title: string }) {
   const [activeTab, setActiveTab] = useState("chapters");
   const [visibleChapters, setVisibleChapters] = useState(20);
-  const [isSticky, setIsSticky] = useState(false);
-
-  // Handle scroll events for sticky header
-  useEffect(() => {
-    const handleScroll = () => {
-      const offset = window.scrollY;      
-      setIsSticky(offset > 350);
-    };  
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   // Load more chapters when scrolling
-  const loadMoreChapters = () => {
+  const loadMoreChapters = useCallback(() => {
     setVisibleChapters(prev => prev + 20);
-  };
+  }, []);
+
+  // Memoize filtered genres to avoid recalculation
+  const filteredGenres = useMemo(() =>
+    data.genre?.filter((g: string) => g !== "Null") || [],
+    [data.genre]
+  );
+
+  // Memoize first and last chapters for buttons
+  const firstChapter = useMemo(() => data.chapters?.[data.chapters.length - 1], [data.chapters]);
+  const latestChapter = useMemo(() => data.chapters?.[0], [data.chapters]);
+
+  // Memoize visible chapters list
+  const visibleChaptersList = useMemo(() =>
+    data.chapters?.slice(0, visibleChapters) || [],
+    [data.chapters, visibleChapters]
+  );
 
   return (
     <div className="bg-background-100 min-h-screen pb-16">
@@ -50,9 +73,10 @@ export default function EnhancedManga({ data, title }: { data: any; title: strin
             src={data.cover_image_url}
             alt={data.title}
             fill
-            className="object-covesr opacity-40 blur-sm"
+            className="object-cover opacity-40 blur-sm"
             priority
             sizes="100vw"
+            quality={50}
           />
         </div>
       </div>
@@ -72,7 +96,8 @@ export default function EnhancedManga({ data, title }: { data: any; title: strin
                   fill
                   className="object-cover"
                   priority
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                  quality={85}
                 />
                 <div className="absolute  z-10">
                   <BookmarkButton seriesUrl={data.url} />
@@ -85,7 +110,7 @@ export default function EnhancedManga({ data, title }: { data: any; title: strin
                 <SeriesStats data={data} />
                 
                 <div className="flex flex-wrap gap-2 mt-4" aria-label="Genres">
-                  {data.genre?.filter((g: string) => g !== "Null").map((genre: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined, index: Key | null | undefined) => (
+                  {filteredGenres.map((genre: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined, index: Key | null | undefined) => (
                     <Badge key={index} variant="outline" className="bg-primary-800/30 text-text-200 border-primary-700">
                       {genre}
                     </Badge>
@@ -161,17 +186,17 @@ export default function EnhancedManga({ data, title }: { data: any; title: strin
                   <div className="p-4 bg-background-700/30 flex justify-between items-center flex-wrap">
                   <h3 className="text-lg font-semibold text-text-50">Latest Chapters</h3>
                   <div className="flex gap-2">
-                    <Button 
-                    variant="outline" 
+                    <Button
+                    variant="outline"
                     size="sm"
                     className="text-xs bg-background-600 border-background-500 hover:bg-background-500"
-                    disabled={data.chapters?.length === 0}
+                    disabled={!firstChapter}
                     asChild
-                    aria-label={`Read first chapter ${data.chapters && data.chapters.length > 0 ? data.chapters[data.chapters.length - 1].chapter_number : ''}`}
+                    aria-label={`Read first chapter ${firstChapter ? firstChapter.chapter_number : ''}`}
                     >
-                    <Link 
-                      href={data.chapters && data.chapters.length > 0 
-                      ? `/series/${title}/${data.chapters[data.chapters.length - 1].publisher.toLowerCase().replace(/\s+/g, '-')}/chapter-${data.chapters[data.chapters.length - 1].chapter_number}`
+                    <Link
+                      href={firstChapter
+                      ? `/series/${title}/${firstChapter.publisher.toLowerCase().replace(/\s+/g, '-')}/chapter-${firstChapter.chapter_number}`
                       : '#'
                       }
                       prefetch={true}
@@ -179,17 +204,17 @@ export default function EnhancedManga({ data, title }: { data: any; title: strin
                       First Chapter
                     </Link>
                     </Button>
-                    <Button 
-                    variant="outline" 
+                    <Button
+                    variant="outline"
                     size="sm"
                     className="text-xs bg-background-600 border-background-500 hover:bg-background-500"
-                    disabled={data.chapters?.length === 0}
+                    disabled={!latestChapter}
                     asChild
-                    aria-label={`Read latest chapter ${data.chapters && data.chapters.length > 0 ? data.chapters[0].chapter_number : ''}`}
+                    aria-label={`Read latest chapter ${latestChapter ? latestChapter.chapter_number : ''}`}
                     >
-                    <Link 
-                      href={data.chapters && data.chapters.length > 0 
-                      ? `/series/${title}/${data.chapters[0].publisher.toLowerCase().replace(/\s+/g, '-')}/chapter-${data.chapters[0].chapter_number}`
+                    <Link
+                      href={latestChapter
+                      ? `/series/${title}/${latestChapter.publisher.toLowerCase().replace(/\s+/g, '-')}/chapter-${latestChapter.chapter_number}`
                       : '#'
                       }
                       prefetch={true}
@@ -202,19 +227,18 @@ export default function EnhancedManga({ data, title }: { data: any; title: strin
                   
                   <ScrollArea className="h-[500px] p-4">
                   <div className="space-y-2">
-                    {data.chapters
-                    ?.slice(0, visibleChapters)
+                    {visibleChaptersList
                     .map((chapter: { chapter_number: any; update_time?: string | undefined; published_at?: string; striked?: boolean | undefined; publisher?: string | undefined; }, index: number) => (
-                      <ChapterSearchCard 
-                      key={chapter.chapter_number} 
+                      <ChapterSearchCard
+                      key={chapter.chapter_number}
                       chapter={{
                         ...chapter,
                         chapter_number: String(chapter.chapter_number),
                         published_at: chapter.published_at || new Date().toISOString(),
                         publisher: chapter.publisher || 'Unknown'
-                      }} 
+                      }}
                       title={title}
-                      index={index} 
+                      index={index}
                       />
                     ))}
                     
@@ -241,14 +265,25 @@ export default function EnhancedManga({ data, title }: { data: any; title: strin
                 </TabsContent>
                 
                 <TabsContent value="discussion" className="p-4">
-                  <SeriesChat seriesId={data.id} />
+                  <Suspense fallback={<Skeleton className="h-96 w-full" />}>
+                    <SeriesChat seriesId={data.id} />
+                  </Suspense>
                 </TabsContent>
               </Tabs>
             </div>
             
             {/* Recommendations Section */}
             <div className="mt-8">
-              <Recommendations genres={data.genre} seriesId={data.id} />
+              <Suspense fallback={
+                <div className="bg-primary-800 p-6 rounded-lg shadow-lg">
+                  <Skeleton className="h-8 w-64 mb-6" />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                    {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-96 w-full" />)}
+                  </div>
+                </div>
+              }>
+                <Recommendations genres={filteredGenres} seriesId={data.id} />
+              </Suspense>
             </div>
           </div>
         </div>
@@ -256,3 +291,6 @@ export default function EnhancedManga({ data, title }: { data: any; title: strin
     </div>
   );
 }
+
+// Export memoized component to prevent unnecessary re-renders
+export default memo(EnhancedManga);

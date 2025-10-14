@@ -223,19 +223,20 @@ export async function generateStaticParams() {
 
 export default async function SingleSeries(props: any) {
   const params = await props.params;
-  
+
   // Check and redirect if URL is incorrect
   const data = await checkAndRedirectSeries(params.series);
-  
+
   if (!data) {
     // Series not found, Next.js will handle 404
     throw new Error('Series not found');
   }
-  
+
+  // Pass data directly to Manga component to avoid duplicate fetching
   return (
     <>
       <Suspense fallback={<Loader />}>
-        <Manga params={params} />
+        <Manga params={params} initialData={data} />
       </Suspense>
     </>
   );

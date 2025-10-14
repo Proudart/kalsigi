@@ -4,6 +4,7 @@ import { db } from "@/util/db";
 import { series } from "@/util/schema";
 import { ilike, and, sql } from "drizzle-orm";
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 3600;
 
 export async function GET(request: NextRequest) {

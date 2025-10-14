@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, memo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Skeleton } from '../components/ui/skeleton';
@@ -126,16 +126,17 @@ const Recommendations: React.FC<RecommendationsProps> = ({ genres, seriesId, cla
       adjustVisibleItems();
     }
   }, [isMounted, recommendations]);
-
-  const SeriesCard = ({ series }: { series: RecommendedSeries }) => {
+  const SeriesCard = memo(({ series }: { series: RecommendedSeries }) => {
     const memoizedImage = useMemo(() => (
       <Image
         src={series.cover_image_url}
         alt={`Cover image for ${series.title}`}
         fill
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
         className="object-cover transition-transform duration-300 group-hover:scale-105"
         priority={false}
+        loading="lazy"
+        quality={75}
       />
     ), [series.cover_image_url, series.title]);
 
@@ -197,7 +198,8 @@ const Recommendations: React.FC<RecommendationsProps> = ({ genres, seriesId, cla
         </div>
       </Link>
     );
-  };
+  }, (prevProps, nextProps) => prevProps.series.id === nextProps.series.id);
+  SeriesCard.displayName = 'SeriesCard'
 
   const LoadingSkeleton = () => (
     <div className="flex flex-col gap-4 bg-background-100 rounded-lg p-4">
@@ -251,4 +253,11 @@ const Recommendations: React.FC<RecommendationsProps> = ({ genres, seriesId, cla
   );
 };
 
-export default Recommendations;
+// Memoize the entire component to avoid re-renders
+export default memo(Recommendations, (prevProps, nextProps) => {
+  return (
+    prevProps.seriesId === nextProps.seriesId &&
+    JSON.stringify(prevProps.genres) === JSON.stringify(nextProps.genres)
+  );
+});
+

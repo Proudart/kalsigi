@@ -81,7 +81,7 @@ const Continue = async () => {
   }
 
   return (
-    <div className="flex-1 bg-primary-100 rounded-lg shadow-md border p-4 sm:p-6">
+    <div className="w-full bg-primary-100 rounded-lg shadow-md border p-4 sm:p-6">
       <UpdatedContent data={data} />
     </div>
   );

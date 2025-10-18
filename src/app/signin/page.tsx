@@ -15,6 +15,7 @@ export default async function SignUpPage() {
   }
 
   return (
+
     <div className="pt:mt-0 mx-auto flex flex-col items-center justify-center px-6 pt-8 h-[calc(100vh-120px)] ">
       <Link
         href="/"
@@ -34,5 +35,6 @@ export default async function SignUpPage() {
         <SignInForm />
       </div>
     </div>
+    
   );
 }

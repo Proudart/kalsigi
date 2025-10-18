@@ -1,8 +1,6 @@
 // app/components/RecommendedManga.tsx
-import { Suspense } from "react";
 import { cookies } from "next/headers";
 import UpdatedContent from "./recommendedContent";
-import UpdatedSkeleton from "./recommendedSkeleton";
 import pako from "pako";
 import { getBaseUrl } from "../../../lib/utils";
 
@@ -45,7 +43,7 @@ async function getRecommendedSeries(titles: any[]) {
   }
 }
 
-async function RecommendedMangaContent() {
+export default async function RecommendedManga() {
   let seriesHistory = [];
 
   if ((await cookies()).has("seriesHistory")) {
@@ -53,28 +51,15 @@ async function RecommendedMangaContent() {
     seriesHistory = decompressData(compressedData as string);
   }
 
-
-  
-
   const data = await getRecommendedSeries(seriesHistory);
 
-  const hasRecommendations = data.length > 0;
+  if (data.length === 0) {
+    return null;
+  }
 
   return (
-    <div>
-      {hasRecommendations ? (
-        <UpdatedContent data={data} />
-      ) : (
-        <div></div>
-      )}
+    <div className="flex-1 bg-primary-100 rounded-lg shadow-md border p-4 sm:p-6">
+      <UpdatedContent data={data} />
     </div>
-  );
-}
-
-export default function RecommendedManga() {
-  return (
-    <Suspense fallback={<UpdatedSkeleton />}>
-      <RecommendedMangaContent />
-    </Suspense>
   );
 }

@@ -29,6 +29,10 @@ const SeriesImage = ({
 };
 
 const RecommendedContent = ({ data }: { data: any[] }) => {
+  if (!data || data.length === 0) {
+    return null;
+  }
+
   return (
     <section className="space-y-6" data-testid="recommended">
       <div className="flex items-center justify-between">

@@ -1,8 +1,6 @@
 
-import { Suspense } from "react";
 import { cookies } from "next/headers";
 import UpdatedContent from "./updatedContent";
-import UpdatedSkeleton from "./updatedSkeleton";
 import pako from "pako";
 import { getBaseUrl } from "../../../lib/utils";
 
@@ -78,15 +76,13 @@ const Continue = async () => {
   const hasBookmark = titles.length > 0;
   const data = hasBookmark ? await fetchData(titles) : [];
 
+  if (!hasBookmark || data.length === 0) {
+    return null;
+  }
+
   return (
-    <div>
-      {hasBookmark && data.length > 0 ? (
-        <Suspense fallback={<UpdatedSkeleton />}>
-          <UpdatedContent data={data} />
-        </Suspense>
-      ) : (
-        <div></div>
-      )}
+    <div className="flex-1 bg-primary-100 rounded-lg shadow-md border p-4 sm:p-6">
+      <UpdatedContent data={data} />
     </div>
   );
 };

@@ -44,6 +44,10 @@ const Feed = dynamic(() => import("../components/feed/main/feed"), {
   ssr: true
 });
 
+const FeaturedGrid = dynamic(() => import("../components/feed/FeaturedGrid"), {
+  ssr: true
+});
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-background-100">
@@ -62,21 +66,7 @@ export default function Home() {
           </Suspense>
 
           {/* Featured Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            {/* Updated Series */}
-            <div className="bg-primary-100 rounded-lg shadow-md border p-4 sm:p-6">
-              <Suspense fallback={<UpdatedSkeleton />}>
-                <Updated />
-              </Suspense>
-            </div>
-
-            {/* Recommended Series */}
-            <div className="bg-primary-100 rounded-lg shadow-md border p-4 sm:p-6">
-              <Suspense fallback={<RecommendedSkeleton />}>
-                <Recommended />
-              </Suspense>
-            </div>
-          </div>
+          <FeaturedGrid />
 
           {/* Latest & Trending Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">

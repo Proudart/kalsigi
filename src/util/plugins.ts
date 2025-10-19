@@ -1,4 +1,4 @@
-import { BetterAuthPlugin } from "better-auth/plugins";
+import { BetterAuthPlugin } from "better-auth";
  
 const myPlugin = ()=>{
     return {

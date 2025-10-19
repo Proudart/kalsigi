@@ -106,7 +106,8 @@ const nextConfig = withPWA({
   webpack: (config, { dev, isServer }) => {
     // Note: This webpack config will be ignored when using Turbopack
     // Keep it for production builds or when Turbopack is disabled
-    if (!dev) {
+    if (!dev && !isServer) {
+      // Only apply custom splitChunks to client-side bundles
       config.optimization = {
         ...config.optimization,
         usedExports: true,
@@ -139,13 +140,6 @@ const nextConfig = withPWA({
               priority: 25,
               enforce: true,
             },
-            data: {
-              name: 'data',
-              chunks: 'all',
-              test: /[\\/]node_modules[\\/](drizzle-orm|better-auth|pg|postgres|zod)[\\/]/,
-              priority: 20,
-              enforce: true,
-            },
             utils: {
               name: 'utils',
               chunks: 'all',
@@ -164,10 +158,7 @@ const nextConfig = withPWA({
           },
         },
       };
-      config.plugins = config.plugins || [];
-      if (!isServer) {
-        config.optimization.concatenateModules = true;
-      }
+      config.optimization.concatenateModules = true;
     }
     return config;
   }

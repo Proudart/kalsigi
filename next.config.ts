@@ -1,6 +1,6 @@
 import withPWA from 'next-pwa';
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: false
+  enabled: process.env.ANALYZE === 'false'
 });
 
 const nextConfig = withPWA({
@@ -47,6 +47,9 @@ const nextConfig = withPWA({
     ];
   },
   reactStrictMode: true,
+  output: 'standalone',
+  poweredByHeader: false,
+  generateEtags: true,
   images: {
     minimumCacheTTL: 31536000,
     formats: ['image/avif', 'image/webp'],
@@ -85,14 +88,14 @@ const nextConfig = withPWA({
   bundlePagesRouterDependencies: true,
   experimental: {
     // Enable Turbopack for development
-   
+
     optimizePackageImports: [
       '@tabler/icons-react',
       'lucide-react',
       '@radix-ui/react-icons',
-      'framer-motion',
       'date-fns',
-      'drizzle-orm'
+      'drizzle-orm',
+      'react-hook-form'
     ],
     optimizeCss: true,
   },
@@ -112,6 +115,7 @@ const nextConfig = withPWA({
         ...config.optimization,
         usedExports: true,
         sideEffects: false,
+        minimize: true,
         splitChunks: {
           ...config.optimization.splitChunks,
           chunks: 'all',
@@ -119,37 +123,58 @@ const nextConfig = withPWA({
             ...config.optimization.splitChunks?.cacheGroups,
             default: false,
             vendors: false,
+            // Core React/Next.js
             vendor: {
               name: 'vendor',
               chunks: 'all',
-              test: /[\\/]node_modules[\\/](react|react-dom|next)[\\/]/,
+              test: /[\\/]node_modules[\\/](react|react-dom|next|scheduler)[\\/]/,
               priority: 40,
               enforce: true,
             },
+            // UI libraries (Radix)
             ui: {
               name: 'ui',
-              chunks: 'all',
-              test: /[\\/]node_modules[\\/](@radix-ui|@headlessui|@heroicons)[\\/]/,
+              chunks: 'async',
+              test: /[\\/]node_modules[\\/](@radix-ui)[\\/]/,
               priority: 30,
               enforce: true,
             },
+            // Icons - load on demand
             icons: {
               name: 'icons',
-              chunks: 'all',
-              test: /[\\/]node_modules[\\/](@tabler\/icons-react|lucide-react|@radix-ui\/react-icons)[\\/]/,
+              chunks: 'async',
+              test: /[\\/]node_modules[\\/](@tabler\/icons-react|lucide-react)[\\/]/,
               priority: 25,
               enforce: true,
             },
+            // Utilities
             utils: {
               name: 'utils',
               chunks: 'all',
               test: /[\\/]node_modules[\\/](date-fns|clsx|class-variance-authority|tailwind-merge|use-debounce)[\\/]/,
+              priority: 20,
+              enforce: true,
+            },
+            // Auth libraries
+            auth: {
+              name: 'auth',
+              chunks: 'async',
+              test: /[\\/]node_modules[\\/](better-auth|oslo)[\\/]/,
+              priority: 18,
+              enforce: true,
+            },
+            // Data fetching
+            data: {
+              name: 'data',
+              chunks: 'async',
+              test: /[\\/]node_modules[\\/](swr|drizzle-orm)[\\/]/,
               priority: 15,
               enforce: true,
             },
+            // Common chunks used across routes
             common: {
               name: 'common',
-              minChunks: 2,
+              minChunks: 3,
               chunks: 'all',
               priority: 10,
               reuseExistingChunk: true,
@@ -159,6 +184,7 @@ const nextConfig = withPWA({
         },
       };
       config.optimization.concatenateModules = true;
+      config.optimization.moduleIds = 'deterministic';
     }
     return config;
   }

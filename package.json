@@ -1,7 +1,33 @@
 {
-  "name": "kadkomi",
-  "version": "0.1.0",
+  "name": "kalsigi",
+  "version": "1.0.0",
+  "description": "A modern, performant manga and manhwa reading platform built with Next.js 15",
+  "author": "Kalsigi Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Proudart/kalsigi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Proudart/kalsigi/issues"
+  },
+  "homepage": "https://github.com/Proudart/kalsigi#readme",
+  "keywords": [
+    "manga",
+    "manhwa",
+    "webtoon",
+    "reading-platform",
+    "nextjs",
+    "react",
+    "typescript",
+    "scanlation",
+    "pwa"
+  ],
   "private": true,
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

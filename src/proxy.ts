@@ -97,7 +97,7 @@ setInterval(() => {
   }
 }, CACHE_TTL);
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
   // Create a response object from the incoming request

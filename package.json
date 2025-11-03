@@ -29,7 +29,7 @@
     "npm": ">=9.0.0"
   },
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "build:analyze": "next build",
     "start": "next start",
@@ -46,7 +46,7 @@
     "@ducanh2912/next-pwa": "^10.2.9",
     "@hookform/resolvers": "^5.2.1",
     "@marsidev/react-turnstile": "^1.3.0",
-    "@next/bundle-analyzer": "^15.4.6",
+    "@next/bundle-analyzer": "16.0.1",
     "@radix-ui/react-aspect-ratio": "^1.1.7",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-dialog": "^1.1.15",
@@ -65,7 +65,7 @@
     "@tailwindcss/postcss": "^4.1.12",
     "@types/node": "24.7.2",
     "@types/react": "19.2.2",
-    "@types/react-dom": "19.2.1",
+    "@types/react-dom": "19.2.2",
     "babel-plugin-react-compiler": "^1.0.0",
     "better-auth": "^1.3.27",
     "class-variance-authority": "^0.7.1",
@@ -76,9 +76,9 @@
     "drizzle-orm": "^0.44.6",
     "embla-carousel-react": "^8.6.0",
     "eslint": "^9.37.0",
-    "eslint-config-next": "15.5.4",
+    "eslint-config-next": "16.0.1",
     "lucide-react": "^0.545.0",
-    "next": "^15.5.4",
+    "next": "16.0.1",
     "next-lazy-hydration-on-scroll": "^1.2.0",
     "next-plausible": "^3.12.4",
     "next-pwa": "^5.6.0",
@@ -88,8 +88,8 @@
     "pg": "^8.16.3",
     "postcss": "^8.5.6",
     "postgres": "^3.4.7",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
     "react-hook-form": "^7.65.0",
     "react-share": "^5.2.2",
     "sass": "^1.93.2",
@@ -125,5 +125,9 @@
     "lightningcss-linux-arm64-musl": "^1.30.2",
     "lightningcss-linux-x64-gnu": "^1.30.2",
     "lightningcss-linux-x64-musl": "^1.30.2"
+  },
+  "overrides": {
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2"
   }
 }

@@ -118,11 +118,3 @@ export async function POST(request: Request) {
     );
   }
 }
-
-// Optional: Add rate limiting middleware
-export const config = {
-  api: {
-    bodyParser: true,
-    externalResolver: true,
-  },
-};

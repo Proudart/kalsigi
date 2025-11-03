@@ -47,9 +47,15 @@ sitemap-state.json
 # public files
 /public/sw.js
 /public/workbox-*
+/public/~partytown
+
 # Million Lint
 .million
 
+# Development notes (keep these private)
 CLAUDE.md
-*.md
 /claude
+NOTES.md
+
+# Bundle analysis
+.next/analyze/

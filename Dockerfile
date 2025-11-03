@@ -4,11 +4,16 @@ FROM node:20.9.0
 # Set the working directory in the container
 WORKDIR /app
 
+# Set environment variables to skip Puppeteer Chrome download
+ENV PUPPETEER_SKIP_DOWNLOAD=true
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_SKIP_CHROME_DOWNLOAD=true
+
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# Install dependencies
-RUN npm i --force
+# Install dependencies (skip devDependencies in production)
+RUN npm ci --only=production --force || npm install --only=production --force
 
 # Copy the entire project to the working directory
 COPY . .

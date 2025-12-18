@@ -166,7 +166,6 @@ export default function RootLayout({
             `,
           }}
         />
-        <PlausibleProvider domain={process.env.PLAUSIBLE as string}>
           <Suspense fallback={<Loader></Loader>}>
             <ThemeProvider
               attribute="class"
@@ -183,7 +182,6 @@ export default function RootLayout({
               <Toaster />
             </ThemeProvider>
           </Suspense>
-        </PlausibleProvider>
       </body>
     </html>
   );

@@ -78,7 +78,6 @@
     "lucide-react": "^0.545.0",
     "next": "16.0.1",
     "next-lazy-hydration-on-scroll": "^1.2.0",
-    "next-plausible": "^3.12.4",
     "next-pwa": "^5.6.0",
     "next-themes": "^0.4.6",
     "oslo": "^1.2.1",

@@ -3,7 +3,6 @@ import { Poppins } from "next/font/google";
 import { lazyHydrate } from 'next-lazy-hydration-on-scroll';
 import { Toaster } from "../components/ui/toaster";
 import logo from "../../public/manhwacall.webp";
-import PlausibleProvider from "next-plausible";
 import { ThemeProvider } from "next-themes";
 import { Suspense } from "react";
 import Loader from "../components/load";

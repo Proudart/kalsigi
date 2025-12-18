@@ -15,6 +15,4 @@ const myPlugin = ()=>{
     } satisfies BetterAuthPlugin
 }
 
-
-
 export { myPlugin};

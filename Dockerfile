@@ -9,18 +9,17 @@ ENV PUPPETEER_SKIP_DOWNLOAD=true
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 ENV PUPPETEER_SKIP_CHROME_DOWNLOAD=true
 
-# Copy package.json and bun.lock to the working directory
-COPY package.json bun.lock ./
+# Copy package.json and bun.lockb to the working directory
+COPY package.json bun.lockb ./
 
-# Install all dependencies for build
+# Install all dependencies (including devDependencies for build)
 RUN bun install --frozen-lockfile
 
-# Copy and build
+# Copy the entire project to the working directory
 COPY . .
-RUN bun run build
 
-# Clean node_modules and reinstall only production deps
-RUN rm -rf node_modules && bun install --production
+# Build the Next.js application
+RUN bun run build
 
 # Expose the desired port (default is 3000 for Next.js)
 EXPOSE 3001     

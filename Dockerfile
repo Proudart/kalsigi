@@ -9,8 +9,8 @@ ENV PUPPETEER_SKIP_DOWNLOAD=true
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 ENV PUPPETEER_SKIP_CHROME_DOWNLOAD=true
 
-# Copy package.json and bun.lockb to the working directory
-COPY package.json bun.lockb ./
+# Copy package.json and bun.lock to the working directory
+COPY package.json bun.lock ./
 
 # Install all dependencies (including devDependencies for build)
 RUN bun install --frozen-lockfile

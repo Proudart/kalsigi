@@ -27,7 +27,14 @@ function decompressData(input: string): any {
     const jsonString = new TextDecoder().decode(decompressed);
     return JSON.parse(jsonString);
   } catch (error) {
-    return JSON.parse(input);
+    try {
+      // If decompression fails, try URL decoding first (for Bun/cookie compatibility)
+      const urlDecoded = decodeURIComponent(input);
+      return JSON.parse(urlDecoded);
+    } catch (error2) {
+      // If that fails, try parsing directly
+      return JSON.parse(input);
+    }
   }
 }
 

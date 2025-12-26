@@ -1,18 +1,16 @@
 
 import { cookies } from "next/headers";
 import UpdatedContent from "./updatedContent";
-import pako from "pako";
 import { getBaseUrl } from "../../../lib/utils";
 
-function decompressData(input: string): any {
+export function decompressData(compressed: string): any {
   try {
-    const compressed = Buffer.from(input, 'base64');
-    const decompressed = pako.inflate(compressed);
-    const jsonString = new TextDecoder().decode(decompressed);
+    // Decode from base64
+    const jsonString = decodeURIComponent(atob(compressed));
     return JSON.parse(jsonString);
   } catch (error) {
-    // If decompression fails, assume the input is not compressed
-    return JSON.parse(input);
+    console.error('Failed to decompress data:', error);
+    return [];
   }
 }
 

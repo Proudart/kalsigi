@@ -249,6 +249,19 @@ export default async function Chapter({ params, initialChapterData }: ChapterPro
             </Suspense>
           )}
         </article>
+  <div className="max-w-3xl mx-auto px-4 mb-6">
+          <Suspense fallback={<div className="h-12 w-full bg-background-200 rounded-md animate-pulse"></div>}>
+            <ChapterNavigation
+              chapters={chapters.map((item: any) => item.chapter_number)}
+              title={chapterData?.title}
+              currentChapter={chapterNumber}
+              url={modifiedTitle}
+              urlCode={chapterData?.url_code}
+              publisher={publisher}
+              chapterData={chapterData}
+            />
+          </Suspense>
+        </div>
 
         {/* Share section */}
         <div id="share-section" className="max-w-3xl mx-auto px-4 mb-8">
@@ -260,7 +273,7 @@ export default async function Chapter({ params, initialChapterData }: ChapterPro
             />
           </div>
         </div>
-
+          
         {/* Chapter summary (if available) */}
         {summary?.tldr && (
           <div className="max-w-3xl mx-auto px-4 mb-8">

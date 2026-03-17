@@ -22,10 +22,10 @@ COPY . .
 RUN bun run build
 
 # Expose the desired port (default is 3000 for Next.js)
-EXPOSE 3001     
+EXPOSE 3002     
 
 # Set environment variable for the port
-ENV PORT=3001
+ENV PORT=3002
 
 # Start the application
 CMD ["bun", "run", "start"]

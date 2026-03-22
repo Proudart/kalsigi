@@ -1,4 +1,6 @@
 // src/app/series/[series]/[publisher]/[chapter]/page.tsx
+export const dynamic = 'force-dynamic';
+
 import { Suspense } from "react";
 import { permanentRedirect } from "next/navigation";
 import { Metadata } from "next";
@@ -169,31 +171,6 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
   }
 }
 
-export async function generateStaticParams() {
-  try {
-    const response = await fetch(
-      `${getBaseUrl()}/api/chapters`,
-      {
-        next: { 
-          revalidate: 60 * 60 * 24 // Cache for a day
-        }
-      }
-    );
-
-    const seriesData = await response.json();
-
-    return seriesData.flatMap(
-      (series: { chapters: any[]; url: string; url_code: string }) =>
-        series.chapters.map((chapter: { chapter_number: string; publisher: string }) => ({
-          series: series.url + "-" + (series.url_code ? series.url_code.toString() : '000000'),
-          group: chapter.publisher.toLowerCase().replace(/\s+/g, '-'),
-          chapter: "chapter-" + chapter.chapter_number.toString(),
-        }))
-    );
-  } catch (e) {
-    return [];
-  }
-}
 
 export default async function ChapterPage(props: any) {
   const params = await props.params;

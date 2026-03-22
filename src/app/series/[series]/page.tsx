@@ -1,4 +1,6 @@
 // src/app/series/[series]/page.tsx
+export const dynamic = 'force-dynamic';
+
 import { Suspense } from "react";
 import { redirect, permanentRedirect } from "next/navigation";
 import Manga from "../../../components/manga/manga";
@@ -209,17 +211,6 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
   }
 }
 
-export async function generateStaticParams() {
-  try {
-    const res = await fetch(`${getBaseUrl()}/api/titles`);
-    const data = await res.json();
-    return data.map((series: any) => ({
-      series: series.url.toString() + '-' + (series.url_code ? series.url_code.toString() : '000000'),
-    }));
-  } catch (e) {
-    return [];
-  }
-}
 
 export default async function SingleSeries(props: any) {
   const params = await props.params;
